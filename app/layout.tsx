@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import { SiteHeader } from "@/components/header/site-header";
+import { getMainNavigation } from "@/lib/navigation";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -8,16 +9,20 @@ const outfit = Outfit({
   weight: ["400", "500"],
 });
 
+export const instant = false;
+
 export const metadata: Metadata = {
   title: "Praxis Dr. Hück",
   description: "Praxis Dr. Hück",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const navigation = await getMainNavigation();
+
   return (
     <html lang="de" className={`${outfit.className} h-full`}>
       <body className="flex min-h-full flex-col bg-background text-ink">
-        <SiteHeader />
+        <SiteHeader desktop={navigation.desktop} mobile={navigation.mobile} />
         {children}
       </body>
     </html>

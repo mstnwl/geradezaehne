@@ -3,32 +3,74 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const desktopLinks = [
-  "Startseite",
-  "Behandler & Team",
-  "Praxis",
-  "Behandlungsspektrum",
-  "Fallbeispiele",
-] as const;
-
-const menuLinks = [
-  "Startseite",
-  "Behandler & Team",
-  "Behandlungsspektrum",
-  "Fallbeispiele",
-  "Praxis",
-  "Kontakt",
-] as const;
+import type { ReactNode } from "react";
+import type { NavItem } from "@/lib/navigation";
 
 type TopNavigationProps = {
+  desktop: NavItem[];
+  mobile: NavItem[];
   open: boolean;
   onClose: () => void;
 };
 
-export function TopNavigation({ open, onClose }: TopNavigationProps) {
+function isCurrent(item: NavItem, pathname: string) {
+  if (pathname === "/") {
+    return item.href === "/" && item.name.startsWith("Startseite");
+  }
+
+  return item.href === pathname;
+}
+
+function NavLink({
+  item,
+  className,
+  pathname,
+  onClick,
+  children,
+}: {
+  item: NavItem;
+  className: string;
+  pathname: string;
+  onClick?: () => void;
+  children?: ReactNode;
+}) {
+  const current = isCurrent(item, pathname) ? "page" : undefined;
+  const external = /^(https?:|mailto:|tel:)/i.test(item.href);
+
+  if (external) {
+    return (
+      <a
+        href={item.href}
+        className={className}
+        aria-current={current}
+        onClick={onClick}
+      >
+        {children}
+        {item.name}
+      </a>
+    );
+  }
+
+  return (
+    <Link
+      href={item.href}
+      className={className}
+      aria-current={current}
+      onClick={onClick}
+    >
+      {children}
+      {item.name}
+    </Link>
+  );
+}
+
+export function TopNavigation({
+  desktop,
+  mobile,
+  open,
+  onClose,
+}: TopNavigationProps) {
   const pathname = usePathname();
-  const homeCurrent = pathname === "/" ? "page" : undefined;
 
   return (
     <>
@@ -36,15 +78,13 @@ export function TopNavigation({ open, onClose }: TopNavigationProps) {
         className="hidden items-center gap-nav lg:flex"
         aria-label="Hauptnavigation"
       >
-        {desktopLinks.map((label) => (
-          <Link
-            key={label}
-            href="/"
+        {desktop.map((item, index) => (
+          <NavLink
+            key={`${item.name}-${index}`}
+            item={item}
+            pathname={pathname}
             className="text-nav"
-            aria-current={label === "Startseite" ? homeCurrent : undefined}
-          >
-            {label}
-          </Link>
+          />
         ))}
       </nav>
       {open ? (
@@ -65,12 +105,12 @@ export function TopNavigation({ open, onClose }: TopNavigationProps) {
             aria-label="Menü"
             className="mx-auto flex max-w-column flex-col gap-menu"
           >
-            {menuLinks.map((label) => (
-              <Link
-                key={label}
-                href="/"
+            {mobile.map((item, index) => (
+              <NavLink
+                key={`${item.name}-${index}`}
+                item={item}
+                pathname={pathname}
                 className="inline-flex items-center gap-pair text-menu"
-                aria-current={label === "Startseite" ? homeCurrent : undefined}
                 onClick={onClose}
               >
                 <Image
@@ -81,8 +121,7 @@ export function TopNavigation({ open, onClose }: TopNavigationProps) {
                   unoptimized
                   className="size-icon-lg"
                 />
-                {label}
-              </Link>
+              </NavLink>
             ))}
           </nav>
         </div>

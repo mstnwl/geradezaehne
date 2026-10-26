@@ -1,11 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { NavItem } from "@/lib/navigation";
 import { Header } from "./header";
 import { SubHeader } from "./sub-header";
 import { TopNavigation } from "./top-navigation";
 
-export function SiteHeader() {
+type SiteHeaderProps = {
+  desktop: NavItem[];
+  mobile: NavItem[];
+};
+
+export function SiteHeader({ desktop, mobile }: SiteHeaderProps) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -34,7 +40,12 @@ export function SiteHeader() {
       <div className="bg-white px-gutter">
         <div className="mx-auto flex h-header max-w-column items-center justify-between">
           <Header open={open} onToggle={() => setOpen((value) => !value)} />
-          <TopNavigation open={open} onClose={() => setOpen(false)} />
+          <TopNavigation
+            desktop={desktop}
+            mobile={mobile}
+            open={open}
+            onClose={() => setOpen(false)}
+          />
         </div>
       </div>
       <SubHeader />
