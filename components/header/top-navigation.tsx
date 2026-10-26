@@ -63,7 +63,7 @@ export function TopNavigation({ open, onClose }: TopNavigationProps) {
           </div>
           <nav
             aria-label="Menü"
-            className="mx-auto flex max-w-column flex-col gap-gutter"
+            className="mx-auto flex max-w-column flex-col gap-menu"
           >
             {menuLinks.map((label) => (
               <Link

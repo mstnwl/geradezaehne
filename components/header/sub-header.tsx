@@ -2,15 +2,15 @@ import Image from "next/image";
 
 export function SubHeader() {
   return (
-    <div className="bg-accent px-gutter text-ink">
-      <div className="mx-auto flex h-bar max-w-column items-center justify-center lg:justify-between">
+    <div className="bg-accent text-ink lg:px-gutter">
+      <div className="flex h-bar items-center lg:mx-auto lg:max-w-column lg:justify-between">
         <p className="hidden text-nav lg:block">
           Sprechzeiten heute: 8.30 – 12:00 Uhr und 13.00 – 17.00 Uhr
         </p>
-        <div className="flex items-center gap-gutter">
+        <div className="grid h-full w-full grid-cols-2 items-center lg:flex lg:w-auto lg:gap-gutter">
           <a
             href="tel:+496131227266"
-            className="inline-flex items-center gap-pair text-nav"
+            className="flex items-center justify-center gap-pair text-nav whitespace-nowrap"
           >
             <Image
               src="/Icon24_Phone.svg"
@@ -22,7 +22,10 @@ export function SubHeader() {
             />
             06131 227266
           </a>
-          <a href="#" className="inline-flex items-center gap-pair text-nav">
+          <a
+            href="#"
+            className="flex items-center justify-center gap-pair text-nav whitespace-nowrap"
+          >
             <Image
               src="/Icon24_Calendar.svg"
               alt=""

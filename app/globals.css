@@ -12,7 +12,7 @@
 
   --text-menu: 1.4375rem;
   --text-menu--line-height: 1.5rem;
-  --text-menu--font-weight: 700;
+  --text-menu--font-weight: 500;
 
   --spacing-header: 7rem;
   --spacing-bar: 3rem;
@@ -22,6 +22,7 @@
   --spacing-icon: 1.5rem;
   --spacing-icon-lg: 2rem;
   --spacing-pair: 0.5rem;
+  --spacing-menu: 1rem;
 
   --max-width-column: 75rem;
 }
@@ -35,3 +36,4 @@ body {
   outline: 2px solid var(--color-ink);
   outline-offset: 2px;
 }
+
