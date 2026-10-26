@@ -6,10 +6,6 @@
   --color-accent: #a1e35d;
   --color-ink: #165231;
 
-  --text-logo: 1.5rem;
-  --text-logo--line-height: 1.146;
-  --text-logo--font-weight: 700;
-
   --text-nav: 1rem;
   --text-nav--line-height: 1.25;
   --text-nav--font-weight: 400;
@@ -23,7 +19,6 @@
   --spacing-logo: 3.4375rem;
   --spacing-gutter: 1.5rem;
   --spacing-nav: 1.75rem;
-  --spacing-lockup: 1.25rem;
   --spacing-icon: 1.5rem;
   --spacing-icon-lg: 2rem;
   --spacing-pair: 0.5rem;
@@ -39,16 +34,4 @@ body {
 :focus-visible {
   outline: 2px solid var(--color-ink);
   outline-offset: 2px;
-}
-
-.logo-mark {
-  background-color: var(--color-accent);
-  -webkit-mask-image: url("/logo-mark.png");
-  mask-image: url("/logo-mark.png");
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: contain;
-  mask-size: contain;
 }

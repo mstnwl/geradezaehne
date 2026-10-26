@@ -13,16 +13,24 @@ export function SubHeader() {
             className="inline-flex items-center gap-pair text-nav"
           >
             <Image
-              src="/icon-phone.png"
+              src="/Icon24_Phone.svg"
               alt=""
               width={24}
               height={24}
+              unoptimized
               className="size-icon"
             />
             06131 227266
           </a>
           <a href="#" className="inline-flex items-center gap-pair text-nav">
-            <span className="size-icon shrink-0" aria-hidden="true" />
+            <Image
+              src="/Icon24_Calendar.svg"
+              alt=""
+              width={24}
+              height={24}
+              unoptimized
+              className="size-icon shrink-0"
+            />
             Termin buchen
           </a>
         </div>

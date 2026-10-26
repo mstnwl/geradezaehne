@@ -9,13 +9,16 @@ type HeaderProps = {
 export function Header({ open, onToggle }: HeaderProps) {
   return (
     <>
-      <Link href="/" className="flex h-logo items-center gap-lockup">
-        <span className="logo-mark size-logo shrink-0" aria-hidden="true" />
-        <span className="text-logo">
-          Praxis
-          <br />
-          Dr. Hück
-        </span>
+      <Link href="/" className="inline-flex shrink-0">
+        <Image
+          src="/Praxis_Logo_Header.svg"
+          alt="Praxis Dr. Hück"
+          width={191}
+          height={55}
+          unoptimized
+          priority
+          className="h-logo w-auto"
+        />
       </Link>
       <button
         type="button"
@@ -25,10 +28,11 @@ export function Header({ open, onToggle }: HeaderProps) {
         onClick={onToggle}
       >
         <Image
-          src="/icon-menu.png"
+          src="/Icon32_Burger.svg"
           alt=""
           width={32}
           height={32}
+          unoptimized
           className="size-icon-lg"
         />
       </button>

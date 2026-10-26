@@ -52,10 +52,11 @@ export function TopNavigation({ open, onClose }: TopNavigationProps) {
           <div className="mx-auto flex h-header max-w-column items-center justify-end">
             <button type="button" aria-label="Menü schließen" onClick={onClose}>
               <Image
-                src="/icon-close.png"
+                src="/Icon32_BurgerX.svg"
                 alt=""
                 width={32}
                 height={32}
+                unoptimized
                 className="size-icon-lg"
               />
             </button>
@@ -73,10 +74,11 @@ export function TopNavigation({ open, onClose }: TopNavigationProps) {
                 onClick={onClose}
               >
                 <Image
-                  src="/icon-arrow.png"
+                  src="/Icon32_Arrow.svg"
                   alt=""
                   width={32}
                   height={32}
+                  unoptimized
                   className="size-icon-lg"
                 />
                 {label}
