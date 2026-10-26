@@ -31,8 +31,8 @@ export function SiteHeader() {
 
   return (
     <header className="text-ink">
-      <div className="bg-white">
-        <div className="mx-auto flex h-header max-w-column items-center justify-between px-gutter lg:px-0">
+      <div className="bg-white px-gutter">
+        <div className="mx-auto flex h-header max-w-column items-center justify-between">
           <Header open={open} onToggle={() => setOpen((value) => !value)} />
           <TopNavigation open={open} onClose={() => setOpen(false)} />
         </div>

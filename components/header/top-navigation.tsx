@@ -48,8 +48,8 @@ export function TopNavigation({ open, onClose }: TopNavigationProps) {
         ))}
       </nav>
       {open ? (
-        <div className="fixed inset-0 z-10 overflow-auto bg-white lg:hidden">
-          <div className="mx-auto flex h-header max-w-column items-center justify-end px-gutter">
+        <div className="fixed inset-0 z-10 overflow-auto bg-white px-gutter lg:hidden">
+          <div className="mx-auto flex h-header max-w-column items-center justify-end">
             <button type="button" aria-label="Menü schließen" onClick={onClose}>
               <Image
                 src="/icon-close.png"
@@ -62,7 +62,7 @@ export function TopNavigation({ open, onClose }: TopNavigationProps) {
           </div>
           <nav
             aria-label="Menü"
-            className="mx-auto flex max-w-column flex-col gap-gutter px-gutter"
+            className="mx-auto flex max-w-column flex-col gap-gutter"
           >
             {menuLinks.map((label) => (
               <Link

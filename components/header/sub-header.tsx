@@ -2,8 +2,8 @@ import Image from "next/image";
 
 export function SubHeader() {
   return (
-    <div className="bg-accent text-ink">
-      <div className="mx-auto flex h-bar max-w-column items-center justify-center px-gutter lg:justify-between lg:px-0">
+    <div className="bg-accent px-gutter text-ink">
+      <div className="mx-auto flex h-bar max-w-column items-center justify-center lg:justify-between">
         <p className="hidden text-nav lg:block">
           Sprechzeiten heute: 8.30 – 12:00 Uhr und 13.00 – 17.00 Uhr
         </p>
