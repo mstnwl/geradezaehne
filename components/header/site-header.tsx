@@ -1,0 +1,43 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { Header } from "./header";
+import { SubHeader } from "./sub-header";
+import { TopNavigation } from "./top-navigation";
+
+export function SiteHeader() {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", onKey);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open]);
+
+  return (
+    <header className="text-ink">
+      <div className="bg-white">
+        <div className="mx-auto flex h-header max-w-column items-center justify-between px-gutter lg:px-0">
+          <Header open={open} onToggle={() => setOpen((value) => !value)} />
+          <TopNavigation open={open} onClose={() => setOpen(false)} />
+        </div>
+      </div>
+      <SubHeader />
+    </header>
+  );
+}
