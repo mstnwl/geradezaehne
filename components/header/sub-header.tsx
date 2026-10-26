@@ -4,7 +4,7 @@ export function SubHeader() {
   return (
     <div className="bg-accent text-ink lg:px-gutter">
       <div className="flex h-bar items-center lg:mx-auto lg:max-w-column lg:justify-between">
-        <p className="hidden text-nav lg:block">
+        <p className="hidden text-nav font-normal lg:block">
           Sprechzeiten heute: 8.30 – 12:00 Uhr und 13.00 – 17.00 Uhr
         </p>
         <div className="grid h-full w-full grid-cols-2 items-center lg:flex lg:w-auto lg:gap-gutter">

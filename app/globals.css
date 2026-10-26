@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+
 @theme {
   --color-white: #ffffff;
   --color-background: #fbf9f5;
@@ -8,7 +9,7 @@
 
   --text-nav: 1rem;
   --text-nav--line-height: 1.25;
-  --text-nav--font-weight: 400;
+  --text-nav--font-weight: 500;
 
   --text-menu: 1.4375rem;
   --text-menu--line-height: 1.5rem;
