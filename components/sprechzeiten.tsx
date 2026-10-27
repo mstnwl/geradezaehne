@@ -5,7 +5,7 @@ import type { SprechzeitenContent } from "@/lib/sprechzeiten";
 
 function BookingButton({ href, label }: { href: string; label: string }) {
   const className =
-    "booking-button flex h-bar w-full items-center justify-center bg-accent px-gutter text-ink lg:inline-flex lg:w-auto";
+    "booking-button flex h-bar w-full items-center justify-center rounded bg-accent px-gutter text-ink lg:inline-flex lg:w-auto";
   const content = (
     <span className="booking-caption inline-flex items-center gap-pair text-nav">
       <Image
@@ -75,7 +75,7 @@ export function Sprechzeiten({ sprechzeiten }: { sprechzeiten: SprechzeitenConte
             />
           ) : null}
         </div>
-        <table className="w-full border-separate border-spacing-y-2 text-left text-base leading-normal text-ink lg:col-start-2 lg:text-[18px]">
+        <table className="w-full border-separate border-spacing-y-1 text-left text-base leading-normal text-ink lg:col-start-2 lg:text-[18px]">
           <tbody>
             {sprechzeiten.hours.map((row) => (
               <tr key={`${row.day}-${row.morning}`}>
