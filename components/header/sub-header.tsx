@@ -24,52 +24,54 @@ export function SubHeader({ lines }: { lines: string[] }) {
   const cycling = count > 1;
 
   return (
-    <div className="action-bar enter enter-3 bg-accent text-ink lg:px-gutter">
-      {cycling ? <style>{hoursKeyframes(count)}</style> : null}
-      <div className="flex h-bar items-center lg:mx-auto lg:max-w-column lg:justify-between">
-        <p
-          className={`hours hidden text-nav font-normal whitespace-nowrap lg:grid${cycling ? " hours-cycle" : ""}`}
-          style={{ "--hours-count": count } as CSSProperties}
-        >
-          {lines.map((line, index) => (
-            <span
-              key={`${index}-${line}`}
-              className="hours-line"
-              style={{ "--hours-index": index } as CSSProperties}
+    <div className="sticky top-0 z-10">
+      <div className="action-bar enter enter-3 bg-accent text-ink lg:px-gutter">
+        {cycling ? <style>{hoursKeyframes(count)}</style> : null}
+        <div className="flex h-bar items-center lg:mx-auto lg:max-w-column lg:justify-between">
+          <p
+            className={`hours hidden text-nav font-normal whitespace-nowrap lg:grid${cycling ? " hours-cycle" : ""}`}
+            style={{ "--hours-count": count } as CSSProperties}
+          >
+            {lines.map((line, index) => (
+              <span
+                key={`${index}-${line}`}
+                className="hours-line"
+                style={{ "--hours-index": index } as CSSProperties}
+              >
+                {line}
+              </span>
+            ))}
+          </p>
+          <div className="grid h-full w-full grid-cols-2 items-center lg:flex lg:w-auto lg:gap-gutter">
+            <a
+              href="tel:+496131227266"
+              className="action-link flex items-center justify-center gap-pair text-nav whitespace-nowrap"
             >
-              {line}
-            </span>
-          ))}
-        </p>
-        <div className="grid h-full w-full grid-cols-2 items-center lg:flex lg:w-auto lg:gap-gutter">
-          <a
-            href="tel:+496131227266"
-            className="action-link flex items-center justify-center gap-pair text-nav whitespace-nowrap"
-          >
-            <Image
-              src="/Icon24_Phone.svg"
-              alt=""
-              width={24}
-              height={24}
-              unoptimized
-              className="size-icon"
-            />
-            06131 227266
-          </a>
-          <a
-            href="#"
-            className="action-link flex items-center justify-center gap-pair text-nav whitespace-nowrap"
-          >
-            <Image
-              src="/Icon24_Calendar.svg"
-              alt=""
-              width={24}
-              height={24}
-              unoptimized
-              className="size-icon shrink-0"
-            />
-            Termin buchen
-          </a>
+              <Image
+                src="/Icon24_Phone.svg"
+                alt=""
+                width={24}
+                height={24}
+                unoptimized
+                className="size-icon"
+              />
+              06131 227266
+            </a>
+            <a
+              href="#"
+              className="action-link flex items-center justify-center gap-pair text-nav whitespace-nowrap"
+            >
+              <Image
+                src="/Icon24_Calendar.svg"
+                alt=""
+                width={24}
+                height={24}
+                unoptimized
+                className="size-icon shrink-0"
+              />
+              Termin buchen
+            </a>
+          </div>
         </div>
       </div>
     </div>

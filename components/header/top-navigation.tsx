@@ -89,7 +89,7 @@ export function TopNavigation({
         ))}
       </nav>
       {open ? (
-        <div className="fixed inset-0 z-10 overflow-auto bg-white px-gutter lg:hidden">
+        <div className="fixed inset-0 z-20 overflow-auto bg-white px-gutter lg:hidden">
           <div className="mx-auto flex h-header max-w-column items-center justify-end">
             <button type="button" aria-label="Menü schließen" onClick={onClose}>
               <Image

@@ -37,19 +37,21 @@ export function SiteHeader({ desktop, mobile, openingHours }: SiteHeaderProps) {
   }, [open]);
 
   return (
-    <header className="text-ink">
-      <div className="bg-white px-gutter">
-        <div className="mx-auto flex h-header max-w-column items-center justify-between">
-          <Header open={open} onToggle={() => setOpen((value) => !value)} />
-          <TopNavigation
-            desktop={desktop}
-            mobile={mobile}
-            open={open}
-            onClose={() => setOpen(false)}
-          />
+    <>
+      <header className="text-ink">
+        <div className="bg-white px-gutter">
+          <div className="mx-auto flex h-header max-w-column items-center justify-between">
+            <Header open={open} onToggle={() => setOpen((value) => !value)} />
+            <TopNavigation
+              desktop={desktop}
+              mobile={mobile}
+              open={open}
+              onClose={() => setOpen(false)}
+            />
+          </div>
         </div>
-      </div>
+      </header>
       <SubHeader lines={openingHours} />
-    </header>
+    </>
   );
 }
