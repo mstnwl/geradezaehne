@@ -1,8 +1,10 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
+import { SiteFooter } from "@/components/footer";
 import { SiteHeader } from "@/components/header/site-header";
 import { Sprechzeiten } from "@/components/sprechzeiten";
+import { getFooter } from "@/lib/footer";
 import { getMainNavigation } from "@/lib/navigation";
 import { getOpeningHours } from "@/lib/opening-hours";
 import { getSprechzeiten } from "@/lib/sprechzeiten";
@@ -39,6 +41,12 @@ async function SprechzeitenData() {
   return blocks.map((block) => <Sprechzeiten key={block.id} sprechzeiten={block} />);
 }
 
+async function FooterData() {
+  const footer = await getFooter();
+
+  return <SiteFooter footer={footer} />;
+}
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="de" className={`${outfit.className} h-full`}>
@@ -49,6 +57,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {children}
         <Suspense fallback={null}>
           <SprechzeitenData />
+        </Suspense>
+        <Suspense fallback={null}>
+          <FooterData />
         </Suspense>
       </body>
     </html>
