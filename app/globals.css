@@ -137,6 +137,23 @@ body {
   background-color: color-mix(in srgb, var(--color-accent) 92%, white);
 }
 
+.hours-table {
+  width: max-content;
+  border-collapse: separate;
+  border-spacing: 0 4px;
+}
+
+.hours-table th,
+.hours-table td {
+  width: max-content;
+  padding-right: 16px;
+  white-space: nowrap;
+}
+
+.hours-table td:last-child {
+  padding-right: 0;
+}
+
 .booking-button {
   transition: background-color 150ms ease-out;
 }

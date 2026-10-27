@@ -75,7 +75,7 @@ export function Sprechzeiten({ sprechzeiten }: { sprechzeiten: SprechzeitenConte
             />
           ) : null}
         </div>
-        <table className="w-full border-separate border-spacing-y-1 text-left text-base leading-normal text-ink lg:col-start-2 lg:text-[18px]">
+        <table className="hours-table justify-self-start text-left text-base leading-normal text-ink lg:col-start-2 lg:text-[18px]">
           <tbody>
             {sprechzeiten.hours.map((row) => (
               <tr key={`${row.day}-${row.morning}`}>
