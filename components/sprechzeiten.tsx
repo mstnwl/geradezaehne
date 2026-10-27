@@ -79,10 +79,10 @@ export function Sprechzeiten({ sprechzeiten }: { sprechzeiten: SprechzeitenConte
           <tbody>
             {sprechzeiten.hours.map((row) => (
               <tr key={`${row.day}-${row.morning}`}>
-                <th scope="row" className="pr-pair text-left font-normal">
+                <th scope="row" className="pr-1 text-left font-normal">
                   {row.day}
                 </th>
-                <td className="pr-pair">{row.morning}</td>
+                <td className="pr-1">{row.morning}</td>
                 <td>{row.afternoon}</td>
               </tr>
             ))}
