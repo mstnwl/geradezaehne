@@ -39,7 +39,7 @@ function PhoneLink({ href, label }: { href: string; label: string }) {
   const className = "header-link inline-flex w-fit items-center gap-pair text-nav";
   const content = (
     <>
-      <span className="menu-arrow size-icon-lg shrink-0" aria-hidden="true" />
+      <span className="menu-arrow size-icon shrink-0" aria-hidden="true" />
       {label}
     </>
   );
@@ -67,7 +67,7 @@ export function Sprechzeiten({ sprechzeiten }: { sprechzeiten: SprechzeitenConte
       <div className="mx-auto grid max-w-column gap-nav lg:grid-cols-2 lg:items-center lg:gap-x-20">
         <h2 className={`text-headline text-ink ${column}`}>{sprechzeiten.headline}</h2>
         {sprechzeiten.image ? (
-          <div className="relative aspect-[7/5] w-full overflow-hidden bg-white lg:col-start-1 lg:row-span-5 lg:row-start-1">
+          <div className="relative aspect-[7/5] w-full overflow-hidden bg-white lg:col-start-1 lg:row-span-4 lg:row-start-1">
             <Image
               src={sprechzeiten.image.src}
               alt={sprechzeiten.image.alt}
@@ -95,10 +95,8 @@ export function Sprechzeiten({ sprechzeiten }: { sprechzeiten: SprechzeitenConte
         <p className={`text-base leading-normal font-normal text-ink lg:text-[18px] ${column}`}>
           {sprechzeiten.body}
         </p>
-        <div className={`justify-self-start ${column}`}>
+        <div className={`flex flex-col items-start gap-nav justify-self-start lg:flex-row lg:items-center lg:gap-gutter ${column}`}>
           <BookingButton href={sprechzeiten.bookingHref} label={sprechzeiten.bookingLabel} />
-        </div>
-        <div className={`justify-self-start ${column}`}>
           <PhoneLink href={sprechzeiten.phoneHref} label={sprechzeiten.phoneLabel} />
         </div>
       </div>
