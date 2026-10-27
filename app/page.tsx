@@ -1,11 +1,11 @@
 import { Suspense } from "react";
 import { ServiceModule } from "@/components/service-module";
-import { getServiceModule } from "@/lib/service-module";
+import { getServiceModules } from "@/lib/service-module";
 
 async function ServiceModuleData() {
-  const service = await getServiceModule();
+  const services = await getServiceModules();
 
-  return <ServiceModule service={service} />;
+  return services.map((service) => <ServiceModule key={service.id} service={service} />);
 }
 
 export default function Home() {

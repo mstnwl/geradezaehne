@@ -9,6 +9,7 @@ export type ServiceImage = {
 };
 
 export type ServiceModuleContent = {
+  id: string;
   eyebrow: string;
   headline: string;
   text: string;
@@ -17,6 +18,7 @@ export type ServiceModuleContent = {
 };
 
 const fallbackServiceModule: ServiceModuleContent = {
+  id: "fallback",
   eyebrow: "SERVICE",
   headline: "Wissenswertes für unsere Patienten",
   text: "Wir haben die wichtigsten Informationen rund um Ihre Behandlung, Pflege und den Praxisalltag für Sie zusammengestellt.",
@@ -76,36 +78,20 @@ function asRecord(value: unknown): StoryblokRecord | null {
   return value as StoryblokRecord;
 }
 
-function findServiceModule(value: unknown): StoryblokRecord | null {
-  if (Array.isArray(value)) {
-    for (const item of value) {
-      const found = findServiceModule(item);
-      if (found) {
-        return found;
-      }
+function serviceModulesInBody(content: StoryblokRecord): StoryblokRecord[] {
+  if (!Array.isArray(content.body)) {
+    return [];
+  }
+
+  return content.body.flatMap((item) => {
+    const record = asRecord(item);
+
+    if (!record || record.component !== "service_module") {
+      return [];
     }
 
-    return null;
-  }
-
-  const record = asRecord(value);
-
-  if (!record) {
-    return null;
-  }
-
-  if (record.component === "service_module") {
-    return record;
-  }
-
-  for (const nested of Object.values(record)) {
-    const found = findServiceModule(nested);
-    if (found) {
-      return found;
-    }
-  }
-
-  return null;
+    return [record];
+  });
 }
 
 function textValue(value: unknown, fallback: string) {
@@ -161,8 +147,11 @@ function linkValue(value: unknown): ServiceLink[] {
   return links.length > 0 ? links : fallbackServiceModule.links;
 }
 
-function mapModule(module: StoryblokRecord): ServiceModuleContent {
+function mapModule(module: StoryblokRecord, index: number): ServiceModuleContent {
+  const uid = typeof module._uid === "string" ? module._uid.trim() : "";
+
   return {
+    id: uid || `service-${index}`,
     eyebrow: textValue(module.eyebrow, fallbackServiceModule.eyebrow),
     headline: textValue(module.headline, fallbackServiceModule.headline),
     text: textValue(module.text, fallbackServiceModule.text),
@@ -171,7 +160,7 @@ function mapModule(module: StoryblokRecord): ServiceModuleContent {
   };
 }
 
-async function readServiceModule(token: string, region: string, version: string) {
+async function readServiceModules(token: string, region: string, version: string) {
   const url = new URL("/v2/cdn/stories/home", apiBase(region));
   url.searchParams.set("version", version);
   url.searchParams.set("token", token);
@@ -191,35 +180,37 @@ async function readServiceModule(token: string, region: string, version: string)
     return null;
   }
 
-  return findServiceModule(content.body) ?? findServiceModule(content);
+  const modules = serviceModulesInBody(content);
+
+  return modules.length > 0 ? modules : null;
 }
 
-async function loadServiceModule(token: string, region: string) {
+async function loadServiceModules(token: string, region: string) {
   try {
-    const published = await readServiceModule(token, region, "published");
+    const published = await readServiceModules(token, region, "published");
 
     if (published) {
-      return mapModule(published);
+      return published.map(mapModule);
     }
 
-    const draft = await readServiceModule(token, region, "draft");
+    const draft = await readServiceModules(token, region, "draft");
 
     if (draft) {
-      return mapModule(draft);
+      return draft.map(mapModule);
     }
   } catch {
-    return fallbackServiceModule;
+    return [fallbackServiceModule];
   }
 
-  return fallbackServiceModule;
+  return [fallbackServiceModule];
 }
 
-export async function getServiceModule() {
+export async function getServiceModules() {
   const token = process.env.STORYBLOK_TOKEN;
 
   if (!token) {
-    return fallbackServiceModule;
+    return [fallbackServiceModule];
   }
 
-  return loadServiceModule(token, process.env.STORYBLOK_REGION || "eu");
+  return loadServiceModules(token, process.env.STORYBLOK_REGION || "eu");
 }
