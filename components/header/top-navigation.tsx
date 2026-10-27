@@ -114,14 +114,7 @@ export function TopNavigation({
                 className="inline-flex items-center gap-pair text-menu"
                 onClick={onClose}
               >
-                <Image
-                  src="/Icon32_Arrow.svg"
-                  alt=""
-                  width={32}
-                  height={32}
-                  unoptimized
-                  className="size-icon-lg"
-                />
+                <span className="menu-arrow size-icon-lg shrink-0" aria-hidden="true" />
               </NavLink>
             ))}
           </nav>

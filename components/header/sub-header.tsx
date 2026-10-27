@@ -24,7 +24,7 @@ export function SubHeader({ lines }: { lines: string[] }) {
   const cycling = count > 1;
 
   return (
-    <div className="enter enter-3 bg-accent text-ink lg:px-gutter">
+    <div className="action-bar enter enter-3 bg-accent text-ink lg:px-gutter">
       {cycling ? <style>{hoursKeyframes(count)}</style> : null}
       <div className="flex h-bar items-center lg:mx-auto lg:max-w-column lg:justify-between">
         <p
@@ -44,7 +44,7 @@ export function SubHeader({ lines }: { lines: string[] }) {
         <div className="grid h-full w-full grid-cols-2 items-center lg:flex lg:w-auto lg:gap-gutter">
           <a
             href="tel:+496131227266"
-            className="header-link flex items-center justify-center gap-pair text-nav whitespace-nowrap"
+            className="action-link flex items-center justify-center gap-pair text-nav whitespace-nowrap"
           >
             <Image
               src="/Icon24_Phone.svg"
@@ -58,7 +58,7 @@ export function SubHeader({ lines }: { lines: string[] }) {
           </a>
           <a
             href="#"
-            className="header-link flex items-center justify-center gap-pair text-nav whitespace-nowrap"
+            className="action-link flex items-center justify-center gap-pair text-nav whitespace-nowrap"
           >
             <Image
               src="/Icon24_Calendar.svg"
