@@ -36,10 +36,22 @@ export type AgeGroupsContent = {
   groups: AgeGroup[];
 };
 
+export type ImageTeaserContent = {
+  id: string;
+  eyebrow: string;
+  headline: string;
+  text: string;
+  linkLabel: string;
+  href: string;
+  image: ServiceImage | null;
+  overlay: number;
+};
+
 export type HomeBlock =
   | { kind: "service"; service: ServiceModuleContent }
   | { kind: "quote"; quote: QuoteContent }
-  | { kind: "age-groups"; ageGroups: AgeGroupsContent };
+  | { kind: "age-groups"; ageGroups: AgeGroupsContent }
+  | { kind: "image-teaser"; teaser: ImageTeaserContent };
 
 const fallbackServiceModule: ServiceModuleContent = {
   id: "fallback",
@@ -60,6 +72,17 @@ const fallbackQuote: QuoteContent = {
   quote:
     "„Wir begleiten unsere Patienten seit über vierzig Jahren mit Erfahrung, Herz und neuester Technik.“",
   name: "Dr. Günter Hück",
+};
+
+const fallbackImageTeaser: ImageTeaserContent = {
+  id: "fallback-image-teaser",
+  eyebrow: "Praxis",
+  headline: "Ein Blick in unsere Praxis",
+  text: "Werfen Sie einen Blick in unsere Praxisräume und gewinnen Sie ein Gefühl für die Atmosphäre, die uns ausmacht.",
+  linkLabel: "Mehr zur Praxis",
+  href: "/",
+  image: null,
+  overlay: 40,
 };
 
 const fallbackAgeGroups: AgeGroupsContent = {
@@ -168,7 +191,8 @@ function homeBlocksInBody(content: StoryblokRecord): StoryblokRecord[] {
       !record ||
       (record.component !== "service_module" &&
         record.component !== "quote" &&
-        record.component !== "age_groups")
+        record.component !== "age_groups" &&
+        record.component !== "image_teaser")
     ) {
       return [];
     }
@@ -345,6 +369,36 @@ function mapAgeGroups(module: StoryblokRecord, index: number): AgeGroupsContent 
   };
 }
 
+function overlayValue(value: unknown) {
+  const number =
+    typeof value === "number"
+      ? value
+      : typeof value === "string" && value.trim() !== ""
+        ? Number(value)
+        : Number.NaN;
+
+  if (!Number.isFinite(number)) {
+    return fallbackImageTeaser.overlay;
+  }
+
+  return Math.min(100, Math.max(0, number));
+}
+
+function mapImageTeaser(module: StoryblokRecord, index: number): ImageTeaserContent {
+  const link = asRecord(module.link) as StoryblokLink | null;
+
+  return {
+    id: blockId(module, index, "image-teaser"),
+    eyebrow: textValue(module.eyebrow, fallbackImageTeaser.eyebrow),
+    headline: textValue(module.headline, fallbackImageTeaser.headline),
+    text: textValue(module.text, fallbackImageTeaser.text),
+    linkLabel: textValue(module.link_label, fallbackImageTeaser.linkLabel),
+    href: module.link ? resolveHref(link ?? undefined) : fallbackImageTeaser.href,
+    image: imageValue(module.image),
+    overlay: overlayValue(module.overlay),
+  };
+}
+
 function mapQuote(module: StoryblokRecord, index: number): QuoteContent {
   return {
     id: blockId(module, index, "quote"),
@@ -363,6 +417,8 @@ function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
       blocks.push({ kind: "quote", quote: mapQuote(record, index) });
     } else if (record.component === "age_groups") {
       blocks.push({ kind: "age-groups", ageGroups: mapAgeGroups(record, index) });
+    } else if (record.component === "image_teaser") {
+      blocks.push({ kind: "image-teaser", teaser: mapImageTeaser(record, index) });
     }
   });
 
@@ -376,6 +432,10 @@ function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
 
   if (!blocks.some((block) => block.kind === "age-groups")) {
     blocks.push({ kind: "age-groups", ageGroups: fallbackAgeGroups });
+  }
+
+  if (!blocks.some((block) => block.kind === "image-teaser")) {
+    blocks.push({ kind: "image-teaser", teaser: fallbackImageTeaser });
   }
 
   return blocks;
@@ -410,6 +470,7 @@ const fallbackHomeBlocks: HomeBlock[] = [
   { kind: "service", service: fallbackServiceModule },
   { kind: "quote", quote: fallbackQuote },
   { kind: "age-groups", ageGroups: fallbackAgeGroups },
+  { kind: "image-teaser", teaser: fallbackImageTeaser },
 ];
 
 async function loadHomeBlocks(token: string, region: string) {

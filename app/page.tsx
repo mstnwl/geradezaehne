@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { AgeGroups } from "@/components/age-groups";
+import { ImageTeaser } from "@/components/image-teaser";
 import { QuoteBand } from "@/components/quote-band";
 import { ServiceModule } from "@/components/service-module";
 import { getHomeBlocks, type HomeBlock } from "@/lib/service-module";
@@ -13,7 +14,11 @@ function renderBlock(block: HomeBlock) {
     return <QuoteBand key={block.quote.id} quote={block.quote} />;
   }
 
-  return <AgeGroups key={block.ageGroups.id} ageGroups={block.ageGroups} />;
+  if (block.kind === "age-groups") {
+    return <AgeGroups key={block.ageGroups.id} ageGroups={block.ageGroups} />;
+  }
+
+  return <ImageTeaser key={block.teaser.id} teaser={block.teaser} />;
 }
 
 async function HomeBody() {
