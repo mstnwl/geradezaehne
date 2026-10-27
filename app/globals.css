@@ -69,13 +69,23 @@ body {
   animation-delay: 270ms;
 }
 
-.header-link {
-  transition: color 150ms ease-out;
+.header-link,
+.action-link {
+  transition:
+    color 150ms ease-out,
+    transform 150ms ease-out;
 }
 
 .header-link:hover,
 .header-link:focus-visible {
   color: var(--color-accent);
+}
+
+.header-link:hover,
+.header-link:focus-visible,
+.action-link:hover,
+.action-link:focus-visible {
+  transform: translateY(-1px);
 }
 
 .action-bar {
@@ -84,16 +94,7 @@ body {
 
 .action-bar:has(.action-link:hover),
 .action-bar:has(.action-link:focus-visible) {
-  background-color: color-mix(in srgb, var(--color-accent) 80%, white);
-}
-
-.action-link {
-  transition: transform 150ms ease-out;
-}
-
-.action-link:hover,
-.action-link:focus-visible {
-  transform: translateY(-1px);
+  background-color: color-mix(in srgb, var(--color-accent) 92%, white);
 }
 
 .menu-arrow {
@@ -129,6 +130,8 @@ body {
     transition: none;
   }
 
+  .header-link:hover,
+  .header-link:focus-visible,
   .action-link:hover,
   .action-link:focus-visible {
     transform: none;
