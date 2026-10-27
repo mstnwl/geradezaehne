@@ -50,10 +50,12 @@ export function ServiceModule({ service }: { service: ServiceModuleContent }) {
           <ServiceFrame image={service.image} />
         </div>
         <div className="contents lg:flex lg:flex-col lg:gap-nav">
-          <p className="text-[12px] font-bold text-ink uppercase tracking-widest">
-            {service.eyebrow}
-          </p>
-          <h2 className="text-headline text-ink">{service.headline}</h2>
+          <div className="flex flex-col gap-pair">
+            <p className="text-[12px] font-bold text-ink uppercase tracking-widest">
+              {service.eyebrow}
+            </p>
+            <h2 className="text-headline text-ink">{service.headline}</h2>
+          </div>
           <div className="lg:hidden">
             <ServiceFrame image={service.image} />
           </div>
