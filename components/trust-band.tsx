@@ -33,12 +33,12 @@ export function TrustBand({ trust }: { trust: TrustBandContent }) {
                 className="flex items-center gap-pair text-base leading-normal font-normal text-ink lg:text-[18px]"
               >
                 <Image
-                  src="/Icon16_Checkmark.svg"
+                  src="/Icon24_Checkmark.svg"
                   alt=""
-                  width={16}
-                  height={16}
+                  width={24}
+                  height={24}
                   unoptimized
-                  className="size-4 shrink-0"
+                  className="size-icon shrink-0"
                 />
                 {label}
               </li>
