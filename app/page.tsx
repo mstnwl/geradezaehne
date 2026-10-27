@@ -4,11 +4,16 @@ import { Hero } from "@/components/hero";
 import { ImageTeaser } from "@/components/image-teaser";
 import { QuoteBand } from "@/components/quote-band";
 import { ServiceModule } from "@/components/service-module";
+import { TrustBand } from "@/components/trust-band";
 import { getHomeBlocks, type HomeBlock } from "@/lib/service-module";
 
 function renderBlock(block: HomeBlock) {
   if (block.kind === "hero") {
     return <Hero key={block.hero.id} hero={block.hero} />;
+  }
+
+  if (block.kind === "trust-band") {
+    return <TrustBand key={block.trust.id} trust={block.trust} />;
   }
 
   if (block.kind === "service") {

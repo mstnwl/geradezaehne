@@ -56,8 +56,15 @@ export type HeroContent = {
   image: ServiceImage | null;
 };
 
+export type TrustBandContent = {
+  id: string;
+  stars: number;
+  items: string[];
+};
+
 export type HomeBlock =
   | { kind: "hero"; hero: HeroContent }
+  | { kind: "trust-band"; trust: TrustBandContent }
   | { kind: "service"; service: ServiceModuleContent }
   | { kind: "quote"; quote: QuoteContent }
   | { kind: "age-groups"; ageGroups: AgeGroupsContent }
@@ -70,6 +77,16 @@ const fallbackHero: HeroContent = {
   buttonLabel: "Termin buchen",
   buttonHref: "#",
   image: null,
+};
+
+const fallbackTrustBand: TrustBandContent = {
+  id: "fallback-trust-band",
+  stars: 5,
+  items: [
+    "Über 15.000 Behandlungen",
+    "Mitglied der DGKFO, BDK, AAO, WFO",
+    "Mehr als 45 Jahre Erfahrung",
+  ],
 };
 
 const fallbackServiceModule: ServiceModuleContent = {
@@ -209,6 +226,7 @@ function homeBlocksInBody(content: StoryblokRecord): StoryblokRecord[] {
     if (
       !record ||
       (record.component !== "hero" &&
+        record.component !== "trust_band" &&
         record.component !== "service_module" &&
         record.component !== "quote" &&
         record.component !== "age_groups" &&
@@ -278,6 +296,47 @@ function blockId(record: StoryblokRecord, index: number, prefix: string) {
   const uid = typeof record._uid === "string" ? record._uid.trim() : "";
 
   return uid || `${prefix}-${index}`;
+}
+
+function starsValue(value: unknown) {
+  const number =
+    typeof value === "number"
+      ? value
+      : typeof value === "string" && value.trim() !== ""
+        ? Number(value)
+        : Number.NaN;
+
+  if (!Number.isFinite(number) || number < 0) {
+    return fallbackTrustBand.stars;
+  }
+
+  return Math.min(10, Math.floor(number));
+}
+
+function trustItems(value: unknown) {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.flatMap((item) => {
+    const record = asRecord(item);
+
+    if (!record || record.component !== "trust_item" || typeof record.label !== "string") {
+      return [];
+    }
+
+    const label = record.label.trim();
+
+    return label ? [label] : [];
+  });
+}
+
+function mapTrustBand(module: StoryblokRecord, index: number): TrustBandContent {
+  return {
+    id: blockId(module, index, "trust-band"),
+    stars: starsValue(module.stars),
+    items: trustItems(module.items),
+  };
 }
 
 function mapHero(module: StoryblokRecord, index: number): HeroContent {
@@ -449,6 +508,8 @@ function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
       if (!hero) {
         hero = mapHero(record, index);
       }
+    } else if (record.component === "trust_band") {
+      blocks.push({ kind: "trust-band", trust: mapTrustBand(record, index) });
     } else if (record.component === "service_module") {
       blocks.push({ kind: "service", service: mapModule(record, index) });
     } else if (record.component === "quote") {
@@ -474,6 +535,10 @@ function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
 
   if (!blocks.some((block) => block.kind === "image-teaser")) {
     blocks.push({ kind: "image-teaser", teaser: fallbackImageTeaser });
+  }
+
+  if (!blocks.some((block) => block.kind === "trust-band")) {
+    blocks.unshift({ kind: "trust-band", trust: fallbackTrustBand });
   }
 
   return [{ kind: "hero", hero: hero ?? fallbackHero }, ...blocks];
@@ -506,6 +571,7 @@ async function readHomeBlocks(token: string, region: string, version: string) {
 
 const fallbackHomeBlocks: HomeBlock[] = [
   { kind: "hero", hero: fallbackHero },
+  { kind: "trust-band", trust: fallbackTrustBand },
   { kind: "service", service: fallbackServiceModule },
   { kind: "quote", quote: fallbackQuote },
   { kind: "age-groups", ageGroups: fallbackAgeGroups },
