@@ -1,11 +1,16 @@
 import { Suspense } from "react";
 import { AgeGroups } from "@/components/age-groups";
+import { Hero } from "@/components/hero";
 import { ImageTeaser } from "@/components/image-teaser";
 import { QuoteBand } from "@/components/quote-band";
 import { ServiceModule } from "@/components/service-module";
 import { getHomeBlocks, type HomeBlock } from "@/lib/service-module";
 
 function renderBlock(block: HomeBlock) {
+  if (block.kind === "hero") {
+    return <Hero key={block.hero.id} hero={block.hero} />;
+  }
+
   if (block.kind === "service") {
     return <ServiceModule key={block.service.id} service={block.service} />;
   }

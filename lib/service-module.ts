@@ -47,11 +47,30 @@ export type ImageTeaserContent = {
   overlay: number;
 };
 
+export type HeroContent = {
+  id: string;
+  headline: string;
+  copy: string;
+  buttonLabel: string;
+  buttonHref: string;
+  image: ServiceImage | null;
+};
+
 export type HomeBlock =
+  | { kind: "hero"; hero: HeroContent }
   | { kind: "service"; service: ServiceModuleContent }
   | { kind: "quote"; quote: QuoteContent }
   | { kind: "age-groups"; ageGroups: AgeGroupsContent }
   | { kind: "image-teaser"; teaser: ImageTeaserContent };
+
+const fallbackHero: HeroContent = {
+  id: "fallback-hero",
+  headline: "Gerade Zähne. Natürlich schön.",
+  copy: "Als Fachzahnärzte für Kieferorthopädie begleiten wir Sie mit Erfahrung, Empathie und neuesten Behandlungsmethoden – von der ersten Beratung bis zum perfekten Lächeln.",
+  buttonLabel: "Termin buchen",
+  buttonHref: "#",
+  image: null,
+};
 
 const fallbackServiceModule: ServiceModuleContent = {
   id: "fallback",
@@ -189,7 +208,8 @@ function homeBlocksInBody(content: StoryblokRecord): StoryblokRecord[] {
 
     if (
       !record ||
-      (record.component !== "service_module" &&
+      (record.component !== "hero" &&
+        record.component !== "service_module" &&
         record.component !== "quote" &&
         record.component !== "age_groups" &&
         record.component !== "image_teaser")
@@ -258,6 +278,19 @@ function blockId(record: StoryblokRecord, index: number, prefix: string) {
   const uid = typeof record._uid === "string" ? record._uid.trim() : "";
 
   return uid || `${prefix}-${index}`;
+}
+
+function mapHero(module: StoryblokRecord, index: number): HeroContent {
+  const link = asRecord(module.button_link) as StoryblokLink | null;
+
+  return {
+    id: blockId(module, index, "hero"),
+    headline: textValue(module.headline, fallbackHero.headline),
+    copy: textValue(module.copy, fallbackHero.copy),
+    buttonLabel: textValue(module.button_label, fallbackHero.buttonLabel),
+    buttonHref: module.button_link ? resolveHref(link ?? undefined) : fallbackHero.buttonHref,
+    image: imageValue(module.image),
+  };
 }
 
 function mapModule(module: StoryblokRecord, index: number): ServiceModuleContent {
@@ -409,9 +442,14 @@ function mapQuote(module: StoryblokRecord, index: number): QuoteContent {
 
 function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
   const blocks: HomeBlock[] = [];
+  let hero: HeroContent | null = null;
 
   records.forEach((record, index) => {
-    if (record.component === "service_module") {
+    if (record.component === "hero") {
+      if (!hero) {
+        hero = mapHero(record, index);
+      }
+    } else if (record.component === "service_module") {
       blocks.push({ kind: "service", service: mapModule(record, index) });
     } else if (record.component === "quote") {
       blocks.push({ kind: "quote", quote: mapQuote(record, index) });
@@ -438,7 +476,7 @@ function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
     blocks.push({ kind: "image-teaser", teaser: fallbackImageTeaser });
   }
 
-  return blocks;
+  return [{ kind: "hero", hero: hero ?? fallbackHero }, ...blocks];
 }
 
 async function readHomeBlocks(token: string, region: string, version: string) {
@@ -467,6 +505,7 @@ async function readHomeBlocks(token: string, region: string, version: string) {
 }
 
 const fallbackHomeBlocks: HomeBlock[] = [
+  { kind: "hero", hero: fallbackHero },
   { kind: "service", service: fallbackServiceModule },
   { kind: "quote", quote: fallbackQuote },
   { kind: "age-groups", ageGroups: fallbackAgeGroups },
