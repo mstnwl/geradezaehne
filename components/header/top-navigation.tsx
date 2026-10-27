@@ -104,18 +104,23 @@ export function TopNavigation({
           </div>
           <nav
             aria-label="Menü"
-            className="enter mx-auto flex max-w-column flex-col gap-menu"
+            className="mx-auto flex max-w-column flex-col gap-menu"
           >
             {mobile.map((item, index) => (
-              <NavLink
+              <div
                 key={`${item.name}-${index}`}
-                item={item}
-                pathname={pathname}
-                className="inline-flex items-center gap-pair text-menu"
-                onClick={onClose}
+                className="enter"
+                style={{ animationDelay: `${index * 90}ms` }}
               >
-                <span className="menu-arrow size-icon-lg shrink-0" aria-hidden="true" />
-              </NavLink>
+                <NavLink
+                  item={item}
+                  pathname={pathname}
+                  className="inline-flex items-center gap-pair text-menu"
+                  onClick={onClose}
+                >
+                  <span className="menu-arrow size-icon-lg shrink-0" aria-hidden="true" />
+                </NavLink>
+              </div>
             ))}
           </nav>
         </div>
