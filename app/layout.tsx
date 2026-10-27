@@ -2,8 +2,10 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import { SiteHeader } from "@/components/header/site-header";
+import { Sprechzeiten } from "@/components/sprechzeiten";
 import { getMainNavigation } from "@/lib/navigation";
 import { getOpeningHours } from "@/lib/opening-hours";
+import { getSprechzeiten } from "@/lib/sprechzeiten";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -31,6 +33,12 @@ async function SiteHeaderData() {
   );
 }
 
+async function SprechzeitenData() {
+  const blocks = await getSprechzeiten();
+
+  return blocks.map((block) => <Sprechzeiten key={block.id} sprechzeiten={block} />);
+}
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="de" className={`${outfit.className} h-full`}>
@@ -39,6 +47,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <SiteHeaderData />
         </Suspense>
         {children}
+        <Suspense fallback={null}>
+          <SprechzeitenData />
+        </Suspense>
       </body>
     </html>
   );

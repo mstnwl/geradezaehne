@@ -133,6 +133,24 @@ body {
   background-color: color-mix(in srgb, var(--color-accent) 92%, white);
 }
 
+.booking-button {
+  transition: background-color 150ms ease-out;
+}
+
+.booking-caption {
+  transition: transform 150ms ease-out;
+}
+
+.booking-button:hover,
+.booking-button:focus-visible {
+  background-color: color-mix(in srgb, var(--color-accent) 92%, white);
+}
+
+.booking-button:hover .booking-caption,
+.booking-button:focus-visible .booking-caption {
+  transform: translateY(-1px);
+}
+
 .menu-arrow {
   display: block;
   background-color: currentColor;
@@ -170,14 +188,18 @@ body {
 
   .header-link,
   .action-bar,
-  .action-link {
+  .action-link,
+  .booking-button,
+  .booking-caption {
     transition: none;
   }
 
   .header-link:hover,
   .header-link:focus-visible,
   .action-link:hover,
-  .action-link:focus-visible {
+  .action-link:focus-visible,
+  .booking-button:hover .booking-caption,
+  .booking-button:focus-visible .booking-caption {
     transform: none;
   }
 
