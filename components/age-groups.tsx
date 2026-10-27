@@ -52,18 +52,24 @@ export function AgeGroups({ ageGroups }: { ageGroups: AgeGroupsContent }) {
                 </p>
               ))}
             </div>
-            <div className="mt-nav flex flex-col gap-pair">
-              <p className="text-base leading-normal font-normal text-ink lg:text-[18px]">
-                {group.treatmentsLabel}
-              </p>
-              <ul className="flex flex-col gap-pair">
-                {group.treatments.map((link) => (
-                  <li key={link.name}>
-                    <TreatmentLink link={link} />
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {group.treatmentsLabel || group.treatments.length > 0 ? (
+              <div className="mt-nav flex flex-col gap-pair">
+                {group.treatmentsLabel ? (
+                  <p className="text-base leading-normal font-normal text-ink lg:text-[18px]">
+                    {group.treatmentsLabel}
+                  </p>
+                ) : null}
+                {group.treatments.length > 0 ? (
+                  <ul className="flex flex-col gap-pair">
+                    {group.treatments.map((link) => (
+                      <li key={link.name}>
+                        <TreatmentLink link={link} />
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+              </div>
+            ) : null}
           </article>
         ))}
       </div>

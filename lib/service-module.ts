@@ -382,7 +382,7 @@ function mapAgeGroup(value: unknown): AgeGroup | null {
     headline: textValue(record.headline, ""),
     image: imageValue(record.image),
     paragraphs: paragraphsValue(record.text),
-    treatmentsLabel: textValue(record.treatments_label, "Typische Behandlungen:"),
+    treatmentsLabel: typeof record.treatments_label === "string" ? record.treatments_label.trim() : "",
     treatments: treatmentLinks(record.treatments),
   };
 }
