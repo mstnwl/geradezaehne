@@ -35,13 +35,14 @@ function NavLink({
   children?: ReactNode;
 }) {
   const current = isCurrent(item, pathname) ? "page" : undefined;
+  const classes = `header-link ${className}`;
   const external = /^(https?:|mailto:|tel:)/i.test(item.href);
 
   if (external) {
     return (
       <a
         href={item.href}
-        className={className}
+        className={classes}
         aria-current={current}
         onClick={onClick}
       >
@@ -54,7 +55,7 @@ function NavLink({
   return (
     <Link
       href={item.href}
-      className={className}
+      className={classes}
       aria-current={current}
       onClick={onClick}
     >
@@ -75,7 +76,7 @@ export function TopNavigation({
   return (
     <>
       <nav
-        className="hidden items-center gap-nav lg:flex"
+        className="enter enter-2 hidden items-center gap-nav lg:flex"
         aria-label="Hauptnavigation"
       >
         {desktop.map((item, index) => (
@@ -88,7 +89,7 @@ export function TopNavigation({
         ))}
       </nav>
       {open ? (
-        <div className="fixed inset-0 z-10 overflow-auto bg-white px-gutter lg:hidden">
+        <div className="enter fixed inset-0 z-10 overflow-auto bg-white px-gutter lg:hidden">
           <div className="mx-auto flex h-header max-w-column items-center justify-end">
             <button type="button" aria-label="Menü schließen" onClick={onClose}>
               <Image

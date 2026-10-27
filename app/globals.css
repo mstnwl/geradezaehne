@@ -38,3 +38,53 @@ body {
   outline-offset: 2px;
 }
 
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(var(--spacing-pair));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.enter {
+  animation-name: enter;
+  animation-duration: 450ms;
+  animation-timing-function: ease-out;
+  animation-fill-mode: both;
+}
+
+.enter-2 {
+  animation-delay: 90ms;
+}
+
+.enter-3 {
+  animation-delay: 180ms;
+}
+
+.enter-4 {
+  animation-delay: 270ms;
+}
+
+.header-link {
+  transition: color 150ms ease-out;
+}
+
+.header-link:hover,
+.header-link:focus-visible {
+  color: var(--color-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: none;
+  }
+
+  .header-link {
+    transition: none;
+  }
+}
+

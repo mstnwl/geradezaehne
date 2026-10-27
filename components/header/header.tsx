@@ -9,7 +9,7 @@ type HeaderProps = {
 export function Header({ open, onToggle }: HeaderProps) {
   return (
     <>
-      <Link href="/" className="inline-flex shrink-0">
+      <Link href="/" className="enter inline-flex shrink-0">
         <Image
           src="/Praxis_Logo_Header.svg"
           alt="Praxis Dr. Hück"
@@ -22,7 +22,7 @@ export function Header({ open, onToggle }: HeaderProps) {
       </Link>
       <button
         type="button"
-        className="lg:hidden"
+        className="enter enter-2 lg:hidden"
         aria-expanded={open}
         aria-label="Menü"
         onClick={onToggle}
