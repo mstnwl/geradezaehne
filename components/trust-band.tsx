@@ -11,7 +11,7 @@ export function TrustBand({ trust }: { trust: TrustBandContent }) {
     <Reveal className="bg-beige px-gutter py-bar text-ink">
       <div className="mx-auto flex max-w-column flex-col items-center gap-gutter">
         {trust.stars > 0 ? (
-          <div className="flex items-center justify-center gap-pair" aria-hidden="true">
+          <div className="flex items-center justify-center gap-1" aria-hidden="true">
             {Array.from({ length: trust.stars }, (_, index) => (
               <Image
                 key={index}
