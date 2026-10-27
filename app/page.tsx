@@ -1,7 +1,12 @@
-export default function Home() {
+import { ServiceModule } from "@/components/service-module";
+import { getServiceModule } from "@/lib/service-module";
+
+export default async function Home() {
+  const service = await getServiceModule();
+
   return (
-    <main className="enter enter-4 px-gutter">
-      <div className="mx-auto max-w-column">Hello world</div>
+    <main>
+      <ServiceModule service={service} />
     </main>
   );
 }

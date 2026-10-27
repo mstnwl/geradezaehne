@@ -15,6 +15,10 @@
   --text-menu--line-height: 1.5rem;
   --text-menu--font-weight: 500;
 
+  --text-headline: 2rem;
+  --text-headline--line-height: 1.2;
+  --text-headline--font-weight: 700;
+
   --spacing-header: 7rem;
   --spacing-bar: 3rem;
   --spacing-logo: 3.4375rem;
@@ -26,6 +30,12 @@
   --spacing-menu: 1rem;
 
   --max-width-column: 75rem;
+}
+
+@media (min-width: 64rem) {
+  .text-headline {
+    font-size: 3rem;
+  }
 }
 
 body {
