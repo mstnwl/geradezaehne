@@ -75,19 +75,21 @@ export function Sprechzeiten({ sprechzeiten }: { sprechzeiten: SprechzeitenConte
             />
           ) : null}
         </div>
-        <table className="hours-table justify-self-start text-left text-base leading-normal text-ink lg:col-start-2 lg:text-[18px]">
-          <tbody>
-            {sprechzeiten.hours.map((row) => (
-              <tr key={`${row.day}-${row.morning}`}>
-                <th scope="row" className="text-left font-normal">
-                  {row.day}
-                </th>
-                <td>{row.morning}</td>
-                <td>{row.afternoon}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="w-max justify-self-start lg:col-start-2">
+          <table className="hours-table text-left text-base leading-normal text-ink lg:text-[18px]">
+            <tbody>
+              {sprechzeiten.hours.map((row) => (
+                <tr key={`${row.day}-${row.morning}`}>
+                  <th scope="row" className="text-left font-normal">
+                    {row.day}
+                  </th>
+                  <td>{row.morning}</td>
+                  <td>{row.afternoon}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         <p className="text-base leading-normal font-normal text-ink lg:col-start-2 lg:text-[18px]">
           {sprechzeiten.body}
         </p>
