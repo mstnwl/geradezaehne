@@ -23,9 +23,23 @@ export type QuoteContent = {
   name: string;
 };
 
+export type AgeGroup = {
+  headline: string;
+  image: ServiceImage | null;
+  paragraphs: string[];
+  treatmentsLabel: string;
+  treatments: ServiceLink[];
+};
+
+export type AgeGroupsContent = {
+  id: string;
+  groups: AgeGroup[];
+};
+
 export type HomeBlock =
   | { kind: "service"; service: ServiceModuleContent }
-  | { kind: "quote"; quote: QuoteContent };
+  | { kind: "quote"; quote: QuoteContent }
+  | { kind: "age-groups"; ageGroups: AgeGroupsContent };
 
 const fallbackServiceModule: ServiceModuleContent = {
   id: "fallback",
@@ -46,6 +60,53 @@ const fallbackQuote: QuoteContent = {
   quote:
     "„Wir begleiten unsere Patienten seit über vierzig Jahren mit Erfahrung, Herz und neuester Technik.“",
   name: "Dr. Günter Hück",
+};
+
+const fallbackAgeGroups: AgeGroupsContent = {
+  id: "fallback-age-groups",
+  groups: [
+    {
+      headline: "Kinder",
+      image: null,
+      paragraphs: [
+        "Ein gesunder Start für kleine Zähne. Wir begleiten Kinder behutsam beim Wachstum von Kiefer und Zähnen – mit Geduld, altersgerechter Sprache und sanften Methoden. So bleibt der Besuch beim Kieferorthopäden ein positives Erlebnis.",
+        "Die erste kieferorthopädische Kontrolle empfehlen wir etwa ab dem 6.–7. Lebensjahr. In diesem Alter können mögliche Zahn- und Kieferfehlstellungen frühzeitig erkannt und bei Bedarf sanft begleitet werden.",
+      ],
+      treatmentsLabel: "Typische Behandlungen:",
+      treatments: [
+        { name: "Frühbehandlung", href: "/" },
+        { name: "Platzhalter", href: "/" },
+        { name: "Herausnehmbare Zahnspangen", href: "/" },
+      ],
+    },
+    {
+      headline: "Jugendliche",
+      image: null,
+      paragraphs: [
+        "Während der Wachstumsphase lassen sich Zahnfehlstellungen besonders gut korrigieren. Ob feste Zahnspange oder nahezu unsichtbare Aligner – gemeinsam finden wir eine Lösung, die optimal zu deinem Alltag und Lebensstil passt.",
+      ],
+      treatmentsLabel: "Typische Behandlungen:",
+      treatments: [
+        { name: "Feste Zahnspangen", href: "/" },
+        { name: "Aligner (z. B. Invisalign Teen)", href: "/" },
+        { name: "Retainer", href: "/" },
+      ],
+    },
+    {
+      headline: "Erwachsene",
+      image: null,
+      paragraphs: [
+        "Zahnkorrekturen sind in jedem Alter möglich – sanft, effizient und oft nahezu unsichtbar. Ob mit Alignern, lingualen Apparaturen oder digital geplanten Schienen: Wir korrigieren Ihr Lächeln unauffällig und ästhetisch, ohne Einschränkungen im Alltag.",
+      ],
+      treatmentsLabel: "Typische Behandlungen:",
+      treatments: [
+        { name: "Aligner", href: "/" },
+        { name: "Lingualtechnik", href: "/" },
+        { name: "CMD-Therapie", href: "/" },
+        { name: "Anti-Schnarchschiene", href: "/" },
+      ],
+    },
+  ],
 };
 
 type StoryblokLink = {
@@ -103,7 +164,12 @@ function homeBlocksInBody(content: StoryblokRecord): StoryblokRecord[] {
   return content.body.flatMap((item) => {
     const record = asRecord(item);
 
-    if (!record || (record.component !== "service_module" && record.component !== "quote")) {
+    if (
+      !record ||
+      (record.component !== "service_module" &&
+        record.component !== "quote" &&
+        record.component !== "age_groups")
+    ) {
       return [];
     }
 
@@ -181,6 +247,104 @@ function mapModule(module: StoryblokRecord, index: number): ServiceModuleContent
   };
 }
 
+function paragraphsValue(value: unknown): string[] {
+  if (typeof value === "string") {
+    return value
+      .split(/\n+/)
+      .map((paragraph) => paragraph.trim())
+      .filter(Boolean);
+  }
+
+  const doc = asRecord(value);
+
+  if (!doc || !Array.isArray(doc.content)) {
+    return [];
+  }
+
+  return doc.content.flatMap((node) => {
+    const paragraph = plainText(node).trim();
+
+    return paragraph ? [paragraph] : [];
+  });
+}
+
+function plainText(value: unknown): string {
+  if (typeof value === "string") {
+    return value;
+  }
+
+  const record = asRecord(value);
+
+  if (!record) {
+    return "";
+  }
+
+  if (typeof record.text === "string") {
+    return record.text;
+  }
+
+  if (!Array.isArray(record.content)) {
+    return "";
+  }
+
+  return record.content.map((node) => plainText(node)).join("");
+}
+
+function treatmentLinks(value: unknown): ServiceLink[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.flatMap((item) => {
+    const record = asRecord(item);
+
+    if (!record || record.component !== "age_group_link" || typeof record.name !== "string") {
+      return [];
+    }
+
+    const name = record.name.trim();
+
+    if (!name) {
+      return [];
+    }
+
+    const link = asRecord(record.link) as StoryblokLink | null;
+
+    return [{ name, href: resolveHref(link ?? undefined) }];
+  });
+}
+
+function mapAgeGroup(value: unknown): AgeGroup | null {
+  const record = asRecord(value);
+
+  if (!record || record.component !== "age_group") {
+    return null;
+  }
+
+  return {
+    headline: textValue(record.headline, ""),
+    image: imageValue(record.image),
+    paragraphs: paragraphsValue(record.text),
+    treatmentsLabel: textValue(record.treatments_label, "Typische Behandlungen:"),
+    treatments: treatmentLinks(record.treatments),
+  };
+}
+
+function mapAgeGroups(module: StoryblokRecord, index: number): AgeGroupsContent {
+  const groups = Array.isArray(module.groups)
+    ? module.groups.flatMap((group) => {
+        const mapped = mapAgeGroup(group);
+
+        return mapped ? [mapped] : [];
+      })
+    : [];
+
+  return {
+    id: blockId(module, index, "age-groups"),
+    groups: groups.length > 0 ? groups : fallbackAgeGroups.groups,
+  };
+}
+
 function mapQuote(module: StoryblokRecord, index: number): QuoteContent {
   return {
     id: blockId(module, index, "quote"),
@@ -197,6 +361,8 @@ function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
       blocks.push({ kind: "service", service: mapModule(record, index) });
     } else if (record.component === "quote") {
       blocks.push({ kind: "quote", quote: mapQuote(record, index) });
+    } else if (record.component === "age_groups") {
+      blocks.push({ kind: "age-groups", ageGroups: mapAgeGroups(record, index) });
     }
   });
 
@@ -206,6 +372,10 @@ function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
 
   if (!blocks.some((block) => block.kind === "quote")) {
     blocks.push({ kind: "quote", quote: fallbackQuote });
+  }
+
+  if (!blocks.some((block) => block.kind === "age-groups")) {
+    blocks.push({ kind: "age-groups", ageGroups: fallbackAgeGroups });
   }
 
   return blocks;
@@ -239,6 +409,7 @@ async function readHomeBlocks(token: string, region: string, version: string) {
 const fallbackHomeBlocks: HomeBlock[] = [
   { kind: "service", service: fallbackServiceModule },
   { kind: "quote", quote: fallbackQuote },
+  { kind: "age-groups", ageGroups: fallbackAgeGroups },
 ];
 
 async function loadHomeBlocks(token: string, region: string) {
