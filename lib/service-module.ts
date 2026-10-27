@@ -17,6 +17,16 @@ export type ServiceModuleContent = {
   links: ServiceLink[];
 };
 
+export type QuoteContent = {
+  id: string;
+  quote: string;
+  name: string;
+};
+
+export type HomeBlock =
+  | { kind: "service"; service: ServiceModuleContent }
+  | { kind: "quote"; quote: QuoteContent };
+
 const fallbackServiceModule: ServiceModuleContent = {
   id: "fallback",
   eyebrow: "SERVICE",
@@ -29,6 +39,13 @@ const fallbackServiceModule: ServiceModuleContent = {
     { name: "Häufig gestellte Fragen", href: "/" },
     { name: "News", href: "/" },
   ],
+};
+
+const fallbackQuote: QuoteContent = {
+  id: "fallback-quote",
+  quote:
+    "„Wir begleiten unsere Patienten seit über vierzig Jahren mit Erfahrung, Herz und neuester Technik.“",
+  name: "Dr. Günter Hück",
 };
 
 type StoryblokLink = {
@@ -78,7 +95,7 @@ function asRecord(value: unknown): StoryblokRecord | null {
   return value as StoryblokRecord;
 }
 
-function serviceModulesInBody(content: StoryblokRecord): StoryblokRecord[] {
+function homeBlocksInBody(content: StoryblokRecord): StoryblokRecord[] {
   if (!Array.isArray(content.body)) {
     return [];
   }
@@ -86,7 +103,7 @@ function serviceModulesInBody(content: StoryblokRecord): StoryblokRecord[] {
   return content.body.flatMap((item) => {
     const record = asRecord(item);
 
-    if (!record || record.component !== "service_module") {
+    if (!record || (record.component !== "service_module" && record.component !== "quote")) {
       return [];
     }
 
@@ -147,11 +164,15 @@ function linkValue(value: unknown): ServiceLink[] {
   return links.length > 0 ? links : fallbackServiceModule.links;
 }
 
-function mapModule(module: StoryblokRecord, index: number): ServiceModuleContent {
-  const uid = typeof module._uid === "string" ? module._uid.trim() : "";
+function blockId(record: StoryblokRecord, index: number, prefix: string) {
+  const uid = typeof record._uid === "string" ? record._uid.trim() : "";
 
+  return uid || `${prefix}-${index}`;
+}
+
+function mapModule(module: StoryblokRecord, index: number): ServiceModuleContent {
   return {
-    id: uid || `service-${index}`,
+    id: blockId(module, index, "service"),
     eyebrow: textValue(module.eyebrow, fallbackServiceModule.eyebrow),
     headline: textValue(module.headline, fallbackServiceModule.headline),
     text: textValue(module.text, fallbackServiceModule.text),
@@ -160,7 +181,37 @@ function mapModule(module: StoryblokRecord, index: number): ServiceModuleContent
   };
 }
 
-async function readServiceModules(token: string, region: string, version: string) {
+function mapQuote(module: StoryblokRecord, index: number): QuoteContent {
+  return {
+    id: blockId(module, index, "quote"),
+    quote: textValue(module.quote, fallbackQuote.quote),
+    name: textValue(module.name, fallbackQuote.name),
+  };
+}
+
+function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
+  const blocks: HomeBlock[] = [];
+
+  records.forEach((record, index) => {
+    if (record.component === "service_module") {
+      blocks.push({ kind: "service", service: mapModule(record, index) });
+    } else if (record.component === "quote") {
+      blocks.push({ kind: "quote", quote: mapQuote(record, index) });
+    }
+  });
+
+  if (!blocks.some((block) => block.kind === "service")) {
+    blocks.unshift({ kind: "service", service: fallbackServiceModule });
+  }
+
+  if (!blocks.some((block) => block.kind === "quote")) {
+    blocks.push({ kind: "quote", quote: fallbackQuote });
+  }
+
+  return blocks;
+}
+
+async function readHomeBlocks(token: string, region: string, version: string) {
   const url = new URL("/v2/cdn/stories/home", apiBase(region));
   url.searchParams.set("version", version);
   url.searchParams.set("token", token);
@@ -180,37 +231,42 @@ async function readServiceModules(token: string, region: string, version: string
     return null;
   }
 
-  const modules = serviceModulesInBody(content);
+  const blocks = homeBlocksInBody(content);
 
-  return modules.length > 0 ? modules : null;
+  return blocks.length > 0 ? blocks : null;
 }
 
-async function loadServiceModules(token: string, region: string) {
+const fallbackHomeBlocks: HomeBlock[] = [
+  { kind: "service", service: fallbackServiceModule },
+  { kind: "quote", quote: fallbackQuote },
+];
+
+async function loadHomeBlocks(token: string, region: string) {
   try {
-    const published = await readServiceModules(token, region, "published");
+    const published = await readHomeBlocks(token, region, "published");
 
     if (published) {
-      return published.map(mapModule);
+      return toHomeBlocks(published);
     }
 
-    const draft = await readServiceModules(token, region, "draft");
+    const draft = await readHomeBlocks(token, region, "draft");
 
     if (draft) {
-      return draft.map(mapModule);
+      return toHomeBlocks(draft);
     }
   } catch {
-    return [fallbackServiceModule];
+    return fallbackHomeBlocks;
   }
 
-  return [fallbackServiceModule];
+  return fallbackHomeBlocks;
 }
 
-export async function getServiceModules() {
+export async function getHomeBlocks() {
   const token = process.env.STORYBLOK_TOKEN;
 
   if (!token) {
-    return [fallbackServiceModule];
+    return fallbackHomeBlocks;
   }
 
-  return loadServiceModules(token, process.env.STORYBLOK_REGION || "eu");
+  return loadHomeBlocks(token, process.env.STORYBLOK_REGION || "eu");
 }

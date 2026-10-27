@@ -19,6 +19,10 @@
   --text-headline--line-height: 1.2;
   --text-headline--font-weight: 600;
 
+  --text-quote: 2rem;
+  --text-quote--line-height: 1.25;
+  --text-quote--font-weight: 600;
+
   --spacing-header: 7rem;
   --spacing-bar: 3rem;
   --spacing-logo: 3.4375rem;

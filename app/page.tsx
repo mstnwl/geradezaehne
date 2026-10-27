@@ -1,18 +1,25 @@
 import { Suspense } from "react";
+import { QuoteBand } from "@/components/quote-band";
 import { ServiceModule } from "@/components/service-module";
-import { getServiceModules } from "@/lib/service-module";
+import { getHomeBlocks } from "@/lib/service-module";
 
-async function ServiceModuleData() {
-  const services = await getServiceModules();
+async function HomeBody() {
+  const blocks = await getHomeBlocks();
 
-  return services.map((service) => <ServiceModule key={service.id} service={service} />);
+  return blocks.map((block) =>
+    block.kind === "service" ? (
+      <ServiceModule key={block.service.id} service={block.service} />
+    ) : (
+      <QuoteBand key={block.quote.id} quote={block.quote} />
+    ),
+  );
 }
 
 export default function Home() {
   return (
     <main>
       <Suspense fallback={null}>
-        <ServiceModuleData />
+        <HomeBody />
       </Suspense>
     </main>
   );
