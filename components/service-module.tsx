@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Reveal } from "@/components/reveal";
 import type { ServiceImage, ServiceLink, ServiceModuleContent } from "@/lib/service-module";
 
 function ServiceFrame({ image }: { image: ServiceImage | null }) {
@@ -44,7 +45,7 @@ function ServiceAnchor({ link }: { link: ServiceLink }) {
 
 export function ServiceModule({ service }: { service: ServiceModuleContent }) {
   return (
-    <section className="enter enter-4 px-gutter py-20">
+    <Reveal className="px-gutter py-20">
       <div className="mx-auto flex max-w-column flex-col gap-nav lg:grid lg:grid-cols-2 lg:items-center lg:gap-x-20">
         <div className="hidden lg:block">
           <ServiceFrame image={service.image} />
@@ -71,6 +72,6 @@ export function ServiceModule({ service }: { service: ServiceModuleContent }) {
           </ul>
         </div>
       </div>
-    </section>
+    </Reveal>
   );
 }

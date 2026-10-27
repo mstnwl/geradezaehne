@@ -21,7 +21,7 @@
 
   --text-quote: 2rem;
   --text-quote--line-height: 1.25;
-  --text-quote--font-weight: 600;
+  --text-quote--font-weight: 300;
 
   --spacing-header: 7rem;
   --spacing-bar: 3rem;
@@ -40,6 +40,10 @@
   .text-headline {
     font-size: 3rem;
   }
+}
+
+h2 {
+  font-weight: 600;
 }
 
 body {
@@ -81,6 +85,18 @@ body {
 
 .enter-4 {
   animation-delay: 270ms;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--spacing-pair));
+}
+
+.reveal-in {
+  animation-name: enter;
+  animation-duration: 450ms;
+  animation-timing-function: ease-out;
+  animation-fill-mode: both;
 }
 
 .header-link,
@@ -134,8 +150,16 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .enter {
+  .enter,
+  .reveal,
+  .reveal-in {
     animation: none;
+  }
+
+  .reveal,
+  .reveal-in {
+    opacity: 1;
+    transform: none;
   }
 
   .header-link,
