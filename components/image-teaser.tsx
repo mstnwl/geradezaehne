@@ -29,7 +29,7 @@ function TeaserLink({ href, label }: { href: string; label: string }) {
 
 export function ImageTeaser({ teaser }: { teaser: ImageTeaserContent }) {
   return (
-    <Reveal className="relative aspect-[390/421] overflow-hidden bg-white lg:aspect-[1728/640]">
+    <Reveal className="relative aspect-[390/421] overflow-hidden bg-white lg:aspect-[1728/760]">
       {teaser.image ? (
         <Image
           src={teaser.image.src}
