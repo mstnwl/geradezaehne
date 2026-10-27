@@ -43,10 +43,10 @@ export function SiteFooter({ footer }: { footer: FooterContent }) {
       <div className="mx-auto grid max-w-column gap-12 lg:grid-cols-4 lg:items-start lg:gap-x-12 lg:gap-y-nav">
         <div className="flex flex-col gap-nav lg:contents">
           <Image
-            src="/Logomark.svg"
+            src="/LogomarkFooter.svg"
             alt=""
-            width={80}
-            height={56}
+            width={60}
+            height={40}
             unoptimized
             className="lg:col-start-1 lg:row-start-1"
           />
