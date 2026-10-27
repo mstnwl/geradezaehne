@@ -140,7 +140,7 @@ body {
 .hours-table {
   width: max-content;
   border-collapse: separate;
-  border-spacing: 0 8px;
+  border-spacing: 0 6px;
 }
 
 .hours-table th,
