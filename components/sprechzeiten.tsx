@@ -60,12 +60,14 @@ function PhoneLink({ href, label }: { href: string; label: string }) {
 }
 
 export function Sprechzeiten({ sprechzeiten }: { sprechzeiten: SprechzeitenContent }) {
+  const column = sprechzeiten.image ? "lg:col-start-2" : "lg:col-start-1";
+
   return (
-    <Reveal className="px-gutter py-20">
+    <Reveal className="bg-background px-gutter py-20">
       <div className="mx-auto grid max-w-column gap-nav lg:grid-cols-2 lg:items-center lg:gap-x-20">
-        <h2 className="text-headline text-ink lg:col-start-2">{sprechzeiten.headline}</h2>
-        <div className="relative aspect-[7/5] w-full overflow-hidden bg-ink/10 lg:col-start-1 lg:row-span-4 lg:row-start-1">
-          {sprechzeiten.image ? (
+        <h2 className={`text-headline text-ink ${column}`}>{sprechzeiten.headline}</h2>
+        {sprechzeiten.image ? (
+          <div className="relative aspect-[7/5] w-full overflow-hidden bg-white lg:col-start-1 lg:row-span-5 lg:row-start-1">
             <Image
               src={sprechzeiten.image.src}
               alt={sprechzeiten.image.alt}
@@ -73,9 +75,9 @@ export function Sprechzeiten({ sprechzeiten }: { sprechzeiten: SprechzeitenConte
               sizes="(min-width: 64rem) 35rem, 100vw"
               className="object-cover"
             />
-          ) : null}
-        </div>
-        <div className="w-max justify-self-start lg:col-start-2">
+          </div>
+        ) : null}
+        <div className={`w-max justify-self-start ${column}`}>
           <table className="hours-table text-left text-base leading-normal text-ink lg:text-[18px]">
             <tbody>
               {sprechzeiten.hours.map((row) => (
@@ -90,13 +92,13 @@ export function Sprechzeiten({ sprechzeiten }: { sprechzeiten: SprechzeitenConte
             </tbody>
           </table>
         </div>
-        <p className="text-base leading-normal font-normal text-ink lg:col-start-2 lg:text-[18px]">
+        <p className={`text-base leading-normal font-normal text-ink lg:text-[18px] ${column}`}>
           {sprechzeiten.body}
         </p>
-        <div className="justify-self-start lg:col-start-2">
+        <div className={`justify-self-start ${column}`}>
           <BookingButton href={sprechzeiten.bookingHref} label={sprechzeiten.bookingLabel} />
         </div>
-        <div className="justify-self-start lg:hidden">
+        <div className={`justify-self-start ${column}`}>
           <PhoneLink href={sprechzeiten.phoneHref} label={sprechzeiten.phoneLabel} />
         </div>
       </div>
