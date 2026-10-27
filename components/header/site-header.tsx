@@ -9,9 +9,10 @@ import { TopNavigation } from "./top-navigation";
 type SiteHeaderProps = {
   desktop: NavItem[];
   mobile: NavItem[];
+  openingHours: string[];
 };
 
-export function SiteHeader({ desktop, mobile }: SiteHeaderProps) {
+export function SiteHeader({ desktop, mobile, openingHours }: SiteHeaderProps) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export function SiteHeader({ desktop, mobile }: SiteHeaderProps) {
           />
         </div>
       </div>
-      <SubHeader />
+      <SubHeader lines={openingHours} />
     </header>
   );
 }

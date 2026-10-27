@@ -78,6 +78,19 @@ body {
   color: var(--color-accent);
 }
 
+.hours-line {
+  grid-area: 1 / 1;
+}
+
+.hours-cycle .hours-line {
+  animation-name: hours-swap;
+  animation-duration: calc(var(--hours-count) * 4s);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+  animation-delay: calc(var(--hours-index) * 4s);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .enter {
     animation: none;
@@ -85,6 +98,17 @@ body {
 
   .header-link {
     transition: none;
+  }
+
+  .hours-line,
+  .hours-cycle .hours-line {
+    animation: none;
+    opacity: 0;
+    transform: none;
+  }
+
+  .hours-line:first-child {
+    opacity: 1;
   }
 }
 
