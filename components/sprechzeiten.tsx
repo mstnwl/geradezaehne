@@ -5,7 +5,7 @@ import type { SprechzeitenContent } from "@/lib/sprechzeiten";
 
 function BookingButton({ href, label }: { href: string; label: string }) {
   const className =
-    "booking-button flex h-bar w-full items-center justify-center rounded bg-accent px-gutter text-ink lg:inline-flex lg:w-auto";
+    "booking-button inline-flex h-bar w-fit items-center rounded bg-accent px-gutter text-ink";
   const content = (
     <span className="booking-caption inline-flex items-center gap-pair text-nav">
       <Image
@@ -36,7 +36,7 @@ function BookingButton({ href, label }: { href: string; label: string }) {
 }
 
 function PhoneLink({ href, label }: { href: string; label: string }) {
-  const className = "header-link inline-flex items-center gap-pair text-nav";
+  const className = "header-link inline-flex w-fit items-center gap-pair text-nav";
   const content = (
     <>
       <span className="menu-arrow size-icon-lg shrink-0" aria-hidden="true" />
@@ -79,10 +79,10 @@ export function Sprechzeiten({ sprechzeiten }: { sprechzeiten: SprechzeitenConte
           <tbody>
             {sprechzeiten.hours.map((row) => (
               <tr key={`${row.day}-${row.morning}`}>
-                <th scope="row" className="pr-6 text-left font-normal">
+                <th scope="row" className="pr-pair text-left font-normal">
                   {row.day}
                 </th>
-                <td className="pr-6">{row.morning}</td>
+                <td className="pr-pair">{row.morning}</td>
                 <td>{row.afternoon}</td>
               </tr>
             ))}
@@ -91,10 +91,10 @@ export function Sprechzeiten({ sprechzeiten }: { sprechzeiten: SprechzeitenConte
         <p className="text-base leading-normal font-normal text-ink lg:col-start-2 lg:text-[18px]">
           {sprechzeiten.body}
         </p>
-        <div className="lg:col-start-2">
+        <div className="justify-self-start lg:col-start-2">
           <BookingButton href={sprechzeiten.bookingHref} label={sprechzeiten.bookingLabel} />
         </div>
-        <div className="lg:hidden">
+        <div className="justify-self-start lg:hidden">
           <PhoneLink href={sprechzeiten.phoneHref} label={sprechzeiten.phoneLabel} />
         </div>
       </div>
