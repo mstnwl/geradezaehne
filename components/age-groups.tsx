@@ -53,7 +53,7 @@ export function AgeGroups({ ageGroups }: { ageGroups: AgeGroupsContent }) {
               ))}
             </div>
             {group.treatmentsLabel || group.treatments.length > 0 ? (
-              <div className="mt-nav flex flex-col gap-pair">
+              <div className="flex flex-col gap-pair">
                 {group.treatmentsLabel ? (
                   <p className="text-base leading-normal font-normal text-ink lg:text-[18px]">
                     {group.treatmentsLabel}
