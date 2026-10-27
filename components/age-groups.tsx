@@ -51,6 +51,8 @@ export function AgeGroups({ ageGroups }: { ageGroups: AgeGroupsContent }) {
                   {paragraph}
                 </p>
               ))}
+            </div>
+            <div className="mt-nav flex flex-col gap-pair">
               <p className="text-base leading-normal font-normal text-ink lg:text-[18px]">
                 {group.treatmentsLabel}
               </p>
