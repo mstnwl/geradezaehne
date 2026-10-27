@@ -52,7 +52,9 @@ export function SiteFooter({ footer }: { footer: FooterContent }) {
           />
           <address className="flex flex-col not-italic text-base leading-normal font-normal lg:col-start-1 lg:row-start-2 lg:text-[18px]">
             {lines.map((line) => (
-              <span key={line}>{line}</span>
+              <span key={line} className={line === footer.phone ? "mt-gutter" : undefined}>
+                {line}
+              </span>
             ))}
           </address>
         </div>
