@@ -1,5 +1,3 @@
-import { cacheLife } from "next/cache";
-
 export const fallbackOpeningHours = [
   "Unsere Sprechzeiten:",
   "Mo - Do: 8.30 – 12:00 Uhr, 13.00 – 17.00 Uhr",
@@ -9,6 +7,7 @@ export const fallbackOpeningHours = [
 type StoryblokOpeningLine = {
   component?: string;
   text?: unknown;
+  Text?: unknown;
 };
 
 function apiBase(region: string) {
@@ -24,6 +23,18 @@ function apiBase(region: string) {
   }
 }
 
+function lineText(block: StoryblokOpeningLine) {
+  if (typeof block.Text === "string" && block.Text.trim()) {
+    return block.Text.trim();
+  }
+
+  if (typeof block.text === "string") {
+    return block.text.trim();
+  }
+
+  return "";
+}
+
 function mapLines(lines: unknown) {
   if (!Array.isArray(lines)) {
     return [];
@@ -36,26 +47,23 @@ function mapLines(lines: unknown) {
 
     const block = line as StoryblokOpeningLine;
 
-    if (block.component !== "opening_hours_line" || typeof block.text !== "string") {
+    if (block.component !== "opening_hours_line") {
       return [];
     }
 
-    const text = block.text.trim();
+    const text = lineText(block);
 
     return text ? [text] : [];
   });
 }
 
 async function loadOpeningHours(token: string, region: string) {
-  "use cache";
-  cacheLife("seconds");
-
   try {
     const url = new URL("/v2/cdn/stories/opening-hours", apiBase(region));
     url.searchParams.set("version", "published");
     url.searchParams.set("token", token);
 
-    const response = await fetch(url);
+    const response = await fetch(url, { cache: "no-store" });
 
     if (!response.ok) {
       return fallbackOpeningHours;
