@@ -1,5 +1,3 @@
-import { cacheLife } from "next/cache";
-
 export type ServiceLink = {
   name: string;
   href: string;
@@ -178,7 +176,7 @@ async function readServiceModule(token: string, region: string, version: string)
   url.searchParams.set("version", version);
   url.searchParams.set("token", token);
 
-  const response = await fetch(url);
+  const response = await fetch(url, { cache: "no-store" });
 
   if (!response.ok) {
     return null;
@@ -197,9 +195,6 @@ async function readServiceModule(token: string, region: string, version: string)
 }
 
 async function loadServiceModule(token: string, region: string) {
-  "use cache";
-  cacheLife("seconds");
-
   try {
     const published = await readServiceModule(token, region, "published");
 

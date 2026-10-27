@@ -50,12 +50,16 @@ export function ServiceModule({ service }: { service: ServiceModuleContent }) {
           <ServiceFrame image={service.image} />
         </div>
         <div className="contents lg:flex lg:flex-col lg:gap-nav">
-          <p className="text-nav text-ink uppercase tracking-widest">{service.eyebrow}</p>
+          <p className="text-[12px] font-bold text-ink uppercase tracking-widest">
+            {service.eyebrow}
+          </p>
           <h2 className="text-headline text-ink">{service.headline}</h2>
           <div className="lg:hidden">
             <ServiceFrame image={service.image} />
           </div>
-          <p className="text-base leading-normal font-normal text-ink">{service.text}</p>
+          <p className="text-base leading-normal font-normal text-ink lg:text-[18px]">
+            {service.text}
+          </p>
           <ul className="flex flex-col gap-pair">
             {service.links.map((link, index) => (
               <li key={`${link.name}-${index}`}>

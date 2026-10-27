@@ -1,12 +1,19 @@
+import { Suspense } from "react";
 import { ServiceModule } from "@/components/service-module";
 import { getServiceModule } from "@/lib/service-module";
 
-export default async function Home() {
+async function ServiceModuleData() {
   const service = await getServiceModule();
 
+  return <ServiceModule service={service} />;
+}
+
+export default function Home() {
   return (
     <main>
-      <ServiceModule service={service} />
+      <Suspense fallback={null}>
+        <ServiceModuleData />
+      </Suspense>
     </main>
   );
 }
