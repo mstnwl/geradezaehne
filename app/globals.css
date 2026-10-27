@@ -20,7 +20,7 @@
   --text-headline--line-height: 1.2;
   --text-headline--font-weight: 500;
 
-  --text-quote: 1.5rem;
+  --text-quote: 1.25rem;
   --text-quote--line-height: 1.25;
   --text-quote--font-weight: 300;
 
@@ -43,7 +43,7 @@
   }
 
   .text-quote {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 }
 
