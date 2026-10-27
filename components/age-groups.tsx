@@ -29,13 +29,13 @@ function TreatmentLink({ link }: { link: ServiceLink }) {
 
 export function AgeGroups({ ageGroups }: { ageGroups: AgeGroupsContent }) {
   return (
-    <Reveal className="px-gutter py-20">
+    <Reveal className="bg-white px-gutter py-20">
       <div className="mx-auto grid max-w-column gap-12 lg:grid-cols-3 lg:gap-x-20">
         {ageGroups.groups.map((group, index) => (
           <article key={`${group.headline}-${index}`} className="flex flex-col gap-nav">
             <h3 className="text-ink">{group.headline}</h3>
-            <div className="relative aspect-[4/5] w-40 overflow-hidden bg-white">
-              {group.image ? (
+            {group.image ? (
+              <div className="relative aspect-[4/5] w-40 overflow-hidden bg-white">
                 <Image
                   src={group.image.src}
                   alt={group.image.alt}
@@ -43,8 +43,8 @@ export function AgeGroups({ ageGroups }: { ageGroups: AgeGroupsContent }) {
                   sizes="10rem"
                   className="object-cover"
                 />
-              ) : null}
-            </div>
+              </div>
+            ) : null}
             <div className="flex flex-col gap-pair">
               {group.paragraphs.map((paragraph) => (
                 <p key={paragraph} className="text-base leading-normal font-normal text-ink lg:text-[18px]">
