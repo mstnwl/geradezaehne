@@ -62,13 +62,22 @@ export type TrustBandContent = {
   items: string[];
 };
 
+export type InfoPanelContent = {
+  id: string;
+  eyebrow: string;
+  headline: string;
+  body: string;
+  links: ServiceLink[];
+};
+
 export type HomeBlock =
   | { kind: "hero"; hero: HeroContent }
   | { kind: "trust-band"; trust: TrustBandContent }
   | { kind: "service"; service: ServiceModuleContent }
   | { kind: "quote"; quote: QuoteContent }
   | { kind: "age-groups"; ageGroups: AgeGroupsContent }
-  | { kind: "image-teaser"; teaser: ImageTeaserContent };
+  | { kind: "image-teaser"; teaser: ImageTeaserContent }
+  | { kind: "info-panel"; info: InfoPanelContent };
 
 const fallbackHero: HeroContent = {
   id: "fallback-hero",
@@ -86,6 +95,19 @@ const fallbackTrustBand: TrustBandContent = {
     "Über 15.000 Behandlungen",
     "Mitglied der DGKFO, BDK, AAO, WFO",
     "Mehr als 45 Jahre Erfahrung",
+  ],
+};
+
+const fallbackInfoPanel: InfoPanelContent = {
+  id: "fallback-info-panel",
+  eyebrow: "SERVICE",
+  headline: "Wissenswertes für unsere Patienten",
+  body: "Wir haben die wichtigsten Informationen rund um Ihre Behandlung, Pflege und den Praxisalltag für Sie zusammengestellt.",
+  links: [
+    { name: "Notfälle & Erste Hilfe bei Zahnspangen", href: "/" },
+    { name: "Pflege & Tipps für zuhause", href: "/" },
+    { name: "Häufig gestellte Fragen", href: "/" },
+    { name: "News", href: "/" },
   ],
 };
 
@@ -230,7 +252,8 @@ function homeBlocksInBody(content: StoryblokRecord): StoryblokRecord[] {
         record.component !== "service_module" &&
         record.component !== "quote" &&
         record.component !== "age_groups" &&
-        record.component !== "image_teaser")
+        record.component !== "image_teaser" &&
+        record.component !== "info_panel")
     ) {
       return [];
     }
@@ -491,6 +514,40 @@ function mapImageTeaser(module: StoryblokRecord, index: number): ImageTeaserCont
   };
 }
 
+function infoLinks(value: unknown): ServiceLink[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.flatMap((item) => {
+    const record = asRecord(item);
+
+    if (!record || record.component !== "info_link" || typeof record.label !== "string") {
+      return [];
+    }
+
+    const name = record.label.trim();
+
+    if (!name) {
+      return [];
+    }
+
+    const link = asRecord(record.link) as StoryblokLink | null;
+
+    return [{ name, href: resolveHref(link ?? undefined) }];
+  });
+}
+
+function mapInfoPanel(module: StoryblokRecord, index: number): InfoPanelContent {
+  return {
+    id: blockId(module, index, "info-panel"),
+    eyebrow: textValue(module.eyebrow, fallbackInfoPanel.eyebrow),
+    headline: textValue(module.headline, fallbackInfoPanel.headline),
+    body: textValue(module.body, fallbackInfoPanel.body),
+    links: infoLinks(module.links),
+  };
+}
+
 function mapQuote(module: StoryblokRecord, index: number): QuoteContent {
   return {
     id: blockId(module, index, "quote"),
@@ -518,6 +575,8 @@ function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
       blocks.push({ kind: "age-groups", ageGroups: mapAgeGroups(record, index) });
     } else if (record.component === "image_teaser") {
       blocks.push({ kind: "image-teaser", teaser: mapImageTeaser(record, index) });
+    } else if (record.component === "info_panel") {
+      blocks.push({ kind: "info-panel", info: mapInfoPanel(record, index) });
     }
   });
 
@@ -539,6 +598,10 @@ function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
 
   if (!blocks.some((block) => block.kind === "trust-band")) {
     blocks.unshift({ kind: "trust-band", trust: fallbackTrustBand });
+  }
+
+  if (!blocks.some((block) => block.kind === "info-panel")) {
+    blocks.push({ kind: "info-panel", info: fallbackInfoPanel });
   }
 
   return [{ kind: "hero", hero: hero ?? fallbackHero }, ...blocks];
@@ -576,6 +639,7 @@ const fallbackHomeBlocks: HomeBlock[] = [
   { kind: "quote", quote: fallbackQuote },
   { kind: "age-groups", ageGroups: fallbackAgeGroups },
   { kind: "image-teaser", teaser: fallbackImageTeaser },
+  { kind: "info-panel", info: fallbackInfoPanel },
 ];
 
 async function loadHomeBlocks(token: string, region: string) {
