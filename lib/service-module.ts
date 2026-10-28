@@ -118,6 +118,25 @@ export type GalleryContent = {
   images: GalleryImage[];
 };
 
+export type CasePhoto = {
+  image: ServiceImage | null;
+  caption: string;
+};
+
+export type CaseStudyContent = {
+  id: string;
+  anchor: string;
+  eyebrow: string;
+  headline: string;
+  situationLabel: string;
+  situation: string;
+  treatmentLabel: string;
+  treatment: string;
+  resultLabel: string;
+  result: string;
+  photos: CasePhoto[];
+};
+
 export type ContentHeroContent = {
   id: string;
   anchor: string;
@@ -140,7 +159,8 @@ export type HomeBlock =
   | { kind: "info-panel"; info: InfoPanelContent }
   | { kind: "booking"; booking: BookingContent }
   | { kind: "team-grid"; teamGrid: TeamGridContent }
-  | { kind: "gallery"; gallery: GalleryContent };
+  | { kind: "gallery"; gallery: GalleryContent }
+  | { kind: "case-study"; caseStudy: CaseStudyContent };
 
 const fallbackHero: HeroContent = {
   id: "fallback-hero",
@@ -330,7 +350,8 @@ function homeBlocksInBody(content: StoryblokRecord): StoryblokRecord[] {
         record.component !== "info_panel" &&
         record.component !== "booking" &&
         record.component !== "team_grid" &&
-        record.component !== "gallery")
+        record.component !== "gallery" &&
+        record.component !== "case_study")
     ) {
       return [];
     }
@@ -819,6 +840,47 @@ function mapGallery(module: StoryblokRecord, index: number): GalleryContent {
   };
 }
 
+function mapCasePhoto(value: unknown): CasePhoto | null {
+  const record = asRecord(value);
+
+  if (!record || record.component !== "case_photo") {
+    return null;
+  }
+
+  const caption = trimmedField(record.caption);
+  const image = imageValue(record.image);
+
+  if (!caption && !image) {
+    return null;
+  }
+
+  return { image, caption };
+}
+
+function mapCaseStudy(module: StoryblokRecord, index: number): CaseStudyContent {
+  const photos = Array.isArray(module.photos)
+    ? module.photos.flatMap((photo) => {
+        const mapped = mapCasePhoto(photo);
+
+        return mapped ? [mapped] : [];
+      })
+    : [];
+
+  return {
+    id: blockId(module, index, "case-study"),
+    anchor: anchorValue(module.anchor),
+    eyebrow: trimmedField(module.eyebrow),
+    headline: trimmedField(module.headline),
+    situationLabel: trimmedField(module.situation_label),
+    situation: trimmedField(module.situation),
+    treatmentLabel: trimmedField(module.treatment_label),
+    treatment: trimmedField(module.treatment),
+    resultLabel: trimmedField(module.result_label),
+    result: trimmedField(module.result),
+    photos,
+  };
+}
+
 function mapTeamGrid(module: StoryblokRecord, index: number): TeamGridContent {
   const members = Array.isArray(module.members)
     ? module.members.flatMap((member) => {
@@ -876,6 +938,8 @@ function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
       blocks.push({ kind: "team-grid", teamGrid: mapTeamGrid(record, index) });
     } else if (record.component === "gallery") {
       blocks.push({ kind: "gallery", gallery: mapGallery(record, index) });
+    } else if (record.component === "case_study") {
+      blocks.push({ kind: "case-study", caseStudy: mapCaseStudy(record, index) });
     }
   });
 
@@ -939,6 +1003,8 @@ function toStoryBlocks(records: StoryblokRecord[], legacyContentHero = false): H
       blocks.push({ kind: "team-grid", teamGrid: mapTeamGrid(record, index) });
     } else if (record.component === "gallery") {
       blocks.push({ kind: "gallery", gallery: mapGallery(record, index) });
+    } else if (record.component === "case_study") {
+      blocks.push({ kind: "case-study", caseStudy: mapCaseStudy(record, index) });
     }
   });
 
