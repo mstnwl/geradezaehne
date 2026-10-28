@@ -39,14 +39,7 @@ function PhoneLink({ href, label }: { href: string; label: string }) {
   const className = "header-link inline-flex w-fit items-center gap-pair text-nav";
   const content = (
     <>
-      <Image
-        src="/Icon24_Phone.svg"
-        alt=""
-        width={24}
-        height={24}
-        unoptimized
-        className="size-icon shrink-0"
-      />
+      <span className="phone-icon size-icon shrink-0" aria-hidden="true" />
       {label}
     </>
   );
