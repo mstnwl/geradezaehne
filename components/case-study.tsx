@@ -33,20 +33,41 @@ function CaseCopy({ label, text }: { label: string; text: string }) {
   );
 }
 
+function imageSize(src: string) {
+  const match = src.match(/\/(\d+)x(\d+)\//);
+
+  if (!match) {
+    return null;
+  }
+
+  return { width: Number(match[1]), height: Number(match[2]) };
+}
+
+function CaseImage({ src, alt }: { src: string; alt: string }) {
+  const size = imageSize(src);
+
+  if (!size) {
+    return <img src={src} alt={alt} className="h-auto w-full" />;
+  }
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={size.width}
+      height={size.height}
+      sizes="(min-width: 64rem) 35rem, 100vw"
+      className="h-auto w-full"
+    />
+  );
+}
+
 function CaseFigure({ photo }: { photo: CasePhoto }) {
   return (
     <li>
       <figure className="flex flex-col gap-pair">
         {photo.image ? (
-          <div className="relative aspect-[4/5] w-full overflow-hidden bg-white">
-            <Image
-              src={photo.image.src}
-              alt={photo.image.alt || photo.caption}
-              fill
-              sizes="(min-width: 64rem) 35rem, 100vw"
-              className="object-cover"
-            />
-          </div>
+          <CaseImage src={photo.image.src} alt={photo.image.alt || photo.caption} />
         ) : null}
         {photo.caption ? (
           <figcaption className="text-base leading-normal font-normal text-ink">
@@ -76,9 +97,9 @@ export function CaseStudy({ caseStudy }: { caseStudy: CaseStudyContent }) {
     <Reveal id={caseStudy.anchor} className="bg-white px-gutter py-20">
       <div className="mx-auto flex max-w-column flex-col gap-12">
         {hasHeading || hasCopy ? (
-          <div className="grid lg:grid-cols-2 lg:gap-x-20">
-            <div className="flex flex-col gap-nav">
-              {hasHeading ? (
+          <div className="flex flex-col gap-nav">
+            {hasHeading ? (
+              <div className="grid lg:grid-cols-2 lg:gap-x-20">
                 <div className="flex flex-col gap-pair">
                   {caseStudy.eyebrow ? (
                     <p className="text-[12px] font-bold text-ink uppercase tracking-widest">
@@ -89,11 +110,15 @@ export function CaseStudy({ caseStudy }: { caseStudy: CaseStudyContent }) {
                     <h2 className="text-ink">{caseStudy.headline}</h2>
                   ) : null}
                 </div>
-              ) : null}
-              <CaseCopy label={caseStudy.situationLabel} text={caseStudy.situation} />
-              <CaseCopy label={caseStudy.treatmentLabel} text={caseStudy.treatment} />
-              <CaseCopy label={caseStudy.resultLabel} text={caseStudy.result} />
-            </div>
+              </div>
+            ) : null}
+            {hasCopy ? (
+              <div className="grid grid-cols-1 gap-nav lg:grid-cols-3 lg:gap-x-20">
+                <CaseCopy label={caseStudy.situationLabel} text={caseStudy.situation} />
+                <CaseCopy label={caseStudy.treatmentLabel} text={caseStudy.treatment} />
+                <CaseCopy label={caseStudy.resultLabel} text={caseStudy.result} />
+              </div>
+            ) : null}
           </div>
         ) : null}
         {caseStudy.photos.length > 0 ? (
