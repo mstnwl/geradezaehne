@@ -63,9 +63,22 @@ function ServiceCopy({
           <ServiceFrame image={service.image} />
         </div>
       ) : null}
-      <p className="text-base leading-normal font-normal whitespace-pre-line text-ink lg:text-[18px]">
-        {service.text}
-      </p>
+      {service.text.trim() ? (
+        <div className="flex flex-col gap-pair">
+          {service.text
+            .split(/\n+/)
+            .map((paragraph) => paragraph.trim())
+            .filter(Boolean)
+            .map((paragraph) => (
+              <p
+                key={paragraph}
+                className="text-base leading-normal font-normal text-ink lg:text-[18px]"
+              >
+                {paragraph}
+              </p>
+            ))}
+        </div>
+      ) : null}
       <ul className="flex flex-col gap-pair">
         {service.links.map((link, index) => (
           <li key={`${link.name}-${index}`}>

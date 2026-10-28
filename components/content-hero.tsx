@@ -65,7 +65,7 @@ export function ContentHero({ content }: { content: ContentHeroContent }) {
                 </div>
               ) : null}
               {content.paragraphs.length > 0 ? (
-                <div className="flex flex-col gap-nav">
+                <div className="flex flex-col gap-pair">
                   {content.paragraphs.map((paragraph) => (
                     <p
                       key={paragraph}
