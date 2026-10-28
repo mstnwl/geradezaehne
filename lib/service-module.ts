@@ -91,6 +91,7 @@ export type HomeBlock =
   | { kind: "hero"; hero: HeroContent }
   | { kind: "trust-band"; trust: TrustBandContent }
   | { kind: "content-hero"; contentHero: ContentHeroContent }
+  | { kind: "content-service"; contentService: ServiceModuleContent }
   | { kind: "service"; service: ServiceModuleContent }
   | { kind: "quote"; quote: QuoteContent }
   | { kind: "age-groups"; ageGroups: AgeGroupsContent }
@@ -276,6 +277,7 @@ function homeBlocksInBody(content: StoryblokRecord): StoryblokRecord[] {
         record.component !== "trust_band" &&
         record.component !== "service_module" &&
         record.component !== "content_hero" &&
+        record.component !== "content_service" &&
         record.component !== "quote" &&
         record.component !== "age_groups" &&
         record.component !== "image_teaser" &&
@@ -455,6 +457,20 @@ function trimmedField(value: unknown) {
 
 function anchorValue(value: unknown) {
   return trimmedField(value).replace(/^#/, "");
+}
+
+function mapContentService(module: StoryblokRecord, index: number): ServiceModuleContent {
+  const service = serviceLinks(module.links);
+
+  return {
+    id: blockId(module, index, "content-service"),
+    anchor: anchorValue(module.anchor),
+    eyebrow: trimmedField(module.eyebrow),
+    headline: trimmedField(module.headline),
+    text: paragraphsValue(module.body).join("\n"),
+    image: imageValue(module.image),
+    links: service.length > 0 ? service : contentLinks(module.links),
+  };
 }
 
 function mapContentHero(module: StoryblokRecord, index: number): ContentHeroContent {
@@ -677,6 +693,8 @@ function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
       blocks.push({ kind: "trust-band", trust: mapTrustBand(record, index) });
     } else if (record.component === "content_hero") {
       blocks.push({ kind: "content-hero", contentHero: mapContentHero(record, index) });
+    } else if (record.component === "content_service") {
+      blocks.push({ kind: "content-service", contentService: mapContentService(record, index) });
     } else if (record.component === "service_module") {
       blocks.push({ kind: "service", service: mapModule(record, index) });
     } else if (record.component === "quote") {
@@ -728,6 +746,8 @@ function toStoryBlocks(records: StoryblokRecord[], legacyContentHero = false): H
       blocks.push({ kind: "trust-band", trust: mapTrustBand(record, index) });
     } else if (record.component === "content_hero") {
       blocks.push({ kind: "content-hero", contentHero: mapContentHero(record, index) });
+    } else if (record.component === "content_service") {
+      blocks.push({ kind: "content-service", contentService: mapContentService(record, index) });
     } else if (record.component === "service_module") {
       if (legacyContentHero && !hasContentHero && isLegacyContentHero(record)) {
         blocks.push({ kind: "content-hero", contentHero: mapLegacyContentHero(record, index) });

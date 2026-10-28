@@ -22,6 +22,10 @@ export function StoryBlocks({ blocks }: { blocks: HomeBlock[] }) {
       return <ContentHero key={block.contentHero.id} content={block.contentHero} />;
     }
 
+    if (block.kind === "content-service") {
+      return <ServiceModule key={block.contentService.id} service={block.contentService} />;
+    }
+
     if (block.kind === "service") {
       return <ServiceModule key={block.service.id} service={block.service} />;
     }
