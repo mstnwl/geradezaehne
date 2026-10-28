@@ -2,14 +2,6 @@ import Image from "next/image";
 import { Reveal } from "@/components/reveal";
 import type { TeamGridContent, TeamMember } from "@/lib/service-module";
 
-function roleLabel(role: string) {
-  if (role.startsWith("(") && role.endsWith(")")) {
-    return role;
-  }
-
-  return `(${role})`;
-}
-
 function Member({ member }: { member: TeamMember }) {
   return (
     <li className="flex flex-col gap-nav">
@@ -27,7 +19,7 @@ function Member({ member }: { member: TeamMember }) {
       {member.name || member.role ? (
         <p className="flex flex-col text-base leading-normal text-ink lg:text-[18px]">
           {member.name ? <span className="font-medium">{member.name}</span> : null}
-          {member.role ? <span className="font-normal">{roleLabel(member.role)}</span> : null}
+          {member.role ? <span className="font-normal">{member.role}</span> : null}
         </p>
       ) : null}
     </li>
