@@ -11,7 +11,7 @@ function RichAnchor({
   target?: "_blank";
   children: ReactNode;
 }) {
-  const className = "header-link";
+  const className = "header-link underline";
 
   if (/^(https?:|mailto:|tel:|#)/i.test(href)) {
     return (
