@@ -1,4 +1,5 @@
 import { AgeGroups } from "@/components/age-groups";
+import { Booking } from "@/components/booking";
 import { ContentHero } from "@/components/content-hero";
 import { Hero } from "@/components/hero";
 import { ImageTeaser } from "@/components/image-teaser";
@@ -46,6 +47,10 @@ export function StoryBlocks({ blocks }: { blocks: HomeBlock[] }) {
 
     if (block.kind === "image-teaser") {
       return <ImageTeaser key={block.teaser.id} teaser={block.teaser} />;
+    }
+
+    if (block.kind === "booking") {
+      return <Booking key={block.booking.id} booking={block.booking} />;
     }
 
     return <InfoPanel key={block.info.id} info={block.info} />;

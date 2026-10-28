@@ -80,6 +80,17 @@ export type InfoPanelContent = {
   links: ServiceLink[];
 };
 
+export type BookingContent = {
+  id: string;
+  anchor: string;
+  headline: string;
+  body: string;
+  bookingLabel: string;
+  bookingHref: string;
+  phoneLabel: string;
+  phoneHref: string;
+};
+
 export type ContentHeroContent = {
   id: string;
   anchor: string;
@@ -99,7 +110,8 @@ export type HomeBlock =
   | { kind: "quote"; quote: QuoteContent }
   | { kind: "age-groups"; ageGroups: AgeGroupsContent }
   | { kind: "image-teaser"; teaser: ImageTeaserContent }
-  | { kind: "info-panel"; info: InfoPanelContent };
+  | { kind: "info-panel"; info: InfoPanelContent }
+  | { kind: "booking"; booking: BookingContent };
 
 const fallbackHero: HeroContent = {
   id: "fallback-hero",
@@ -285,7 +297,8 @@ function homeBlocksInBody(content: StoryblokRecord): StoryblokRecord[] {
         record.component !== "quote" &&
         record.component !== "age_groups" &&
         record.component !== "image_teaser" &&
-        record.component !== "info_panel")
+        record.component !== "info_panel" &&
+        record.component !== "booking")
     ) {
       return [];
     }
@@ -677,6 +690,44 @@ function mapInfoPanel(module: StoryblokRecord, index: number): InfoPanelContent 
   };
 }
 
+const fallbackBooking: BookingContent = {
+  id: "fallback-booking",
+  anchor: "",
+  headline: "Individuelle Beratung",
+  body: "Wir nehmen uns Zeit für Ihre Fragen und beraten Sie persönlich zur passenden Behandlung.",
+  bookingLabel: "Termin buchen",
+  bookingHref: "/",
+  phoneLabel: "Jetzt anrufen",
+  phoneHref: "tel:+496131227266",
+};
+
+function linkedHref(link: StoryblokLink | null, fallback: string) {
+  const value =
+    link?.linktype === "url" ? link.url || link.cached_url || "" : link?.cached_url || link?.url || "";
+
+  if (!value.trim()) {
+    return fallback;
+  }
+
+  return resolveHref(link ?? undefined);
+}
+
+function mapBooking(module: StoryblokRecord, index: number): BookingContent {
+  const bookingLink = asRecord(module.booking_link) as StoryblokLink | null;
+  const phoneLink = asRecord(module.phone_link) as StoryblokLink | null;
+
+  return {
+    id: blockId(module, index, "booking"),
+    anchor: anchorValue(module.anchor),
+    headline: textValue(module.headline, fallbackBooking.headline),
+    body: textValue(module.body, fallbackBooking.body),
+    bookingLabel: textValue(module.booking_label, fallbackBooking.bookingLabel),
+    bookingHref: linkedHref(bookingLink, fallbackBooking.bookingHref),
+    phoneLabel: textValue(module.phone_label, fallbackBooking.phoneLabel),
+    phoneHref: linkedHref(phoneLink, fallbackBooking.phoneHref),
+  };
+}
+
 function mapQuote(module: StoryblokRecord, index: number): QuoteContent {
   return {
     id: blockId(module, index, "quote"),
@@ -711,6 +762,8 @@ function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
       blocks.push({ kind: "image-teaser", teaser: mapImageTeaser(record, index) });
     } else if (record.component === "info_panel") {
       blocks.push({ kind: "info-panel", info: mapInfoPanel(record, index) });
+    } else if (record.component === "booking") {
+      blocks.push({ kind: "booking", booking: mapBooking(record, index) });
     }
   });
 
@@ -768,6 +821,8 @@ function toStoryBlocks(records: StoryblokRecord[], legacyContentHero = false): H
       blocks.push({ kind: "image-teaser", teaser: mapImageTeaser(record, index) });
     } else if (record.component === "info_panel") {
       blocks.push({ kind: "info-panel", info: mapInfoPanel(record, index) });
+    } else if (record.component === "booking") {
+      blocks.push({ kind: "booking", booking: mapBooking(record, index) });
     }
   });
 
