@@ -1,3 +1,5 @@
+import { richTextValue, type RichTextDoc } from "@/lib/rich-text";
+
 export type ServiceLink = {
   name: string;
   href: string;
@@ -14,6 +16,7 @@ export type ServiceModuleContent = {
   eyebrow: string;
   headline: string;
   text: string;
+  richText: RichTextDoc | null;
   image: ServiceImage | null;
   links: ServiceLink[];
 };
@@ -83,7 +86,7 @@ export type ContentHeroContent = {
   eyebrow: string;
   headline: string;
   image: ServiceImage | null;
-  paragraphs: string[];
+  body: RichTextDoc;
   links: ServiceLink[];
 };
 
@@ -139,6 +142,7 @@ const fallbackServiceModule: ServiceModuleContent = {
   eyebrow: "SERVICE",
   headline: "Wissenswertes für unsere Patienten",
   text: "Wir haben die wichtigsten Informationen rund um Ihre Behandlung, Pflege und den Praxisalltag für Sie zusammengestellt.",
+  richText: null,
   image: null,
   links: [
     { name: "Notfälle & Erste Hilfe bei Zahnspangen", href: "/" },
@@ -446,6 +450,7 @@ function mapModule(
     eyebrow: textValue(module.eyebrow, fallback ?? fallbackServiceModule.eyebrow),
     headline: textValue(module.headline, fallback ?? fallbackServiceModule.headline),
     text: textValue(module.text, fallback ?? fallbackServiceModule.text),
+    richText: null,
     image: imageValue(module.image),
     links: preserveEmpty ? serviceLinks(module.links) : linkValue(module.links),
   };
@@ -467,7 +472,8 @@ function mapContentService(module: StoryblokRecord, index: number): ServiceModul
     anchor: anchorValue(module.anchor),
     eyebrow: trimmedField(module.eyebrow),
     headline: trimmedField(module.headline),
-    text: paragraphsValue(module.body).join("\n"),
+    text: "",
+    richText: richTextValue(module.body),
     image: imageValue(module.image),
     links: service.length > 0 ? service : contentLinks(module.links),
   };
@@ -480,7 +486,7 @@ function mapContentHero(module: StoryblokRecord, index: number): ContentHeroCont
     eyebrow: trimmedField(module.eyebrow),
     headline: trimmedField(module.headline),
     image: imageValue(module.image),
-    paragraphs: paragraphsValue(module.body),
+    body: richTextValue(module.body),
     links: contentLinks(module.links),
   };
 }
@@ -501,7 +507,7 @@ function mapLegacyContentHero(module: StoryblokRecord, index: number): ContentHe
     eyebrow: trimmedField(module.eyebrow),
     headline: trimmedField(module.headline),
     image: imageValue(module.image),
-    paragraphs: paragraphsValue(module.text),
+    body: richTextValue(module.text),
     links: serviceLinks(module.links),
   };
 }

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { RichText } from "@/components/rich-text";
 import type { ContentHeroContent, ServiceImage, ServiceLink } from "@/lib/service-module";
 
 function ContentAnchor({ link }: { link: ServiceLink }) {
@@ -43,7 +44,7 @@ function ContentImage({ image }: { image: ServiceImage }) {
 
 export function ContentHero({ content }: { content: ContentHeroContent }) {
   const hasHeading = content.eyebrow.length > 0 || content.headline.length > 0;
-  const hasCopy = content.paragraphs.length > 0 || content.links.length > 0;
+  const hasCopy = content.body.blocks.length > 0 || content.links.length > 0;
 
   return (
     <section id={content.anchor || undefined} className="bg-white">
@@ -64,18 +65,7 @@ export function ContentHero({ content }: { content: ContentHeroContent }) {
                   ) : null}
                 </div>
               ) : null}
-              {content.paragraphs.length > 0 ? (
-                <div className="flex flex-col gap-pair">
-                  {content.paragraphs.map((paragraph) => (
-                    <p
-                      key={paragraph}
-                      className="text-base leading-normal font-normal text-ink lg:text-[18px]"
-                    >
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              ) : null}
+              {content.body.blocks.length > 0 ? <RichText document={content.body} /> : null}
               {content.links.length > 0 ? (
                 <ul className="flex flex-col gap-pair">
                   {content.links.map((link, index) => (

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Reveal } from "@/components/reveal";
+import { RichText } from "@/components/rich-text";
 import type { ServiceImage, ServiceLink, ServiceModuleContent } from "@/lib/service-module";
 
 function ServiceFrame({ image }: { image: ServiceImage }) {
@@ -63,7 +64,9 @@ function ServiceCopy({
           <ServiceFrame image={service.image} />
         </div>
       ) : null}
-      {service.text.trim() ? (
+      {service.richText && service.richText.blocks.length > 0 ? (
+        <RichText document={service.richText} />
+      ) : service.text.trim() ? (
         <div className="flex flex-col gap-pair">
           {service.text
             .split(/\n+/)
