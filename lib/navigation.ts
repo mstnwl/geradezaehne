@@ -22,16 +22,16 @@ const fallbackDesktop: NavItem[] = [
   { name: "Behandler & Team", href: "/" },
   { name: "Praxis", href: "/praxis" },
   { name: "Behandlungsspektrum", href: "/behandlungsspektrum" },
-  { name: "Fallbeispiele", href: "/" },
+  { name: "Fallbeispiele", href: "/fallbeispiele" },
 ];
 
 const fallbackMobile: NavItem[] = [
   { name: "Startseite", href: "/" },
   { name: "Behandler & Team", href: "/" },
   { name: "Behandlungsspektrum", href: "/behandlungsspektrum" },
-  { name: "Fallbeispiele", href: "/" },
+  { name: "Fallbeispiele", href: "/fallbeispiele" },
   { name: "Praxis", href: "/praxis" },
-  { name: "Kontakt", href: "/" },
+  { name: "Kontakt", href: "/kontakt" },
 ];
 
 function apiBase(region: string) {
@@ -65,6 +65,22 @@ function resolveNavHref(link: StoryblokLink | undefined) {
   return trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
 }
 
+const routedPages: Record<string, string> = {
+  Fallbeispiele: "/fallbeispiele",
+  Kontakt: "/kontakt",
+  Datenschutz: "/datenschutz",
+  Impressum: "/impressum",
+  Aktuelles: "/news",
+  News: "/news",
+  FAQ: "/faq",
+  "FAQ (Häufig gestellte Fragen)": "/faq",
+  "Häufig gestellte Fragen": "/faq",
+  "Erste Hilfe": "/sos",
+  SOS: "/sos",
+  Tipps: "/tipps",
+  Karriere: "/karriere",
+};
+
 const fallbackNavigation = {
   desktop: fallbackDesktop,
   mobile: fallbackMobile,
@@ -82,12 +98,15 @@ function mapItems(items: StoryblokNavItem[] | undefined) {
       return [];
     }
 
+    const resolved = resolveNavHref(item.link);
     const href =
       name === "Behandlungsspektrum"
         ? "/behandlungsspektrum"
         : name === "Praxis"
           ? "/praxis"
-          : resolveNavHref(item.link);
+          : resolved === "/" && routedPages[name]
+            ? routedPages[name]
+            : resolved;
 
     return [{ name, href }];
   });
