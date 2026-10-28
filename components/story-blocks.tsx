@@ -23,7 +23,13 @@ export function StoryBlocks({ blocks }: { blocks: HomeBlock[] }) {
     }
 
     if (block.kind === "content-service") {
-      return <ServiceModule key={block.contentService.id} service={block.contentService} />;
+      return (
+        <ServiceModule
+          key={block.contentService.id}
+          service={block.contentService}
+          imageAlign="start"
+        />
+      );
     }
 
     if (block.kind === "service") {

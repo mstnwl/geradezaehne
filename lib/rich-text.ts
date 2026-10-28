@@ -5,8 +5,11 @@ export type RichMark =
 
 export type RichInline = { type: "text"; text: string; marks: RichMark[] } | { type: "break" };
 
+export type RichHeadingLevel = 1 | 2 | 3 | 4;
+
 export type RichBlock =
   | { type: "paragraph"; content: RichInline[] }
+  | { type: "heading"; level: RichHeadingLevel; content: RichInline[] }
   | { type: "bullet_list"; items: RichBlock[][] }
   | { type: "ordered_list"; items: RichBlock[][] };
 
@@ -150,6 +153,24 @@ function parseListItems(value: unknown): RichBlock[][] {
   });
 }
 
+function headingLevel(value: unknown): RichHeadingLevel {
+  const level = typeof value === "number" ? value : typeof value === "string" ? Number(value) : Number.NaN;
+
+  if (level <= 1) {
+    return 1;
+  }
+
+  if (level === 2) {
+    return 2;
+  }
+
+  if (level === 3) {
+    return 3;
+  }
+
+  return 4;
+}
+
 function parseBlocks(value: unknown): RichBlock[] {
   if (!Array.isArray(value)) {
     return [];
@@ -162,7 +183,15 @@ function parseBlocks(value: unknown): RichBlock[] {
       return [];
     }
 
-    if (node.type === "paragraph" || node.type === "heading") {
+    if (node.type === "heading") {
+      const content = parseInlines(node.content);
+
+      return inlineHasContent(content)
+        ? [{ type: "heading" as const, level: headingLevel(asRecord(node.attrs)?.level), content }]
+        : [];
+    }
+
+    if (node.type === "paragraph") {
       const content = parseInlines(node.content);
 
       return inlineHasContent(content) ? [{ type: "paragraph" as const, content }] : [];

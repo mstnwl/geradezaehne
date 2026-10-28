@@ -93,7 +93,13 @@ function ServiceCopy({
   );
 }
 
-export function ServiceModule({ service }: { service: ServiceModuleContent }) {
+export function ServiceModule({
+  service,
+  imageAlign = "center",
+}: {
+  service: ServiceModuleContent;
+  imageAlign?: "center" | "start";
+}) {
   if (!service.image) {
     return (
       <Reveal id={service.anchor} className="bg-white px-gutter py-20">
@@ -108,7 +114,11 @@ export function ServiceModule({ service }: { service: ServiceModuleContent }) {
 
   return (
     <Reveal id={service.anchor} className="bg-white px-gutter py-20">
-      <div className="mx-auto flex max-w-column flex-col gap-nav lg:grid lg:grid-cols-2 lg:items-center lg:gap-x-20">
+      <div
+        className={`mx-auto flex max-w-column flex-col gap-nav lg:grid lg:grid-cols-2 lg:gap-x-20 ${
+          imageAlign === "start" ? "lg:items-start" : "lg:items-center"
+        }`}
+      >
         <div className="hidden lg:block">
           <ServiceFrame image={service.image} />
         </div>

@@ -36,7 +36,7 @@ function RichAnchor({
 function markedText(text: string, marks: RichMark[]) {
   return marks.reduce<ReactNode>((children, mark) => {
     if (mark.type === "bold") {
-      return <strong className="font-bold">{children}</strong>;
+      return <strong className="font-medium">{children}</strong>;
     }
 
     if (mark.type === "italic") {
@@ -59,6 +59,18 @@ function Inlines({ content }: { content: RichInline[] }) {
 
 function Blocks({ blocks }: { blocks: RichBlock[] }) {
   return blocks.map((block, index) => {
+    if (block.type === "heading") {
+      const Tag = `h${block.level}` as "h1" | "h2" | "h3" | "h4";
+      const className =
+        block.level <= 2 ? "text-headline text-ink" : block.level === 3 ? "text-ink" : "font-medium text-ink";
+
+      return (
+        <Tag key={index} className={className}>
+          <Inlines content={block.content} />
+        </Tag>
+      );
+    }
+
     if (block.type === "paragraph") {
       return (
         <p key={index}>
