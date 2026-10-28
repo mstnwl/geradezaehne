@@ -91,6 +91,19 @@ export type BookingContent = {
   phoneHref: string;
 };
 
+export type TeamMember = {
+  name: string;
+  role: string;
+  image: ServiceImage | null;
+};
+
+export type TeamGridContent = {
+  id: string;
+  anchor: string;
+  headline: string;
+  members: TeamMember[];
+};
+
 export type ContentHeroContent = {
   id: string;
   anchor: string;
@@ -111,7 +124,8 @@ export type HomeBlock =
   | { kind: "age-groups"; ageGroups: AgeGroupsContent }
   | { kind: "image-teaser"; teaser: ImageTeaserContent }
   | { kind: "info-panel"; info: InfoPanelContent }
-  | { kind: "booking"; booking: BookingContent };
+  | { kind: "booking"; booking: BookingContent }
+  | { kind: "team-grid"; teamGrid: TeamGridContent };
 
 const fallbackHero: HeroContent = {
   id: "fallback-hero",
@@ -298,7 +312,8 @@ function homeBlocksInBody(content: StoryblokRecord): StoryblokRecord[] {
         record.component !== "age_groups" &&
         record.component !== "image_teaser" &&
         record.component !== "info_panel" &&
-        record.component !== "booking")
+        record.component !== "booking" &&
+        record.component !== "team_grid")
     ) {
       return [];
     }
@@ -728,6 +743,43 @@ function mapBooking(module: StoryblokRecord, index: number): BookingContent {
   };
 }
 
+const fallbackTeamHeadline = "Unser Team";
+
+function mapTeamMember(value: unknown): TeamMember | null {
+  const record = asRecord(value);
+
+  if (!record || record.component !== "team_member") {
+    return null;
+  }
+
+  const name = textValue(record.name, "");
+  const role = textValue(record.role, "");
+  const image = imageValue(record.image);
+
+  if (!name && !role && !image) {
+    return null;
+  }
+
+  return { name, role, image };
+}
+
+function mapTeamGrid(module: StoryblokRecord, index: number): TeamGridContent {
+  const members = Array.isArray(module.members)
+    ? module.members.flatMap((member) => {
+        const mapped = mapTeamMember(member);
+
+        return mapped ? [mapped] : [];
+      })
+    : [];
+
+  return {
+    id: blockId(module, index, "team-grid"),
+    anchor: anchorValue(module.anchor),
+    headline: textValue(module.headline, fallbackTeamHeadline),
+    members,
+  };
+}
+
 function mapQuote(module: StoryblokRecord, index: number): QuoteContent {
   return {
     id: blockId(module, index, "quote"),
@@ -764,6 +816,8 @@ function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
       blocks.push({ kind: "info-panel", info: mapInfoPanel(record, index) });
     } else if (record.component === "booking") {
       blocks.push({ kind: "booking", booking: mapBooking(record, index) });
+    } else if (record.component === "team_grid") {
+      blocks.push({ kind: "team-grid", teamGrid: mapTeamGrid(record, index) });
     }
   });
 
@@ -823,6 +877,8 @@ function toStoryBlocks(records: StoryblokRecord[], legacyContentHero = false): H
       blocks.push({ kind: "info-panel", info: mapInfoPanel(record, index) });
     } else if (record.component === "booking") {
       blocks.push({ kind: "booking", booking: mapBooking(record, index) });
+    } else if (record.component === "team_grid") {
+      blocks.push({ kind: "team-grid", teamGrid: mapTeamGrid(record, index) });
     }
   });
 

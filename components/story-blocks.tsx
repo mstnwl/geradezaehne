@@ -6,6 +6,7 @@ import { ImageTeaser } from "@/components/image-teaser";
 import { InfoPanel } from "@/components/info-panel";
 import { QuoteBand } from "@/components/quote-band";
 import { ServiceModule } from "@/components/service-module";
+import { TeamGrid } from "@/components/team-grid";
 import { TrustBand } from "@/components/trust-band";
 import type { HomeBlock } from "@/lib/service-module";
 
@@ -51,6 +52,10 @@ export function StoryBlocks({ blocks }: { blocks: HomeBlock[] }) {
 
     if (block.kind === "booking") {
       return <Booking key={block.booking.id} booking={block.booking} />;
+    }
+
+    if (block.kind === "team-grid") {
+      return <TeamGrid key={block.teamGrid.id} teamGrid={block.teamGrid} />;
     }
 
     return <InfoPanel key={block.info.id} info={block.info} />;
