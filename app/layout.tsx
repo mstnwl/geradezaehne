@@ -36,9 +36,9 @@ async function SiteHeaderData() {
 }
 
 async function SprechzeitenData() {
-  const blocks = await getSprechzeiten();
+  const sprechzeiten = await getSprechzeiten();
 
-  return blocks.map((block) => <Sprechzeiten key={block.id} sprechzeiten={block} />);
+  return <Sprechzeiten sprechzeiten={sprechzeiten} />;
 }
 
 async function FooterData() {

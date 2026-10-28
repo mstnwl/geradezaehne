@@ -158,35 +158,9 @@ function mapSprechzeiten(record: StoryblokRecord, index: number): SprechzeitenCo
   };
 }
 
-function collectSprechzeiten(value: unknown, found: StoryblokRecord[]) {
-  if (Array.isArray(value)) {
-    for (const item of value) {
-      collectSprechzeiten(item, found);
-    }
-
-    return;
-  }
-
-  const record = asRecord(value);
-
-  if (!record) {
-    return;
-  }
-
-  if (record.component === "sprechzeiten") {
-    found.push(record);
-  }
-
-  for (const nested of Object.values(record)) {
-    if (Array.isArray(nested) || asRecord(nested)) {
-      collectSprechzeiten(nested, found);
-    }
-  }
-}
-
-async function readSprechzeiten(token: string, region: string) {
-  const url = new URL("/v2/cdn/stories/home", apiBase(region));
-  url.searchParams.set("version", "published");
+async function readSprechzeiten(token: string, region: string, version: string) {
+  const url = new URL("/v2/cdn/stories/sprechzeiten", apiBase(region));
+  url.searchParams.set("version", version);
   url.searchParams.set("token", token);
 
   const response = await fetch(url, { cache: "no-store" });
@@ -198,30 +172,34 @@ async function readSprechzeiten(token: string, region: string) {
   const data = (await response.json()) as {
     story?: { content?: StoryblokRecord };
   };
-  const body = data.story?.content?.body;
-  const found: StoryblokRecord[] = [];
 
-  collectSprechzeiten(body, found);
-
-  return found.length > 0 ? found : null;
+  return data.story?.content ?? null;
 }
 
 export async function getSprechzeiten() {
   const token = process.env.STORYBLOK_TOKEN;
 
   if (!token) {
-    return [fallbackSprechzeiten];
+    return fallbackSprechzeiten;
   }
+
+  const region = process.env.STORYBLOK_REGION || "eu";
 
   try {
-    const published = await readSprechzeiten(token, process.env.STORYBLOK_REGION || "eu");
+    const published = await readSprechzeiten(token, region, "published");
 
     if (published) {
-      return published.map(mapSprechzeiten);
+      return mapSprechzeiten(published, 0);
+    }
+
+    const draft = await readSprechzeiten(token, region, "draft");
+
+    if (draft) {
+      return mapSprechzeiten(draft, 0);
     }
   } catch {
-    return [fallbackSprechzeiten];
+    return fallbackSprechzeiten;
   }
 
-  return [fallbackSprechzeiten];
+  return fallbackSprechzeiten;
 }
