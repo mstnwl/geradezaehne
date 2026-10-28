@@ -51,17 +51,19 @@ function ServiceCopy({
   return (
     <>
       <div className="flex flex-col gap-pair">
-        <p className="text-[12px] font-bold text-ink uppercase tracking-widest">
-          {service.eyebrow}
-        </p>
-        <h2 className="text-headline text-ink">{service.headline}</h2>
+        {service.eyebrow ? (
+          <p className="text-[12px] font-bold text-ink uppercase tracking-widest">
+            {service.eyebrow}
+          </p>
+        ) : null}
+        {service.headline ? <h2 className="text-headline text-ink">{service.headline}</h2> : null}
       </div>
       {showMobileImage && service.image ? (
         <div className="lg:hidden">
           <ServiceFrame image={service.image} />
         </div>
       ) : null}
-      <p className="text-base leading-normal font-normal text-ink lg:text-[18px]">
+      <p className="text-base leading-normal font-normal whitespace-pre-line text-ink lg:text-[18px]">
         {service.text}
       </p>
       <ul className="flex flex-col gap-pair">

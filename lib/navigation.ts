@@ -21,14 +21,14 @@ const fallbackDesktop: NavItem[] = [
   { name: "Startseite", href: "/" },
   { name: "Behandler & Team", href: "/" },
   { name: "Praxis", href: "/" },
-  { name: "Behandlungsspektrum", href: "/" },
+  { name: "Behandlungsspektrum", href: "/behandlungsspektrum" },
   { name: "Fallbeispiele", href: "/" },
 ];
 
 const fallbackMobile: NavItem[] = [
   { name: "Startseite", href: "/" },
   { name: "Behandler & Team", href: "/" },
-  { name: "Behandlungsspektrum", href: "/" },
+  { name: "Behandlungsspektrum", href: "/behandlungsspektrum" },
   { name: "Fallbeispiele", href: "/" },
   { name: "Praxis", href: "/" },
   { name: "Kontakt", href: "/" },
@@ -76,11 +76,16 @@ function mapItems(items: StoryblokNavItem[] | undefined) {
   }
 
   return items.flatMap((item) => {
-    if (item.component !== "nav_item" || !item.name?.trim()) {
+    const name = item.name?.trim();
+
+    if (item.component !== "nav_item" || !name) {
       return [];
     }
 
-    return [{ name: item.name.trim(), href: resolveNavHref(item.link) }];
+    const href =
+      name === "Behandlungsspektrum" ? "/behandlungsspektrum" : resolveNavHref(item.link);
+
+    return [{ name, href }];
   });
 }
 

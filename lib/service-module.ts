@@ -289,12 +289,12 @@ function imageValue(value: unknown): ServiceImage | null {
   return { src, alt };
 }
 
-function linkValue(value: unknown): ServiceLink[] {
+function serviceLinks(value: unknown): ServiceLink[] {
   if (!Array.isArray(value)) {
-    return fallbackServiceModule.links;
+    return [];
   }
 
-  const links = value.flatMap((item) => {
+  return value.flatMap((item) => {
     const record = asRecord(item);
 
     if (!record || record.component !== "service_link" || typeof record.name !== "string") {
@@ -311,6 +311,10 @@ function linkValue(value: unknown): ServiceLink[] {
 
     return [{ name, href: resolveHref(link ?? undefined) }];
   });
+}
+
+function linkValue(value: unknown): ServiceLink[] {
+  const links = serviceLinks(value);
 
   return links.length > 0 ? links : fallbackServiceModule.links;
 }
@@ -375,14 +379,20 @@ function mapHero(module: StoryblokRecord, index: number): HeroContent {
   };
 }
 
-function mapModule(module: StoryblokRecord, index: number): ServiceModuleContent {
+function mapModule(
+  module: StoryblokRecord,
+  index: number,
+  preserveEmpty = false,
+): ServiceModuleContent {
+  const fallback = preserveEmpty ? "" : undefined;
+
   return {
     id: blockId(module, index, "service"),
-    eyebrow: textValue(module.eyebrow, fallbackServiceModule.eyebrow),
-    headline: textValue(module.headline, fallbackServiceModule.headline),
-    text: textValue(module.text, fallbackServiceModule.text),
+    eyebrow: textValue(module.eyebrow, fallback ?? fallbackServiceModule.eyebrow),
+    headline: textValue(module.headline, fallback ?? fallbackServiceModule.headline),
+    text: textValue(module.text, fallback ?? fallbackServiceModule.text),
     image: imageValue(module.image),
-    links: linkValue(module.links),
+    links: preserveEmpty ? serviceLinks(module.links) : linkValue(module.links),
   };
 }
 
@@ -607,8 +617,32 @@ function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
   return [{ kind: "hero", hero: hero ?? fallbackHero }, ...blocks];
 }
 
-async function readHomeBlocks(token: string, region: string, version: string) {
-  const url = new URL("/v2/cdn/stories/home", apiBase(region));
+function toStoryBlocks(records: StoryblokRecord[]): HomeBlock[] {
+  const blocks: HomeBlock[] = [];
+
+  records.forEach((record, index) => {
+    if (record.component === "hero") {
+      blocks.push({ kind: "hero", hero: mapHero(record, index) });
+    } else if (record.component === "trust_band") {
+      blocks.push({ kind: "trust-band", trust: mapTrustBand(record, index) });
+    } else if (record.component === "service_module") {
+      blocks.push({ kind: "service", service: mapModule(record, index, true) });
+    } else if (record.component === "quote") {
+      blocks.push({ kind: "quote", quote: mapQuote(record, index) });
+    } else if (record.component === "age_groups") {
+      blocks.push({ kind: "age-groups", ageGroups: mapAgeGroups(record, index) });
+    } else if (record.component === "image_teaser") {
+      blocks.push({ kind: "image-teaser", teaser: mapImageTeaser(record, index) });
+    } else if (record.component === "info_panel") {
+      blocks.push({ kind: "info-panel", info: mapInfoPanel(record, index) });
+    }
+  });
+
+  return blocks;
+}
+
+async function readStoryBody(token: string, region: string, slug: string, version: string) {
+  const url = new URL(`/v2/cdn/stories/${slug}`, apiBase(region));
   url.searchParams.set("version", version);
   url.searchParams.set("token", token);
 
@@ -630,6 +664,10 @@ async function readHomeBlocks(token: string, region: string, version: string) {
   const blocks = homeBlocksInBody(content);
 
   return blocks.length > 0 ? blocks : null;
+}
+
+async function readHomeBlocks(token: string, region: string, version: string) {
+  return readStoryBody(token, region, "home", version);
 }
 
 const fallbackHomeBlocks: HomeBlock[] = [
@@ -670,4 +708,34 @@ export async function getHomeBlocks() {
   }
 
   return loadHomeBlocks(token, process.env.STORYBLOK_REGION || "eu");
+}
+
+async function loadStoryBlocks(token: string, region: string, slug: string) {
+  try {
+    const published = await readStoryBody(token, region, slug, "published");
+
+    if (published) {
+      return toStoryBlocks(published);
+    }
+
+    const draft = await readStoryBody(token, region, slug, "draft");
+
+    if (draft) {
+      return toStoryBlocks(draft);
+    }
+  } catch {
+    return [];
+  }
+
+  return [];
+}
+
+export async function getStoryBlocks(slug: string) {
+  const token = process.env.STORYBLOK_TOKEN;
+
+  if (!token) {
+    return [];
+  }
+
+  return loadStoryBlocks(token, process.env.STORYBLOK_REGION || "eu", slug);
 }
