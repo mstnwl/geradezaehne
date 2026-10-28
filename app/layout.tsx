@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import { SiteFooter } from "@/components/footer";
+import { HashScroll } from "@/components/hash-scroll";
 import { SiteHeader } from "@/components/header/site-header";
 import { Sprechzeiten } from "@/components/sprechzeiten";
 import { getFooter } from "@/lib/footer";
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Suspense fallback={null}>
           <FooterData />
         </Suspense>
+        <HashScroll />
       </body>
     </html>
   );

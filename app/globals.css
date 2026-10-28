@@ -58,6 +58,10 @@ h3 {
   line-height: 1.2;
 }
 
+html {
+  scroll-padding-top: var(--spacing-bar);
+}
+
 body {
   background: var(--color-background);
   color: var(--color-ink);
