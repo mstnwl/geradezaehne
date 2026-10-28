@@ -11,7 +11,7 @@ function InfoAnchor({ link }: { link: ServiceLink }) {
     </>
   );
 
-  if (/^(https?:|mailto:|tel:)/i.test(link.href)) {
+  if (/^(https?:|mailto:|tel:|#)/i.test(link.href)) {
     return (
       <a href={link.href} className={className}>
         {content}
@@ -28,7 +28,7 @@ function InfoAnchor({ link }: { link: ServiceLink }) {
 
 export function InfoPanel({ info }: { info: InfoPanelContent }) {
   return (
-    <Reveal className="bg-ink px-gutter py-20 text-white">
+    <Reveal id={info.anchor} className="bg-ink px-gutter py-20 text-white">
       <div className="mx-auto grid max-w-column lg:grid-cols-2 lg:items-center lg:gap-x-20">
         <div className="flex flex-col gap-nav">
           <div className="flex flex-col gap-pair">

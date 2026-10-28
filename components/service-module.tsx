@@ -26,7 +26,7 @@ function ServiceAnchor({ link }: { link: ServiceLink }) {
     </>
   );
 
-  if (/^(https?:|mailto:|tel:)/i.test(link.href)) {
+  if (/^(https?:|mailto:|tel:|#)/i.test(link.href)) {
     return (
       <a href={link.href} className={className}>
         {content}
@@ -93,7 +93,7 @@ function ServiceCopy({
 export function ServiceModule({ service }: { service: ServiceModuleContent }) {
   if (!service.image) {
     return (
-      <Reveal className="bg-white px-gutter py-20">
+      <Reveal id={service.anchor} className="bg-white px-gutter py-20">
         <div className="mx-auto grid max-w-column lg:grid-cols-2 lg:items-center lg:gap-x-20">
           <div className="flex flex-col gap-nav">
             <ServiceCopy service={service} showMobileImage={false} />
@@ -104,7 +104,7 @@ export function ServiceModule({ service }: { service: ServiceModuleContent }) {
   }
 
   return (
-    <Reveal className="bg-white px-gutter py-20">
+    <Reveal id={service.anchor} className="bg-white px-gutter py-20">
       <div className="mx-auto flex max-w-column flex-col gap-nav lg:grid lg:grid-cols-2 lg:items-center lg:gap-x-20">
         <div className="hidden lg:block">
           <ServiceFrame image={service.image} />

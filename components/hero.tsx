@@ -36,7 +36,7 @@ function BookingButton({ href, label }: { href: string; label: string }) {
 
 export function Hero({ hero }: { hero: HeroContent }) {
   return (
-    <section className="bg-white">
+    <section id={hero.anchor || undefined} className="bg-white">
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-white lg:aspect-[16/9]">
         {hero.image ? (
           <Image

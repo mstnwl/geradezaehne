@@ -10,6 +10,7 @@ export type ServiceImage = {
 
 export type ServiceModuleContent = {
   id: string;
+  anchor: string;
   eyebrow: string;
   headline: string;
   text: string;
@@ -19,6 +20,7 @@ export type ServiceModuleContent = {
 
 export type QuoteContent = {
   id: string;
+  anchor: string;
   quote: string;
   name: string;
 };
@@ -33,11 +35,13 @@ export type AgeGroup = {
 
 export type AgeGroupsContent = {
   id: string;
+  anchor: string;
   groups: AgeGroup[];
 };
 
 export type ImageTeaserContent = {
   id: string;
+  anchor: string;
   eyebrow: string;
   headline: string;
   text: string;
@@ -49,6 +53,7 @@ export type ImageTeaserContent = {
 
 export type HeroContent = {
   id: string;
+  anchor: string;
   headline: string;
   copy: string;
   buttonLabel: string;
@@ -58,12 +63,14 @@ export type HeroContent = {
 
 export type TrustBandContent = {
   id: string;
+  anchor: string;
   stars: number;
   items: string[];
 };
 
 export type InfoPanelContent = {
   id: string;
+  anchor: string;
   eyebrow: string;
   headline: string;
   body: string;
@@ -72,6 +79,7 @@ export type InfoPanelContent = {
 
 export type ContentHeroContent = {
   id: string;
+  anchor: string;
   eyebrow: string;
   headline: string;
   image: ServiceImage | null;
@@ -91,6 +99,7 @@ export type HomeBlock =
 
 const fallbackHero: HeroContent = {
   id: "fallback-hero",
+  anchor: "",
   headline: "Gerade Zähne. Natürlich schön.",
   copy: "Als Fachzahnärzte für Kieferorthopädie begleiten wir Sie mit Erfahrung, Empathie und neuesten Behandlungsmethoden – von der ersten Beratung bis zum perfekten Lächeln.",
   buttonLabel: "Termin buchen",
@@ -100,6 +109,7 @@ const fallbackHero: HeroContent = {
 
 const fallbackTrustBand: TrustBandContent = {
   id: "fallback-trust-band",
+  anchor: "",
   stars: 5,
   items: [
     "Über 15.000 Behandlungen",
@@ -110,6 +120,7 @@ const fallbackTrustBand: TrustBandContent = {
 
 const fallbackInfoPanel: InfoPanelContent = {
   id: "fallback-info-panel",
+  anchor: "",
   eyebrow: "SERVICE",
   headline: "Wissenswertes für unsere Patienten",
   body: "Wir haben die wichtigsten Informationen rund um Ihre Behandlung, Pflege und den Praxisalltag für Sie zusammengestellt.",
@@ -123,6 +134,7 @@ const fallbackInfoPanel: InfoPanelContent = {
 
 const fallbackServiceModule: ServiceModuleContent = {
   id: "fallback",
+  anchor: "",
   eyebrow: "SERVICE",
   headline: "Wissenswertes für unsere Patienten",
   text: "Wir haben die wichtigsten Informationen rund um Ihre Behandlung, Pflege und den Praxisalltag für Sie zusammengestellt.",
@@ -137,6 +149,7 @@ const fallbackServiceModule: ServiceModuleContent = {
 
 const fallbackQuote: QuoteContent = {
   id: "fallback-quote",
+  anchor: "",
   quote:
     "„Wir begleiten unsere Patienten seit über vierzig Jahren mit Erfahrung, Herz und neuester Technik.“",
   name: "Dr. Günter Hück",
@@ -144,6 +157,7 @@ const fallbackQuote: QuoteContent = {
 
 const fallbackImageTeaser: ImageTeaserContent = {
   id: "fallback-image-teaser",
+  anchor: "",
   eyebrow: "Praxis",
   headline: "Ein Blick in unsere Praxis",
   text: "Werfen Sie einen Blick in unsere Praxisräume und gewinnen Sie ein Gefühl für die Atmosphäre, die uns ausmacht.",
@@ -155,6 +169,7 @@ const fallbackImageTeaser: ImageTeaserContent = {
 
 const fallbackAgeGroups: AgeGroupsContent = {
   id: "fallback-age-groups",
+  anchor: "",
   groups: [
     {
       headline: "Kinder",
@@ -232,7 +247,7 @@ function resolveHref(link: StoryblokLink | undefined) {
     return "/";
   }
 
-  if (/^(https?:|mailto:|tel:)/i.test(trimmed)) {
+  if (trimmed.startsWith("#") || /^(https?:|mailto:|tel:)/i.test(trimmed)) {
     return trimmed;
   }
 
@@ -396,6 +411,7 @@ function trustItems(value: unknown) {
 function mapTrustBand(module: StoryblokRecord, index: number): TrustBandContent {
   return {
     id: blockId(module, index, "trust-band"),
+    anchor: anchorValue(module.anchor),
     stars: starsValue(module.stars),
     items: trustItems(module.items),
   };
@@ -406,6 +422,7 @@ function mapHero(module: StoryblokRecord, index: number): HeroContent {
 
   return {
     id: blockId(module, index, "hero"),
+    anchor: anchorValue(module.anchor),
     headline: textValue(module.headline, fallbackHero.headline),
     copy: textValue(module.copy, fallbackHero.copy),
     buttonLabel: textValue(module.button_label, fallbackHero.buttonLabel),
@@ -423,6 +440,7 @@ function mapModule(
 
   return {
     id: blockId(module, index, "service"),
+    anchor: anchorValue(module.anchor),
     eyebrow: textValue(module.eyebrow, fallback ?? fallbackServiceModule.eyebrow),
     headline: textValue(module.headline, fallback ?? fallbackServiceModule.headline),
     text: textValue(module.text, fallback ?? fallbackServiceModule.text),
@@ -435,9 +453,14 @@ function trimmedField(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
 }
 
+function anchorValue(value: unknown) {
+  return trimmedField(value).replace(/^#/, "");
+}
+
 function mapContentHero(module: StoryblokRecord, index: number): ContentHeroContent {
   return {
     id: blockId(module, index, "content-hero"),
+    anchor: anchorValue(module.anchor),
     eyebrow: trimmedField(module.eyebrow),
     headline: trimmedField(module.headline),
     image: imageValue(module.image),
@@ -458,6 +481,7 @@ function isLegacyContentHero(record: StoryblokRecord) {
 function mapLegacyContentHero(module: StoryblokRecord, index: number): ContentHeroContent {
   return {
     id: blockId(module, index, "content-hero"),
+    anchor: anchorValue(module.anchor),
     eyebrow: trimmedField(module.eyebrow),
     headline: trimmedField(module.headline),
     image: imageValue(module.image),
@@ -560,6 +584,7 @@ function mapAgeGroups(module: StoryblokRecord, index: number): AgeGroupsContent 
 
   return {
     id: blockId(module, index, "age-groups"),
+    anchor: anchorValue(module.anchor),
     groups: groups.length > 0 ? groups : fallbackAgeGroups.groups,
   };
 }
@@ -584,6 +609,7 @@ function mapImageTeaser(module: StoryblokRecord, index: number): ImageTeaserCont
 
   return {
     id: blockId(module, index, "image-teaser"),
+    anchor: anchorValue(module.anchor),
     eyebrow: textValue(module.eyebrow, fallbackImageTeaser.eyebrow),
     headline: textValue(module.headline, fallbackImageTeaser.headline),
     text: textValue(module.text, fallbackImageTeaser.text),
@@ -621,6 +647,7 @@ function infoLinks(value: unknown): ServiceLink[] {
 function mapInfoPanel(module: StoryblokRecord, index: number): InfoPanelContent {
   return {
     id: blockId(module, index, "info-panel"),
+    anchor: anchorValue(module.anchor),
     eyebrow: textValue(module.eyebrow, fallbackInfoPanel.eyebrow),
     headline: textValue(module.headline, fallbackInfoPanel.headline),
     body: textValue(module.body, fallbackInfoPanel.body),
@@ -631,6 +658,7 @@ function mapInfoPanel(module: StoryblokRecord, index: number): InfoPanelContent 
 function mapQuote(module: StoryblokRecord, index: number): QuoteContent {
   return {
     id: blockId(module, index, "quote"),
+    anchor: anchorValue(module.anchor),
     quote: textValue(module.quote, fallbackQuote.quote),
     name: textValue(module.name, fallbackQuote.name),
   };

@@ -87,7 +87,7 @@ function resolveHref(link: StoryblokLink | undefined, fallback: string) {
     return fallback;
   }
 
-  if (/^(https?:|mailto:|tel:)/i.test(trimmed)) {
+  if (trimmed.startsWith("#") || /^(https?:|mailto:|tel:)/i.test(trimmed)) {
     return trimmed;
   }
 

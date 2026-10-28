@@ -44,7 +44,7 @@ function PhoneLink({ href, label }: { href: string; label: string }) {
     </>
   );
 
-  if (/^(https?:|mailto:|tel:)/i.test(href)) {
+  if (/^(https?:|mailto:|tel:|#)/i.test(href)) {
     return (
       <a href={href} className={className}>
         {content}

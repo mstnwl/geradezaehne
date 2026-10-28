@@ -8,7 +8,7 @@ export function TrustBand({ trust }: { trust: TrustBandContent }) {
   }
 
   return (
-    <Reveal className="bg-beige px-gutter py-bar text-ink">
+    <Reveal id={trust.anchor} className="bg-beige px-gutter py-bar text-ink">
       <div className="mx-auto flex max-w-column flex-col items-center gap-gutter">
         {trust.stars > 0 ? (
           <div className="flex items-center justify-center gap-1" aria-hidden="true">

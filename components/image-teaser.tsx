@@ -12,7 +12,7 @@ function TeaserLink({ href, label }: { href: string; label: string }) {
     </>
   );
 
-  if (/^(https?:|mailto:|tel:)/i.test(href)) {
+  if (/^(https?:|mailto:|tel:|#)/i.test(href)) {
     return (
       <a href={href} className={className}>
         {content}
@@ -29,7 +29,7 @@ function TeaserLink({ href, label }: { href: string; label: string }) {
 
 export function ImageTeaser({ teaser }: { teaser: ImageTeaserContent }) {
   return (
-    <Reveal className="relative aspect-[390/421] overflow-hidden bg-white lg:aspect-[1728/760]">
+    <Reveal id={teaser.anchor} className="relative aspect-[390/421] overflow-hidden bg-white lg:aspect-[1728/760]">
       {teaser.image ? (
         <Image
           src={teaser.image.src}

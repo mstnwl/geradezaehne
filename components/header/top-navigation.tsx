@@ -36,7 +36,7 @@ function NavLink({
 }) {
   const current = isCurrent(item, pathname) ? "page" : undefined;
   const classes = `header-link ${className}`;
-  const external = /^(https?:|mailto:|tel:)/i.test(item.href);
+  const external = /^(https?:|mailto:|tel:|#)/i.test(item.href);
 
   if (external) {
     return (

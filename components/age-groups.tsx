@@ -12,7 +12,7 @@ function TreatmentLink({ link }: { link: ServiceLink }) {
     </>
   );
 
-  if (/^(https?:|mailto:|tel:)/i.test(link.href)) {
+  if (/^(https?:|mailto:|tel:|#)/i.test(link.href)) {
     return (
       <a href={link.href} className={className}>
         {content}
@@ -29,7 +29,7 @@ function TreatmentLink({ link }: { link: ServiceLink }) {
 
 export function AgeGroups({ ageGroups }: { ageGroups: AgeGroupsContent }) {
   return (
-    <Reveal className="bg-white px-gutter py-20">
+    <Reveal id={ageGroups.anchor} className="bg-white px-gutter py-20">
       <div className="mx-auto grid max-w-column gap-12 lg:grid-cols-3 lg:gap-x-20">
         {ageGroups.groups.map((group, index) => (
           <article key={`${group.headline}-${index}`} className="flex flex-col gap-nav">

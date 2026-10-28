@@ -10,7 +10,7 @@ function quotedName(name: string) {
 
 export function QuoteBand({ quote }: { quote: QuoteContent }) {
   return (
-    <Reveal className="bg-ink px-gutter py-bar text-white">
+    <Reveal id={quote.anchor} className="bg-ink px-gutter py-bar text-white">
       <figure className="mx-auto flex max-w-column flex-col items-center gap-8 text-center">
         <Image src="/Logomark.svg" alt="" width={80} height={56} unoptimized />
         <blockquote className="text-quote max-w-lg">

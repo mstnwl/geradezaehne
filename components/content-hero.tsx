@@ -11,7 +11,7 @@ function ContentAnchor({ link }: { link: ServiceLink }) {
     </>
   );
 
-  if (/^(https?:|mailto:|tel:)/i.test(link.href)) {
+  if (/^(https?:|mailto:|tel:|#)/i.test(link.href)) {
     return (
       <a href={link.href} className={className}>
         {content}
@@ -46,7 +46,7 @@ export function ContentHero({ content }: { content: ContentHeroContent }) {
   const hasCopy = content.paragraphs.length > 0 || content.links.length > 0;
 
   return (
-    <section className="bg-white">
+    <section id={content.anchor || undefined} className="bg-white">
       {content.image ? <ContentImage image={content.image} /> : null}
       {hasHeading || hasCopy ? (
         <div className="px-gutter py-20">

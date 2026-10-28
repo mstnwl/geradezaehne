@@ -58,7 +58,7 @@ function resolveNavHref(link: StoryblokLink | undefined) {
     return "/";
   }
 
-  if (/^(https?:|mailto:|tel:)/i.test(trimmed)) {
+  if (trimmed.startsWith("#") || /^(https?:|mailto:|tel:)/i.test(trimmed)) {
     return trimmed;
   }
 
