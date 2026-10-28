@@ -37,8 +37,8 @@ function BookingButton({ href, label }: { href: string; label: string }) {
 export function Hero({ hero }: { hero: HeroContent }) {
   return (
     <section id={hero.anchor || undefined} className="bg-white">
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-white lg:aspect-[16/9]">
-        {hero.image ? (
+      {hero.image ? (
+        <div className="relative aspect-[4/5] w-full overflow-hidden bg-white lg:aspect-[16/9]">
           <Image
             src={hero.image.src}
             alt={hero.image.alt}
@@ -47,8 +47,8 @@ export function Hero({ hero }: { hero: HeroContent }) {
             sizes="100vw"
             className="object-cover"
           />
-        ) : null}
-      </div>
+        </div>
+      ) : null}
       <div className="px-gutter py-20">
         <div className="mx-auto flex max-w-column flex-col items-center gap-nav text-center">
           <h1 className="text-headline text-balance text-ink">{hero.headline}</h1>
