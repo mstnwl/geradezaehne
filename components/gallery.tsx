@@ -40,7 +40,7 @@ export function Gallery({ gallery }: { gallery: GalleryContent }) {
           <div className="grid lg:grid-cols-2 lg:gap-x-20">
             <div className="flex flex-col gap-nav">
               {gallery.headline ? (
-                <h2 className="text-headline text-ink">{gallery.headline}</h2>
+                <h2 className="text-ink">{gallery.headline}</h2>
               ) : null}
               {paragraphs.length > 0 ? (
                 <div className="flex flex-col gap-pair">

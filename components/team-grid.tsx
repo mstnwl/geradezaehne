@@ -30,7 +30,7 @@ export function TeamGrid({ teamGrid }: { teamGrid: TeamGridContent }) {
   return (
     <Reveal id={teamGrid.anchor} className="bg-white px-gutter py-20">
       <div className="mx-auto flex max-w-column flex-col gap-nav">
-        <h2 className="text-headline text-ink">{teamGrid.headline}</h2>
+        <h2 className="text-ink">{teamGrid.headline}</h2>
         {teamGrid.members.length > 0 ? (
           <ul className="grid grid-cols-2 gap-12 lg:grid-cols-3 lg:gap-x-20">
             {teamGrid.members.map((member, index) => (

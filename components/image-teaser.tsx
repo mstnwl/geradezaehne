@@ -48,7 +48,7 @@ export function ImageTeaser({ teaser }: { teaser: ImageTeaserContent }) {
         <div className="mx-auto w-full max-w-column">
           <div className="flex max-w-xl flex-col gap-nav text-white">
             <p className="text-[12px] font-bold uppercase tracking-widest">{teaser.eyebrow}</p>
-            <h2 className="text-headline">{teaser.headline}</h2>
+            <h2>{teaser.headline}</h2>
             <p className="text-base leading-normal font-normal lg:text-[18px]">{teaser.text}</p>
             <TeaserLink href={teaser.href} label={teaser.linkLabel} />
           </div>

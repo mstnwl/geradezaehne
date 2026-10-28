@@ -33,7 +33,7 @@ export function InfoPanel({ info }: { info: InfoPanelContent }) {
         <div className="flex flex-col gap-nav">
           <div className="flex flex-col gap-pair">
             <p className="text-[12px] font-bold tracking-widest uppercase">{info.eyebrow}</p>
-            <h2 className="text-headline">{info.headline}</h2>
+            <h2>{info.headline}</h2>
           </div>
           <p className="text-base leading-normal font-normal lg:text-[18px]">{info.body}</p>
           {info.links.length > 0 ? (

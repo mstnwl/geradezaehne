@@ -69,7 +69,7 @@ export function Booking({ booking }: { booking: BookingContent }) {
     <Reveal id={booking.anchor} className="bg-background px-gutter py-20">
       <div className="mx-auto grid max-w-column lg:grid-cols-2 lg:items-start lg:gap-x-20">
         <div className="flex flex-col items-start gap-nav">
-          <h2 className="text-headline text-ink">{booking.headline}</h2>
+          <h2 className="text-ink">{booking.headline}</h2>
           {paragraphs.length > 0 ? (
             <div className="flex flex-col gap-pair">
               {paragraphs.map((paragraph) => (

@@ -61,7 +61,7 @@ export function ContentHero({ content }: { content: ContentHeroContent }) {
                     </p>
                   ) : null}
                   {content.headline ? (
-                    <h1 className="text-headline text-ink">{content.headline}</h1>
+                    <h1 className="text-ink">{content.headline}</h1>
                   ) : null}
                 </div>
               ) : null}

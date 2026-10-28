@@ -65,7 +65,7 @@ export function Sprechzeiten({ sprechzeiten }: { sprechzeiten: SprechzeitenConte
   return (
     <Reveal className="bg-background px-gutter py-20">
       <div className="mx-auto grid max-w-column gap-nav lg:grid-cols-2 lg:items-center lg:gap-x-20">
-        <h2 className={`text-headline text-ink ${column}`}>{sprechzeiten.headline}</h2>
+        <h2 className={`text-ink ${column}`}>{sprechzeiten.headline}</h2>
         {sprechzeiten.image ? (
           <div className="relative aspect-[7/5] w-full overflow-hidden bg-white lg:col-start-1 lg:row-span-4 lg:row-start-1">
             <Image

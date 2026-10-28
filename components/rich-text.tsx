@@ -61,8 +61,7 @@ function Blocks({ blocks }: { blocks: RichBlock[] }) {
   return blocks.map((block, index) => {
     if (block.type === "heading") {
       const Tag = `h${block.level}` as "h1" | "h2" | "h3" | "h4";
-      const className =
-        block.level <= 2 ? "text-headline text-ink" : block.level === 3 ? "text-ink" : "font-medium text-ink";
+      const className = "text-ink";
 
       return (
         <Tag key={index} className={className}>

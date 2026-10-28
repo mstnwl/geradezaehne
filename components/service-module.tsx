@@ -59,7 +59,7 @@ function ServiceCopy({
             {service.eyebrow}
           </p>
         ) : null}
-        {service.headline ? <h2 className="text-headline text-ink">{service.headline}</h2> : null}
+        {service.headline ? <h2 className="text-ink">{service.headline}</h2> : null}
       </div>
       {showMobileImage && service.image ? (
         <div className="lg:hidden">

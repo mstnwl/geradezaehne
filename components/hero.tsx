@@ -51,7 +51,7 @@ export function Hero({ hero }: { hero: HeroContent }) {
       ) : null}
       <div className="px-gutter py-20">
         <div className="mx-auto flex max-w-column flex-col items-center gap-nav text-center">
-          <h1 className="text-headline text-balance text-ink">{hero.headline}</h1>
+          <h1 className="text-balance text-ink">{hero.headline}</h1>
           <p className="w-full text-base leading-normal font-normal text-ink lg:w-[50vw] lg:max-w-full lg:text-[18px]">
             {hero.copy}
           </p>
