@@ -4,9 +4,11 @@ import { Reveal } from "@/components/reveal";
 import { RichText } from "@/components/rich-text";
 import type { ServiceImage, ServiceLink, ServiceModuleContent } from "@/lib/service-module";
 
-function ServiceFrame({ image }: { image: ServiceImage }) {
+function ServiceFrame({ image, portrait }: { image: ServiceImage; portrait: boolean }) {
   return (
-    <div className="relative aspect-[7/5] w-full overflow-hidden bg-white">
+    <div
+      className={`relative w-full overflow-hidden bg-white ${portrait ? "aspect-[4/5]" : "aspect-[7/5]"}`}
+    >
       <Image
         src={image.src}
         alt={image.alt}
@@ -61,7 +63,7 @@ function ServiceCopy({
       </div>
       {showMobileImage && service.image ? (
         <div className="lg:hidden">
-          <ServiceFrame image={service.image} />
+          <ServiceFrame image={service.image} portrait={service.portrait} />
         </div>
       ) : null}
       {service.richText && service.richText.blocks.length > 0 ? (
@@ -120,7 +122,7 @@ export function ServiceModule({
         }`}
       >
         <div className="hidden lg:block">
-          <ServiceFrame image={service.image} />
+          <ServiceFrame image={service.image} portrait={service.portrait} />
         </div>
         <div className="contents lg:flex lg:flex-col lg:gap-nav">
           <ServiceCopy service={service} showMobileImage />

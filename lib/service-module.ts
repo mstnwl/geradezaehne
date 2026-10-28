@@ -19,6 +19,7 @@ export type ServiceModuleContent = {
   richText: RichTextDoc | null;
   image: ServiceImage | null;
   links: ServiceLink[];
+  portrait: boolean;
 };
 
 export type QuoteContent = {
@@ -176,6 +177,7 @@ const fallbackServiceModule: ServiceModuleContent = {
     { name: "Häufig gestellte Fragen", href: "/" },
     { name: "News", href: "/" },
   ],
+  portrait: false,
 };
 
 const fallbackQuote: QuoteContent = {
@@ -481,6 +483,7 @@ function mapModule(
     richText: null,
     image: imageValue(module.image),
     links: preserveEmpty ? serviceLinks(module.links) : linkValue(module.links),
+    portrait: false,
   };
 }
 
@@ -504,6 +507,7 @@ function mapContentService(module: StoryblokRecord, index: number): ServiceModul
     richText: richTextValue(module.body),
     image: imageValue(module.image),
     links: service.length > 0 ? service : contentLinks(module.links),
+    portrait: module.portrait === true,
   };
 }
 
