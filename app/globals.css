@@ -113,9 +113,14 @@ body {
 
 .header-link,
 .action-link {
+  color: var(--color-ink);
   transition:
     color 150ms ease-out,
     transform 150ms ease-out;
+}
+
+.header-link.text-white {
+  color: var(--color-white);
 }
 
 .header-link:hover,
