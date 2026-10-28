@@ -105,6 +105,19 @@ export type TeamGridContent = {
   members: TeamMember[];
 };
 
+export type GalleryImage = {
+  image: ServiceImage | null;
+  caption: string;
+};
+
+export type GalleryContent = {
+  id: string;
+  anchor: string;
+  headline: string;
+  body: string;
+  images: GalleryImage[];
+};
+
 export type ContentHeroContent = {
   id: string;
   anchor: string;
@@ -126,7 +139,8 @@ export type HomeBlock =
   | { kind: "image-teaser"; teaser: ImageTeaserContent }
   | { kind: "info-panel"; info: InfoPanelContent }
   | { kind: "booking"; booking: BookingContent }
-  | { kind: "team-grid"; teamGrid: TeamGridContent };
+  | { kind: "team-grid"; teamGrid: TeamGridContent }
+  | { kind: "gallery"; gallery: GalleryContent };
 
 const fallbackHero: HeroContent = {
   id: "fallback-hero",
@@ -315,7 +329,8 @@ function homeBlocksInBody(content: StoryblokRecord): StoryblokRecord[] {
         record.component !== "image_teaser" &&
         record.component !== "info_panel" &&
         record.component !== "booking" &&
-        record.component !== "team_grid")
+        record.component !== "team_grid" &&
+        record.component !== "gallery")
     ) {
       return [];
     }
@@ -767,6 +782,43 @@ function mapTeamMember(value: unknown): TeamMember | null {
   return { name, role, image };
 }
 
+const fallbackGalleryHeadline = "Ein Ort zum Ankommen und Vertrauen";
+
+function mapGalleryImage(value: unknown): GalleryImage | null {
+  const record = asRecord(value);
+
+  if (!record || record.component !== "gallery_image") {
+    return null;
+  }
+
+  const caption = textValue(record.caption, "");
+  const image = imageValue(record.image);
+
+  if (!caption && !image) {
+    return null;
+  }
+
+  return { image, caption };
+}
+
+function mapGallery(module: StoryblokRecord, index: number): GalleryContent {
+  const images = Array.isArray(module.images)
+    ? module.images.flatMap((image) => {
+        const mapped = mapGalleryImage(image);
+
+        return mapped ? [mapped] : [];
+      })
+    : [];
+
+  return {
+    id: blockId(module, index, "gallery"),
+    anchor: anchorValue(module.anchor),
+    headline: textValue(module.headline, fallbackGalleryHeadline),
+    body: textValue(module.body, ""),
+    images,
+  };
+}
+
 function mapTeamGrid(module: StoryblokRecord, index: number): TeamGridContent {
   const members = Array.isArray(module.members)
     ? module.members.flatMap((member) => {
@@ -822,6 +874,8 @@ function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
       blocks.push({ kind: "booking", booking: mapBooking(record, index) });
     } else if (record.component === "team_grid") {
       blocks.push({ kind: "team-grid", teamGrid: mapTeamGrid(record, index) });
+    } else if (record.component === "gallery") {
+      blocks.push({ kind: "gallery", gallery: mapGallery(record, index) });
     }
   });
 
@@ -883,6 +937,8 @@ function toStoryBlocks(records: StoryblokRecord[], legacyContentHero = false): H
       blocks.push({ kind: "booking", booking: mapBooking(record, index) });
     } else if (record.component === "team_grid") {
       blocks.push({ kind: "team-grid", teamGrid: mapTeamGrid(record, index) });
+    } else if (record.component === "gallery") {
+      blocks.push({ kind: "gallery", gallery: mapGallery(record, index) });
     }
   });
 

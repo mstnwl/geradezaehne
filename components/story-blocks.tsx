@@ -1,5 +1,6 @@
 import { AgeGroups } from "@/components/age-groups";
 import { Booking } from "@/components/booking";
+import { Gallery } from "@/components/gallery";
 import { ContentHero } from "@/components/content-hero";
 import { Hero } from "@/components/hero";
 import { ImageTeaser } from "@/components/image-teaser";
@@ -56,6 +57,10 @@ export function StoryBlocks({ blocks }: { blocks: HomeBlock[] }) {
 
     if (block.kind === "team-grid") {
       return <TeamGrid key={block.teamGrid.id} teamGrid={block.teamGrid} />;
+    }
+
+    if (block.kind === "gallery") {
+      return <Gallery key={block.gallery.id} gallery={block.gallery} />;
     }
 
     return <InfoPanel key={block.info.id} info={block.info} />;
