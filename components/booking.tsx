@@ -73,7 +73,7 @@ export function Booking({ booking }: { booking: BookingContent }) {
     .filter(Boolean);
 
   return (
-    <Reveal id={booking.anchor} className="bg-white px-gutter py-20">
+    <Reveal id={booking.anchor} className="bg-background px-gutter py-20">
       <div className="mx-auto grid max-w-column lg:grid-cols-2 lg:items-start lg:gap-x-20">
         <div className="flex flex-col items-start gap-nav">
           <h2 className="text-headline text-ink">{booking.headline}</h2>
@@ -89,8 +89,10 @@ export function Booking({ booking }: { booking: BookingContent }) {
               ))}
             </div>
           ) : null}
-          <BookingButton href={booking.bookingHref} label={booking.bookingLabel} />
-          <PhoneLink href={booking.phoneHref} label={booking.phoneLabel} />
+          <div className="flex flex-col items-start gap-nav lg:flex-row lg:items-center lg:gap-gutter">
+            <BookingButton href={booking.bookingHref} label={booking.bookingLabel} />
+            <PhoneLink href={booking.phoneHref} label={booking.phoneLabel} />
+          </div>
         </div>
       </div>
     </Reveal>
