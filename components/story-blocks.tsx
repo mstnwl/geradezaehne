@@ -1,4 +1,5 @@
 import { AgeGroups } from "@/components/age-groups";
+import { ContentHero } from "@/components/content-hero";
 import { Hero } from "@/components/hero";
 import { ImageTeaser } from "@/components/image-teaser";
 import { InfoPanel } from "@/components/info-panel";
@@ -15,6 +16,10 @@ export function StoryBlocks({ blocks }: { blocks: HomeBlock[] }) {
 
     if (block.kind === "trust-band") {
       return <TrustBand key={block.trust.id} trust={block.trust} />;
+    }
+
+    if (block.kind === "content-hero") {
+      return <ContentHero key={block.contentHero.id} content={block.contentHero} />;
     }
 
     if (block.kind === "service") {

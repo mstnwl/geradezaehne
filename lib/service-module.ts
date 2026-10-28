@@ -70,9 +70,19 @@ export type InfoPanelContent = {
   links: ServiceLink[];
 };
 
+export type ContentHeroContent = {
+  id: string;
+  eyebrow: string;
+  headline: string;
+  image: ServiceImage | null;
+  paragraphs: string[];
+  links: ServiceLink[];
+};
+
 export type HomeBlock =
   | { kind: "hero"; hero: HeroContent }
   | { kind: "trust-band"; trust: TrustBandContent }
+  | { kind: "content-hero"; contentHero: ContentHeroContent }
   | { kind: "service"; service: ServiceModuleContent }
   | { kind: "quote"; quote: QuoteContent }
   | { kind: "age-groups"; ageGroups: AgeGroupsContent }
@@ -250,6 +260,7 @@ function homeBlocksInBody(content: StoryblokRecord): StoryblokRecord[] {
       (record.component !== "hero" &&
         record.component !== "trust_band" &&
         record.component !== "service_module" &&
+        record.component !== "content_hero" &&
         record.component !== "quote" &&
         record.component !== "age_groups" &&
         record.component !== "image_teaser" &&
@@ -317,6 +328,30 @@ function linkValue(value: unknown): ServiceLink[] {
   const links = serviceLinks(value);
 
   return links.length > 0 ? links : fallbackServiceModule.links;
+}
+
+function contentLinks(value: unknown): ServiceLink[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.flatMap((item) => {
+    const record = asRecord(item);
+
+    if (!record || record.component !== "content_link" || typeof record.label !== "string") {
+      return [];
+    }
+
+    const name = record.label.trim();
+
+    if (!name) {
+      return [];
+    }
+
+    const link = asRecord(record.link) as StoryblokLink | null;
+
+    return [{ name, href: resolveHref(link ?? undefined) }];
+  });
 }
 
 function blockId(record: StoryblokRecord, index: number, prefix: string) {
@@ -393,6 +428,41 @@ function mapModule(
     text: textValue(module.text, fallback ?? fallbackServiceModule.text),
     image: imageValue(module.image),
     links: preserveEmpty ? serviceLinks(module.links) : linkValue(module.links),
+  };
+}
+
+function trimmedField(value: unknown) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function mapContentHero(module: StoryblokRecord, index: number): ContentHeroContent {
+  return {
+    id: blockId(module, index, "content-hero"),
+    eyebrow: trimmedField(module.eyebrow),
+    headline: trimmedField(module.headline),
+    image: imageValue(module.image),
+    paragraphs: paragraphsValue(module.body),
+    links: contentLinks(module.links),
+  };
+}
+
+function isLegacyContentHero(record: StoryblokRecord) {
+  return (
+    trimmedField(record.eyebrow).length > 0 &&
+    trimmedField(record.headline).length === 0 &&
+    paragraphsValue(record.text).length > 0 &&
+    serviceLinks(record.links).length > 0
+  );
+}
+
+function mapLegacyContentHero(module: StoryblokRecord, index: number): ContentHeroContent {
+  return {
+    id: blockId(module, index, "content-hero"),
+    eyebrow: trimmedField(module.eyebrow),
+    headline: trimmedField(module.headline),
+    image: imageValue(module.image),
+    paragraphs: paragraphsValue(module.text),
+    links: serviceLinks(module.links),
   };
 }
 
@@ -577,6 +647,8 @@ function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
       }
     } else if (record.component === "trust_band") {
       blocks.push({ kind: "trust-band", trust: mapTrustBand(record, index) });
+    } else if (record.component === "content_hero") {
+      blocks.push({ kind: "content-hero", contentHero: mapContentHero(record, index) });
     } else if (record.component === "service_module") {
       blocks.push({ kind: "service", service: mapModule(record, index) });
     } else if (record.component === "quote") {
@@ -617,16 +689,23 @@ function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
   return [{ kind: "hero", hero: hero ?? fallbackHero }, ...blocks];
 }
 
-function toStoryBlocks(records: StoryblokRecord[]): HomeBlock[] {
+function toStoryBlocks(records: StoryblokRecord[], legacyContentHero = false): HomeBlock[] {
   const blocks: HomeBlock[] = [];
+  const hasContentHero = records.some((record) => record.component === "content_hero");
 
   records.forEach((record, index) => {
     if (record.component === "hero") {
       blocks.push({ kind: "hero", hero: mapHero(record, index) });
     } else if (record.component === "trust_band") {
       blocks.push({ kind: "trust-band", trust: mapTrustBand(record, index) });
+    } else if (record.component === "content_hero") {
+      blocks.push({ kind: "content-hero", contentHero: mapContentHero(record, index) });
     } else if (record.component === "service_module") {
-      blocks.push({ kind: "service", service: mapModule(record, index, true) });
+      if (legacyContentHero && !hasContentHero && isLegacyContentHero(record)) {
+        blocks.push({ kind: "content-hero", contentHero: mapLegacyContentHero(record, index) });
+      } else {
+        blocks.push({ kind: "service", service: mapModule(record, index, true) });
+      }
     } else if (record.component === "quote") {
       blocks.push({ kind: "quote", quote: mapQuote(record, index) });
     } else if (record.component === "age_groups") {
@@ -715,13 +794,13 @@ async function loadStoryBlocks(token: string, region: string, slug: string) {
     const published = await readStoryBody(token, region, slug, "published");
 
     if (published) {
-      return toStoryBlocks(published);
+      return toStoryBlocks(published, slug === "behandlungsspektrum");
     }
 
     const draft = await readStoryBody(token, region, slug, "draft");
 
     if (draft) {
-      return toStoryBlocks(draft);
+      return toStoryBlocks(draft, slug === "behandlungsspektrum");
     }
   } catch {
     return [];
