@@ -4,14 +4,18 @@ import { Reveal } from "@/components/reveal";
 import type { PostSummary } from "@/lib/posts";
 
 function PostThumb({ post }: { post: PostSummary }) {
-  if (!post.image) {
-    return <div className="size-40 shrink-0 bg-background lg:size-72" aria-hidden="true" />;
-  }
-
-  return (
-    <div className="relative size-40 shrink-0 overflow-hidden bg-background lg:size-72">
+  const frame = post.image ? (
+    <div className="relative size-40 overflow-hidden bg-background lg:size-72">
       <Image src={post.image.src} alt="" fill sizes="(min-width: 64rem) 18rem, 10rem" className="object-cover" />
     </div>
+  ) : (
+    <div className="size-40 bg-background lg:size-72" aria-hidden="true" />
+  );
+
+  return (
+    <Link href={`/news/${post.slug}`} aria-label={post.headline || "Lesen"} className="shrink-0">
+      {frame}
+    </Link>
   );
 }
 
