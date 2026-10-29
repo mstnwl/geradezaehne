@@ -75,7 +75,7 @@ function PostDate({ post }: { post: Post }) {
 
 function PostBackLink() {
   return (
-    <Link href="/news" className="header-link inline-flex w-fit items-center gap-pair text-nav">
+    <Link href="/news" className="header-link mb-20 inline-flex w-fit items-center gap-pair text-nav">
       <span className="menu-arrow size-icon shrink-0" style={{ transform: "scaleX(-1)" }} aria-hidden="true" />
       Alle Beiträge
     </Link>
@@ -85,7 +85,7 @@ function PostBackLink() {
 export function PostDetail({ post }: { post: Post }) {
   return (
     <Reveal className="bg-white px-gutter py-20">
-      <div className="mx-auto flex max-w-column flex-col gap-nav">
+      <div className="mx-auto flex max-w-column flex-col">
         <PostBackLink />
         <div className="grid items-start gap-nav lg:grid-cols-2 lg:gap-x-20">
           <div className="flex flex-col gap-nav">
