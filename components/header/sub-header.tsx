@@ -20,7 +20,15 @@ function hoursKeyframes(count: number) {
   }`;
 }
 
-export function SubHeader({ lines, bookingHref }: { lines: string[]; bookingHref: string }) {
+export function SubHeader({
+  lines,
+  bookingHref,
+  bookingOverlay,
+}: {
+  lines: string[];
+  bookingHref: string;
+  bookingOverlay: boolean;
+}) {
   const count = lines.length;
   const cycling = count > 1;
 
@@ -60,6 +68,7 @@ export function SubHeader({ lines, bookingHref }: { lines: string[]; bookingHref
             </a>
             <BookingLink
               href={bookingHref}
+              overlay={bookingOverlay}
               className="action-link flex items-center justify-center gap-pair text-nav whitespace-nowrap"
             >
               <Image

@@ -62,6 +62,7 @@ export type HeroContent = {
   copy: string;
   buttonLabel: string;
   buttonHref: string;
+  overlay: boolean;
   image: ServiceImage | null;
 };
 
@@ -88,6 +89,7 @@ export type BookingContent = {
   body: string;
   bookingLabel: string;
   bookingHref: string;
+  overlay: boolean;
   phoneLabel: string;
   phoneHref: string;
 };
@@ -184,6 +186,7 @@ const fallbackHero: HeroContent = {
   copy: "Als Fachzahnärzte für Kieferorthopädie begleiten wir Sie mit Erfahrung, Empathie und neuesten Behandlungsmethoden – von der ersten Beratung bis zum perfekten Lächeln.",
   buttonLabel: "Termin buchen",
   buttonHref: "#",
+  overlay: false,
   image: null,
 };
 
@@ -515,6 +518,7 @@ function mapHero(module: StoryblokRecord, index: number): HeroContent {
     copy: textValue(module.copy, fallbackHero.copy),
     buttonLabel: textValue(module.button_label, fallbackHero.buttonLabel),
     buttonHref: module.button_link ? resolveHref(link ?? undefined) : fallbackHero.buttonHref,
+    overlay: module.overlay === true,
     image: imageValue(module.image),
   };
 }
@@ -768,6 +772,7 @@ const fallbackBooking: BookingContent = {
   body: "Wir nehmen uns Zeit für Ihre Fragen und beraten Sie persönlich zur passenden Behandlung.",
   bookingLabel: "Termin buchen",
   bookingHref: "/",
+  overlay: false,
   phoneLabel: "Jetzt anrufen",
   phoneHref: "tel:+496131227266",
 };
@@ -794,6 +799,7 @@ function mapBooking(module: StoryblokRecord, index: number): BookingContent {
     body: textValue(module.body, fallbackBooking.body),
     bookingLabel: textValue(module.booking_label, fallbackBooking.bookingLabel),
     bookingHref: linkedHref(bookingLink, fallbackBooking.bookingHref),
+    overlay: module.overlay === true,
     phoneLabel: textValue(module.phone_label, fallbackBooking.phoneLabel),
     phoneHref: linkedHref(phoneLink, fallbackBooking.phoneHref),
   };

@@ -4,6 +4,16 @@ export const fallbackOpeningHours = [
   "Fr: 8.30 – 12:00 Uhr",
 ];
 
+export type OpeningHoursContent = {
+  lines: string[];
+  overlay: boolean;
+};
+
+const fallbackOpeningHoursContent: OpeningHoursContent = {
+  lines: fallbackOpeningHours,
+  overlay: false,
+};
+
 type StoryblokOpeningLine = {
   component?: string;
   text?: unknown;
@@ -66,17 +76,20 @@ async function loadOpeningHours(token: string, region: string) {
     const response = await fetch(url, { cache: "no-store" });
 
     if (!response.ok) {
-      return fallbackOpeningHours;
+      return fallbackOpeningHoursContent;
     }
 
     const data = (await response.json()) as {
-      story?: { content?: { lines?: unknown } };
+      story?: { content?: { lines?: unknown; overlay?: unknown } };
     };
     const lines = mapLines(data.story?.content?.lines);
 
-    return lines.length > 0 ? lines : fallbackOpeningHours;
+    return {
+      lines: lines.length > 0 ? lines : fallbackOpeningHours,
+      overlay: data.story?.content?.overlay === true,
+    };
   } catch {
-    return fallbackOpeningHours;
+    return fallbackOpeningHoursContent;
   }
 }
 
@@ -84,7 +97,7 @@ export async function getOpeningHours() {
   const token = process.env.STORYBLOK_TOKEN;
 
   if (!token) {
-    return fallbackOpeningHours;
+    return fallbackOpeningHoursContent;
   }
 
   return loadOpeningHours(token, process.env.STORYBLOK_REGION || "eu");

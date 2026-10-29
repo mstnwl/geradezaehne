@@ -34,8 +34,9 @@ async function SiteHeaderData() {
     <SiteHeader
       desktop={navigation.desktop}
       mobile={navigation.mobile}
-      openingHours={openingHours}
+      openingHours={openingHours.lines}
       bookingHref={hero ? hero.hero.buttonHref : "#"}
+      bookingOverlay={openingHours.overlay}
     />
   );
 }

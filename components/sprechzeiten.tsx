@@ -4,10 +4,11 @@ import { BookingLink } from "@/components/booking-link";
 import { Reveal } from "@/components/reveal";
 import type { SprechzeitenContent } from "@/lib/sprechzeiten";
 
-function BookingButton({ href, label }: { href: string; label: string }) {
+function BookingButton({ href, label, overlay }: { href: string; label: string; overlay: boolean }) {
   return (
     <BookingLink
       href={href}
+      overlay={overlay}
       className="booking-button inline-flex h-bar w-fit items-center rounded bg-accent px-gutter text-ink"
     >
       <span className="booking-caption inline-flex items-center gap-pair text-nav">
@@ -86,7 +87,11 @@ export function Sprechzeiten({ sprechzeiten }: { sprechzeiten: SprechzeitenConte
           {sprechzeiten.body}
         </p>
         <div className={`flex flex-col items-start gap-nav justify-self-start lg:flex-row lg:items-center lg:gap-gutter ${column}`}>
-          <BookingButton href={sprechzeiten.bookingHref} label={sprechzeiten.bookingLabel} />
+          <BookingButton
+            href={sprechzeiten.bookingHref}
+            label={sprechzeiten.bookingLabel}
+            overlay={sprechzeiten.overlay}
+          />
           <PhoneLink href={sprechzeiten.phoneHref} label={sprechzeiten.phoneLabel} />
         </div>
       </div>

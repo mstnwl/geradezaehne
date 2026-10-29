@@ -11,9 +11,16 @@ type SiteHeaderProps = {
   mobile: NavItem[];
   openingHours: string[];
   bookingHref: string;
+  bookingOverlay: boolean;
 };
 
-export function SiteHeader({ desktop, mobile, openingHours, bookingHref }: SiteHeaderProps) {
+export function SiteHeader({
+  desktop,
+  mobile,
+  openingHours,
+  bookingHref,
+  bookingOverlay,
+}: SiteHeaderProps) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -52,7 +59,7 @@ export function SiteHeader({ desktop, mobile, openingHours, bookingHref }: SiteH
           </div>
         </div>
       </header>
-      <SubHeader lines={openingHours} bookingHref={bookingHref} />
+      <SubHeader lines={openingHours} bookingHref={bookingHref} bookingOverlay={bookingOverlay} />
     </>
   );
 }

@@ -2,10 +2,11 @@ import Image from "next/image";
 import { BookingLink } from "@/components/booking-link";
 import type { HeroContent } from "@/lib/service-module";
 
-function BookingButton({ href, label }: { href: string; label: string }) {
+function BookingButton({ href, label, overlay }: { href: string; label: string; overlay: boolean }) {
   return (
     <BookingLink
       href={href}
+      overlay={overlay}
       className="booking-button inline-flex h-bar w-fit items-center rounded bg-accent px-gutter text-ink"
     >
       <span className="booking-caption inline-flex items-center gap-pair text-nav">
@@ -44,7 +45,7 @@ export function Hero({ hero }: { hero: HeroContent }) {
           <p className="w-full text-base leading-normal font-normal text-ink lg:w-[50vw] lg:max-w-full lg:text-[18px]">
             {hero.copy}
           </p>
-          <BookingButton href={hero.buttonHref} label={hero.buttonLabel} />
+          <BookingButton href={hero.buttonHref} label={hero.buttonLabel} overlay={hero.overlay} />
         </div>
       </div>
     </section>

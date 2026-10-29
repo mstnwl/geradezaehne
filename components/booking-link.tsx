@@ -4,14 +4,6 @@ import { useEffect, useId, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 
-function isBookingEmbed(href: string) {
-  try {
-    return new URL(href).hostname === "embed.etermio.com";
-  } catch {
-    return false;
-  }
-}
-
 function BookingOverlay({ href, onClose }: { href: string; onClose: () => void }) {
   const titleId = useId();
 
@@ -61,16 +53,18 @@ function BookingOverlay({ href, onClose }: { href: string; onClose: () => void }
 
 export function BookingLink({
   href,
+  overlay = false,
   className,
   children,
 }: {
   href: string;
+  overlay?: boolean;
   className: string;
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
 
-  if (!isBookingEmbed(href)) {
+  if (!overlay) {
     if (/^(https?:|mailto:|tel:|#)/i.test(href)) {
       return (
         <a href={href} className={className}>

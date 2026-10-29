@@ -4,10 +4,11 @@ import { BookingLink } from "@/components/booking-link";
 import { Reveal } from "@/components/reveal";
 import type { BookingContent } from "@/lib/service-module";
 
-function BookingButton({ href, label }: { href: string; label: string }) {
+function BookingButton({ href, label, overlay }: { href: string; label: string; overlay: boolean }) {
   return (
     <BookingLink
       href={href}
+      overlay={overlay}
       className="booking-button inline-flex h-bar w-fit items-center rounded bg-accent px-gutter text-ink"
     >
       <span className="booking-caption inline-flex items-center gap-pair text-nav">
@@ -73,7 +74,11 @@ export function Booking({ booking }: { booking: BookingContent }) {
             </div>
           ) : null}
           <div className="flex flex-col items-start gap-nav lg:flex-row lg:items-center lg:gap-gutter">
-            <BookingButton href={booking.bookingHref} label={booking.bookingLabel} />
+            <BookingButton
+              href={booking.bookingHref}
+              label={booking.bookingLabel}
+              overlay={booking.overlay}
+            />
             <PhoneLink href={booking.phoneHref} label={booking.phoneLabel} />
           </div>
         </div>

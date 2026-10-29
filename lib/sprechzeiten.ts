@@ -17,6 +17,7 @@ export type SprechzeitenContent = {
   body: string;
   bookingLabel: string;
   bookingHref: string;
+  overlay: boolean;
   phoneLabel: string;
   phoneHref: string;
 };
@@ -33,6 +34,7 @@ const fallbackSprechzeiten: SprechzeitenContent = {
   body: "Um Ihnen möglichst kurze Wartezeiten zu garantieren, bitten wir Sie, telefonisch oder online einen Termin zu vereinbaren.",
   bookingLabel: "Termin buchen",
   bookingHref: "#",
+  overlay: false,
   phoneLabel: "Jetzt anrufen",
   phoneHref: "tel:+496131227266",
 };
@@ -151,6 +153,7 @@ function mapSprechzeiten(record: StoryblokRecord, index: number): SprechzeitenCo
     bookingHref: record.booking_link
       ? resolveHref(bookingLink ?? undefined, fallbackSprechzeiten.bookingHref)
       : fallbackSprechzeiten.bookingHref,
+    overlay: record.overlay === true,
     phoneLabel: textValue(record.phone_label, fallbackSprechzeiten.phoneLabel),
     phoneHref: record.phone_link
       ? resolveHref(phoneLink ?? undefined, fallbackSprechzeiten.phoneHref)
