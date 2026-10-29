@@ -1,7 +1,47 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Reveal } from "@/components/reveal";
-import type { AgeGroupsContent, ServiceLink } from "@/lib/service-module";
+import type { AgeGroupsContent, ServiceImage, ServiceLink } from "@/lib/service-module";
+
+function imageSize(src: string) {
+  const match = src.match(/\/(\d+)x(\d+)\//);
+
+  if (!match) {
+    return null;
+  }
+
+  const width = Number(match[1]);
+  const height = Number(match[2]);
+
+  if (!width || !height) {
+    return null;
+  }
+
+  return { width, height };
+}
+
+function AgeGroupImage({ image }: { image: ServiceImage }) {
+  const size = imageSize(image.src);
+  const className = "h-auto w-4/5";
+
+  if (!size) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={image.src} alt={image.alt} className={className} />
+    );
+  }
+
+  return (
+    <Image
+      src={image.src}
+      alt={image.alt}
+      width={size.width}
+      height={size.height}
+      sizes="(min-width: 64rem) 18rem, 80vw"
+      className={className}
+    />
+  );
+}
 
 function TreatmentLink({ link }: { link: ServiceLink }) {
   const className = "header-link inline-flex items-center gap-pair text-nav";
@@ -34,17 +74,7 @@ export function AgeGroups({ ageGroups }: { ageGroups: AgeGroupsContent }) {
         {ageGroups.groups.map((group, index) => (
           <article key={`${group.headline}-${index}`} className="flex flex-col gap-nav">
             <h3 className="text-ink">{group.headline}</h3>
-            {group.image ? (
-              <div className="relative aspect-[4/5] w-40 overflow-hidden bg-white">
-                <Image
-                  src={group.image.src}
-                  alt={group.image.alt}
-                  fill
-                  sizes="10rem"
-                  className="object-cover"
-                />
-              </div>
-            ) : null}
+            {group.image ? <AgeGroupImage image={group.image} /> : null}
             <div className="flex flex-col gap-pair">
               {group.paragraphs.map((paragraph) => (
                 <p key={paragraph} className="text-base leading-normal font-normal text-ink lg:text-[18px]">
