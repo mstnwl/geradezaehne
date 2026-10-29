@@ -15,10 +15,10 @@ export type OpeningHoursContent = {
 
 const fallbackOpeningHoursContent: OpeningHoursContent = {
   lines: fallbackOpeningHours,
-  phoneNumber: "06131 227266",
-  phoneHref: "tel:+496131227266",
-  bookingLabel: "Termin buchen",
-  bookingHref: "#",
+  phoneNumber: "",
+  phoneHref: "",
+  bookingLabel: "",
+  bookingHref: "",
   overlay: false,
 };
 
@@ -47,19 +47,17 @@ function apiBase(region: string) {
   }
 }
 
-function textField(value: unknown, fallback: string) {
+function textField(value: unknown) {
   if (typeof value !== "string") {
-    return fallback;
+    return "";
   }
 
-  const trimmed = value.trim();
-
-  return trimmed || fallback;
+  return value.trim();
 }
 
-function linkHref(value: unknown, fallback: string) {
+function linkHref(value: unknown) {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
-    return fallback;
+    return "";
   }
 
   const link = value as StoryblokLink;
@@ -68,7 +66,7 @@ function linkHref(value: unknown, fallback: string) {
   const trimmed = raw.trim();
 
   if (!trimmed || trimmed === "home") {
-    return fallback;
+    return "";
   }
 
   if (trimmed.startsWith("#") || /^(https?:|mailto:|tel:)/i.test(trimmed)) {
@@ -141,10 +139,10 @@ async function loadOpeningHours(token: string, region: string) {
 
     return {
       lines: lines.length > 0 ? lines : fallbackOpeningHours,
-      phoneNumber: textField(content?.phone_number, fallbackOpeningHoursContent.phoneNumber),
-      phoneHref: linkHref(content?.phone_link, fallbackOpeningHoursContent.phoneHref),
-      bookingLabel: textField(content?.booking_label, fallbackOpeningHoursContent.bookingLabel),
-      bookingHref: linkHref(content?.booking_link, fallbackOpeningHoursContent.bookingHref),
+      phoneNumber: textField(content?.phone_number),
+      phoneHref: linkHref(content?.phone_link),
+      bookingLabel: textField(content?.booking_label),
+      bookingHref: linkHref(content?.booking_link),
       overlay: content?.overlay === true,
     };
   } catch {

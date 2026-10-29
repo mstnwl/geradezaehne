@@ -69,6 +69,9 @@ export function SubHeader({
 }) {
   const count = lines.length;
   const cycling = count > 1;
+  const showPhone = Boolean(phoneNumber && phoneHref);
+  const showBooking = Boolean(bookingLabel && bookingHref);
+  const actionCount = Number(showPhone) + Number(showBooking);
 
   return (
     <div className="sticky top-0 z-10">
@@ -89,24 +92,30 @@ export function SubHeader({
               </span>
             ))}
           </p>
-          <div className="grid h-full w-full grid-cols-2 items-center lg:flex lg:w-auto lg:gap-gutter">
-            <PhoneAction href={phoneHref} label={phoneNumber} />
-            <BookingLink
-              href={bookingHref}
-              overlay={bookingOverlay}
-              className="action-link flex items-center justify-center gap-pair text-nav whitespace-nowrap"
+          {actionCount > 0 ? (
+            <div
+              className={`grid h-full items-center lg:flex lg:w-auto lg:gap-gutter ${actionCount > 1 ? "w-full grid-cols-2" : "w-full lg:w-auto"}`}
             >
-              <Image
-                src="/Icon24_Calendar.svg"
-                alt=""
-                width={24}
-                height={24}
-                unoptimized
-                className="size-icon shrink-0"
-              />
-              {bookingLabel}
-            </BookingLink>
-          </div>
+              {showPhone ? <PhoneAction href={phoneHref} label={phoneNumber} /> : null}
+              {showBooking ? (
+                <BookingLink
+                  href={bookingHref}
+                  overlay={bookingOverlay}
+                  className="action-link flex items-center justify-center gap-pair text-nav whitespace-nowrap"
+                >
+                  <Image
+                    src="/Icon24_Calendar.svg"
+                    alt=""
+                    width={24}
+                    height={24}
+                    unoptimized
+                    className="size-icon shrink-0"
+                  />
+                  {bookingLabel}
+                </BookingLink>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
