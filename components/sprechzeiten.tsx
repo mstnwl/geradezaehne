@@ -63,6 +63,7 @@ export function Sprechzeiten({ sprechzeiten }: { sprechzeiten: SprechzeitenConte
               src={sprechzeiten.image.src}
               alt={sprechzeiten.image.alt}
               fill
+              unoptimized
               sizes="(min-width: 64rem) 35rem, 100vw"
               className="object-cover"
             />

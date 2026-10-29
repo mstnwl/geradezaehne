@@ -6,7 +6,7 @@ import type { PostSummary } from "@/lib/posts";
 function PostThumb({ post }: { post: PostSummary }) {
   const frame = post.image ? (
     <div className="relative size-40 overflow-hidden bg-background lg:size-72">
-      <Image src={post.image.src} alt="" fill sizes="(min-width: 64rem) 18rem, 10rem" className="object-cover" />
+      <Image src={post.image.src} alt="" fill unoptimized sizes="(min-width: 64rem) 18rem, 10rem" className="object-cover" />
     </div>
   ) : (
     <div className="size-40 bg-background lg:size-72" aria-hidden="true" />

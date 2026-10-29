@@ -13,6 +13,7 @@ function ServiceFrame({ image, portrait }: { image: ServiceImage; portrait: bool
         src={image.src}
         alt={image.alt}
         fill
+        unoptimized
         sizes="(min-width: 64rem) 35rem, 100vw"
         className="object-cover"
       />

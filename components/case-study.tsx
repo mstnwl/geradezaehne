@@ -56,6 +56,7 @@ function CaseImage({ src, alt }: { src: string; alt: string }) {
       alt={alt}
       width={size.width}
       height={size.height}
+      unoptimized
       sizes="(min-width: 64rem) 35rem, 100vw"
       className="h-auto w-full"
     />

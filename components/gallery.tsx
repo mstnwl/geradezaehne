@@ -12,6 +12,7 @@ function GalleryFigure({ item }: { item: GalleryImage }) {
               src={item.image.src}
               alt={item.image.alt || item.caption}
               fill
+              unoptimized
               sizes="(min-width: 64rem) 75rem, 100vw"
               className="object-cover"
             />

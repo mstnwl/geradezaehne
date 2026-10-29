@@ -30,6 +30,7 @@ export function HeroImage({ image }: { image: ServiceImage }) {
           alt={image.alt}
           fill
           preload
+          unoptimized
           sizes="100vw"
           className="object-cover"
         />
@@ -45,6 +46,7 @@ export function HeroImage({ image }: { image: ServiceImage }) {
         width={size.width}
         height={size.height}
         preload
+        unoptimized
         sizes="100vw"
         className="h-auto w-full lg:absolute lg:inset-0 lg:h-full lg:object-cover"
       />

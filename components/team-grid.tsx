@@ -11,6 +11,7 @@ function Member({ member }: { member: TeamMember }) {
             src={member.image.src}
             alt={member.image.alt || member.name}
             fill
+            unoptimized
             sizes="(min-width: 64rem) 22rem, 45vw"
             className="object-cover"
           />

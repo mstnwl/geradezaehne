@@ -35,6 +35,7 @@ export function ImageTeaser({ teaser }: { teaser: ImageTeaserContent }) {
           src={teaser.image.src}
           alt={teaser.image.alt}
           fill
+          unoptimized
           sizes="100vw"
           className="object-cover"
         />

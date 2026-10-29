@@ -27,6 +27,7 @@ function PostPicture({ image }: { image: PostImage }) {
       alt={image.alt}
       width={size.width}
       height={size.height}
+      unoptimized
       sizes="(min-width: 64rem) 35rem, 100vw"
       className="h-auto w-full"
     />
