@@ -61,7 +61,7 @@ function FaqRow({
     <li id={item.anchor || undefined}>
       <button
         type="button"
-        className="faq-question w-full cursor-pointer py-nav text-left"
+        className="faq-question w-full cursor-pointer py-menu text-left"
         aria-expanded={open}
         aria-controls={hasAnswer ? panelId : undefined}
         onClick={onToggle}
@@ -72,7 +72,7 @@ function FaqRow({
         </span>
       </button>
       {open && hasAnswer ? (
-        <div id={panelId} className="pb-nav pl-menu">
+        <div id={panelId} className="pb-menu pl-menu">
           <RichText document={item.answer} />
         </div>
       ) : null}
