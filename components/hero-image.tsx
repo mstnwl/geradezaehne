@@ -18,13 +18,21 @@ function imageSize(src: string) {
   return { width, height };
 }
 
-export function HeroImage({ image }: { image: ServiceImage }) {
+export function HeroImage({
+  image,
+  mobile = "cover",
+}: {
+  image: ServiceImage;
+  mobile?: "cover" | "natural";
+}) {
   const size = imageSize(image.src);
   const portrait = size ? size.height > size.width : false;
 
-  if (!portrait || !size) {
+  if (!size || (!portrait && mobile !== "natural")) {
+    const mobileAspect = mobile === "natural" ? "aspect-[3/2]" : "aspect-[4/5]";
+
     return (
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-white lg:aspect-[16/9]">
+      <div className={`relative ${mobileAspect} w-full overflow-hidden bg-white lg:aspect-[16/9]`}>
         <Image
           src={image.src}
           alt={image.alt}

@@ -33,7 +33,7 @@ export function ContentHero({ content }: { content: ContentHeroContent }) {
 
   return (
     <section id={content.anchor || undefined} className="bg-white">
-      {content.image ? <HeroImage image={content.image} /> : null}
+      {content.image ? <HeroImage image={content.image} mobile="natural" /> : null}
       {hasHeading || hasCopy ? (
         <div className="px-gutter py-20">
           <div className="mx-auto grid max-w-column lg:grid-cols-2 lg:gap-x-20">
