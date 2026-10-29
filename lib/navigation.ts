@@ -112,7 +112,11 @@ function mapItems(items: StoryblokNavItem[] | undefined) {
   });
 }
 
-async function loadNavigation(token: string, region: string) {
+function contentVersion() {
+  return process.env.NODE_ENV === "production" ? "published" : "draft";
+}
+
+async function loadNavigation(token: string, region: string, version: string) {
   "use cache";
   cacheLife("seconds");
 
@@ -120,7 +124,7 @@ async function loadNavigation(token: string, region: string) {
     "/v2/cdn/stories/main-navigation",
     apiBase(region),
   );
-  url.searchParams.set("version", "draft");
+  url.searchParams.set("version", version);
   url.searchParams.set("token", token);
 
   const response = await fetch(url);
@@ -150,5 +154,5 @@ export async function getMainNavigation() {
     return fallbackNavigation;
   }
 
-  return loadNavigation(token, process.env.STORYBLOK_REGION || "eu");
+  return loadNavigation(token, process.env.STORYBLOK_REGION || "eu", contentVersion());
 }
