@@ -1,5 +1,6 @@
 import Image from "next/image";
-import type { CSSProperties } from "react";
+import Link from "next/link";
+import type { CSSProperties, ReactNode } from "react";
 import { BookingLink } from "@/components/booking-link";
 
 function percent(value: number) {
@@ -20,12 +21,49 @@ function hoursKeyframes(count: number) {
   }`;
 }
 
+function PhoneAction({ href, label }: { href: string; label: string }) {
+  const className = "action-link flex items-center justify-center gap-pair text-nav whitespace-nowrap";
+  const content: ReactNode = (
+    <>
+      <Image
+        src="/Icon24_Phone.svg"
+        alt=""
+        width={24}
+        height={24}
+        unoptimized
+        className="size-icon"
+      />
+      {label}
+    </>
+  );
+
+  if (/^(https?:|mailto:|tel:|#)/i.test(href)) {
+    return (
+      <a href={href} className={className}>
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className={className}>
+      {content}
+    </Link>
+  );
+}
+
 export function SubHeader({
   lines,
+  phoneNumber,
+  phoneHref,
+  bookingLabel,
   bookingHref,
   bookingOverlay,
 }: {
   lines: string[];
+  phoneNumber: string;
+  phoneHref: string;
+  bookingLabel: string;
   bookingHref: string;
   bookingOverlay: boolean;
 }) {
@@ -52,20 +90,7 @@ export function SubHeader({
             ))}
           </p>
           <div className="grid h-full w-full grid-cols-2 items-center lg:flex lg:w-auto lg:gap-gutter">
-            <a
-              href="tel:+496131227266"
-              className="action-link flex items-center justify-center gap-pair text-nav whitespace-nowrap"
-            >
-              <Image
-                src="/Icon24_Phone.svg"
-                alt=""
-                width={24}
-                height={24}
-                unoptimized
-                className="size-icon"
-              />
-              06131 227266
-            </a>
+            <PhoneAction href={phoneHref} label={phoneNumber} />
             <BookingLink
               href={bookingHref}
               overlay={bookingOverlay}
@@ -79,7 +104,7 @@ export function SubHeader({
                 unoptimized
                 className="size-icon shrink-0"
               />
-              Termin buchen
+              {bookingLabel}
             </BookingLink>
           </div>
         </div>

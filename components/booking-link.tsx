@@ -1,8 +1,19 @@
 "use client";
 
-import { useEffect, useId, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useId,
+  useState,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
+
+const BookingOverlayContext = createContext<((href: string) => void) | null>(null);
 
 function BookingOverlay({ href, onClose }: { href: string; onClose: () => void }) {
   const titleId = useId();
@@ -51,48 +62,72 @@ function BookingOverlay({ href, onClose }: { href: string; onClose: () => void }
   );
 }
 
+export function BookingOverlayProvider({ children }: { children: ReactNode }) {
+  const [href, setHref] = useState<string | null>(null);
+  const open = useCallback((next: string) => {
+    setHref(next);
+  }, []);
+  const close = useCallback(() => {
+    setHref(null);
+  }, []);
+
+  return (
+    <BookingOverlayContext.Provider value={open}>
+      {children}
+      {href ? <BookingOverlay href={href} onClose={close} /> : null}
+    </BookingOverlayContext.Provider>
+  );
+}
+
 export function BookingLink({
   href,
   overlay = false,
   className,
   children,
+  onClick,
+  ariaCurrent,
 }: {
   href: string;
   overlay?: boolean;
   className: string;
   children: ReactNode;
+  onClick?: () => void;
+  ariaCurrent?: "page";
 }) {
+  const openOverlay = useContext(BookingOverlayContext);
   const [open, setOpen] = useState(false);
 
   if (!overlay) {
     if (/^(https?:|mailto:|tel:|#)/i.test(href)) {
       return (
-        <a href={href} className={className}>
+        <a href={href} className={className} aria-current={ariaCurrent} onClick={onClick}>
           {children}
         </a>
       );
     }
 
     return (
-      <Link href={href} className={className}>
+      <Link href={href} className={className} aria-current={ariaCurrent} onClick={onClick}>
         {children}
       </Link>
     );
   }
 
+  const show = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    openOverlay?.(href);
+    if (!openOverlay) {
+      setOpen(true);
+    }
+    onClick?.();
+  };
+
   return (
     <>
-      <a
-        href={href}
-        className={className}
-        onClick={(event) => {
-          event.preventDefault();
-          setOpen(true);
-        }}
-      >
+      <a href={href} className={className} aria-current={ariaCurrent} onClick={show}>
         {children}
       </a>
-      {open ? <BookingOverlay href={href} onClose={() => setOpen(false)} /> : null}
+      {!openOverlay && open ? <BookingOverlay href={href} onClose={() => setOpen(false)} /> : null}
     </>
   );
 }

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
+import { BookingOverlayProvider } from "@/components/booking-link";
 import { SiteFooter } from "@/components/footer";
 import { HashScroll } from "@/components/hash-scroll";
 import { SiteHeader } from "@/components/header/site-header";
@@ -9,7 +10,6 @@ import { getFooter } from "@/lib/footer";
 import { getMainNavigation } from "@/lib/navigation";
 import { getOpeningHours } from "@/lib/opening-hours";
 import { getSprechzeiten } from "@/lib/sprechzeiten";
-import { getHomeBlocks } from "@/lib/service-module";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -23,19 +23,20 @@ export const metadata: Metadata = {
 };
 
 async function SiteHeaderData() {
-  const [navigation, openingHours, blocks] = await Promise.all([
+  const [navigation, openingHours] = await Promise.all([
     getMainNavigation(),
     getOpeningHours(),
-    getHomeBlocks(),
   ]);
-  const hero = blocks.find((block) => block.kind === "hero");
 
   return (
     <SiteHeader
       desktop={navigation.desktop}
       mobile={navigation.mobile}
       openingHours={openingHours.lines}
-      bookingHref={hero ? hero.hero.buttonHref : "#"}
+      phoneNumber={openingHours.phoneNumber}
+      phoneHref={openingHours.phoneHref}
+      bookingLabel={openingHours.bookingLabel}
+      bookingHref={openingHours.bookingHref}
       bookingOverlay={openingHours.overlay}
     />
   );
@@ -57,17 +58,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="de" className={`${outfit.className} h-full bg-white`}>
       <body className="flex min-h-full flex-col bg-white text-ink">
-        <Suspense fallback={null}>
-          <SiteHeaderData />
-        </Suspense>
-        {children}
-        <Suspense fallback={null}>
-          <SprechzeitenData />
-        </Suspense>
-        <Suspense fallback={null}>
-          <FooterData />
-        </Suspense>
-        <HashScroll />
+        <BookingOverlayProvider>
+          <Suspense fallback={null}>
+            <SiteHeaderData />
+          </Suspense>
+          {children}
+          <Suspense fallback={null}>
+            <SprechzeitenData />
+          </Suspense>
+          <Suspense fallback={null}>
+            <FooterData />
+          </Suspense>
+          <HashScroll />
+        </BookingOverlayProvider>
       </body>
     </html>
   );

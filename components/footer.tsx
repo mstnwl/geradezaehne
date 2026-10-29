@@ -1,29 +1,18 @@
 import Image from "next/image";
-import Link from "next/link";
+import { BookingLink } from "@/components/booking-link";
 import { Reveal } from "@/components/reveal";
 import type { FooterContent, FooterLink } from "@/lib/footer";
 
 function FooterAnchor({ link }: { link: FooterLink }) {
-  const className = "header-link inline-flex w-fit items-center gap-pair text-nav";
-  const content = (
-    <>
+  return (
+    <BookingLink
+      href={link.href}
+      overlay={link.overlay === true}
+      className="header-link inline-flex w-fit items-center gap-pair text-nav"
+    >
       <span className="menu-arrow size-icon shrink-0" aria-hidden="true" />
       {link.label}
-    </>
-  );
-
-  if (/^(https?:|mailto:|tel:|#)/i.test(link.href)) {
-    return (
-      <a href={link.href} className={className}>
-        {content}
-      </a>
-    );
-  }
-
-  return (
-    <Link href={link.href} className={className}>
-      {content}
-    </Link>
+    </BookingLink>
   );
 }
 

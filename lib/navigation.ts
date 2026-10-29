@@ -3,6 +3,7 @@ import { cacheLife } from "next/cache";
 export type NavItem = {
   name: string;
   href: string;
+  overlay?: boolean;
 };
 
 type StoryblokLink = {
@@ -15,6 +16,7 @@ type StoryblokNavItem = {
   component?: string;
   name?: string;
   link?: StoryblokLink;
+  overlay?: unknown;
 };
 
 const fallbackDesktop: NavItem[] = [
@@ -108,7 +110,7 @@ function mapItems(items: StoryblokNavItem[] | undefined) {
             ? routedPages[name]
             : resolved;
 
-    return [{ name, href }];
+    return [{ name, href, overlay: item.overlay === true }];
   });
 }
 

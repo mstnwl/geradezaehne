@@ -1,6 +1,7 @@
 export type FooterLink = {
   label: string;
   href: string;
+  overlay?: boolean;
 };
 
 export type FooterGroup = {
@@ -140,7 +141,7 @@ function mapLinks(value: unknown): FooterLink[] {
 
     const link = asRecord(record.link) as StoryblokLink | null;
 
-    return [{ label, href: resolveHref(link ?? undefined) }];
+    return [{ label, href: resolveHref(link ?? undefined), overlay: record.overlay === true }];
   });
 }
 

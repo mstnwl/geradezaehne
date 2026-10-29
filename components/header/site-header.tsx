@@ -10,6 +10,9 @@ type SiteHeaderProps = {
   desktop: NavItem[];
   mobile: NavItem[];
   openingHours: string[];
+  phoneNumber: string;
+  phoneHref: string;
+  bookingLabel: string;
   bookingHref: string;
   bookingOverlay: boolean;
 };
@@ -18,6 +21,9 @@ export function SiteHeader({
   desktop,
   mobile,
   openingHours,
+  phoneNumber,
+  phoneHref,
+  bookingLabel,
   bookingHref,
   bookingOverlay,
 }: SiteHeaderProps) {
@@ -59,7 +65,14 @@ export function SiteHeader({
           </div>
         </div>
       </header>
-      <SubHeader lines={openingHours} bookingHref={bookingHref} bookingOverlay={bookingOverlay} />
+      <SubHeader
+        lines={openingHours}
+        phoneNumber={phoneNumber}
+        phoneHref={phoneHref}
+        bookingLabel={bookingLabel}
+        bookingHref={bookingHref}
+        bookingOverlay={bookingOverlay}
+      />
     </>
   );
 }

@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { BookingLink } from "@/components/booking-link";
 import type { NavItem } from "@/lib/navigation";
 
 type TopNavigationProps = {
@@ -35,33 +35,18 @@ function NavLink({
   children?: ReactNode;
 }) {
   const current = isCurrent(item, pathname) ? "page" : undefined;
-  const classes = `header-link ${className}`;
-  const external = /^(https?:|mailto:|tel:|#)/i.test(item.href);
-
-  if (external) {
-    return (
-      <a
-        href={item.href}
-        className={classes}
-        aria-current={current}
-        onClick={onClick}
-      >
-        {children}
-        {item.name}
-      </a>
-    );
-  }
 
   return (
-    <Link
+    <BookingLink
       href={item.href}
-      className={classes}
-      aria-current={current}
+      overlay={item.overlay === true}
+      className={`header-link ${className}`}
+      ariaCurrent={current}
       onClick={onClick}
     >
       {children}
       {item.name}
-    </Link>
+    </BookingLink>
   );
 }
 

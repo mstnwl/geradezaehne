@@ -6,12 +6,26 @@ export const fallbackOpeningHours = [
 
 export type OpeningHoursContent = {
   lines: string[];
+  phoneNumber: string;
+  phoneHref: string;
+  bookingLabel: string;
+  bookingHref: string;
   overlay: boolean;
 };
 
 const fallbackOpeningHoursContent: OpeningHoursContent = {
   lines: fallbackOpeningHours,
+  phoneNumber: "06131 227266",
+  phoneHref: "tel:+496131227266",
+  bookingLabel: "Termin buchen",
+  bookingHref: "#",
   overlay: false,
+};
+
+type StoryblokLink = {
+  linktype?: string;
+  url?: string;
+  cached_url?: string;
 };
 
 type StoryblokOpeningLine = {
@@ -31,6 +45,37 @@ function apiBase(region: string) {
     default:
       return "https://api.storyblok.com";
   }
+}
+
+function textField(value: unknown, fallback: string) {
+  if (typeof value !== "string") {
+    return fallback;
+  }
+
+  const trimmed = value.trim();
+
+  return trimmed || fallback;
+}
+
+function linkHref(value: unknown, fallback: string) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return fallback;
+  }
+
+  const link = value as StoryblokLink;
+  const raw =
+    link.linktype === "url" ? link.url || link.cached_url || "" : link.cached_url || link.url || "";
+  const trimmed = raw.trim();
+
+  if (!trimmed || trimmed === "home") {
+    return fallback;
+  }
+
+  if (trimmed.startsWith("#") || /^(https?:|mailto:|tel:)/i.test(trimmed)) {
+    return trimmed;
+  }
+
+  return trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
 }
 
 function lineText(block: StoryblokOpeningLine) {
@@ -80,13 +125,27 @@ async function loadOpeningHours(token: string, region: string) {
     }
 
     const data = (await response.json()) as {
-      story?: { content?: { lines?: unknown; overlay?: unknown } };
+      story?: {
+        content?: {
+          lines?: unknown;
+          phone_number?: unknown;
+          phone_link?: unknown;
+          booking_label?: unknown;
+          booking_link?: unknown;
+          overlay?: unknown;
+        };
+      };
     };
-    const lines = mapLines(data.story?.content?.lines);
+    const content = data.story?.content;
+    const lines = mapLines(content?.lines);
 
     return {
       lines: lines.length > 0 ? lines : fallbackOpeningHours,
-      overlay: data.story?.content?.overlay === true,
+      phoneNumber: textField(content?.phone_number, fallbackOpeningHoursContent.phoneNumber),
+      phoneHref: linkHref(content?.phone_link, fallbackOpeningHoursContent.phoneHref),
+      bookingLabel: textField(content?.booking_label, fallbackOpeningHoursContent.bookingLabel),
+      bookingHref: linkHref(content?.booking_link, fallbackOpeningHoursContent.bookingHref),
+      overlay: content?.overlay === true,
     };
   } catch {
     return fallbackOpeningHoursContent;

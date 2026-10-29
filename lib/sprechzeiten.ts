@@ -153,7 +153,7 @@ function mapSprechzeiten(record: StoryblokRecord, index: number): SprechzeitenCo
     bookingHref: record.booking_link
       ? resolveHref(bookingLink ?? undefined, fallbackSprechzeiten.bookingHref)
       : fallbackSprechzeiten.bookingHref,
-    overlay: record.overlay === true,
+    overlay: record.overlay_booking === true,
     phoneLabel: textValue(record.phone_label, fallbackSprechzeiten.phoneLabel),
     phoneHref: record.phone_link
       ? resolveHref(phoneLink ?? undefined, fallbackSprechzeiten.phoneHref)

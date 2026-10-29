@@ -3,6 +3,7 @@ import { richTextValue, type RichTextDoc } from "@/lib/rich-text";
 export type ServiceLink = {
   name: string;
   href: string;
+  overlay?: boolean;
 };
 
 export type ServiceImage = {
@@ -426,7 +427,7 @@ function serviceLinks(value: unknown): ServiceLink[] {
 
     const link = asRecord(record.link) as StoryblokLink | null;
 
-    return [{ name, href: resolveHref(link ?? undefined) }];
+    return [{ name, href: resolveHref(link ?? undefined), overlay: record.overlay === true }];
   });
 }
 
@@ -518,7 +519,7 @@ function mapHero(module: StoryblokRecord, index: number): HeroContent {
     copy: textValue(module.copy, fallbackHero.copy),
     buttonLabel: textValue(module.button_label, fallbackHero.buttonLabel),
     buttonHref: module.button_link ? resolveHref(link ?? undefined) : fallbackHero.buttonHref,
-    overlay: module.overlay === true,
+    overlay: module.overlay_link === true,
     image: imageValue(module.image),
   };
 }
