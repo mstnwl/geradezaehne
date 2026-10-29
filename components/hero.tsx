@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { BookingLink } from "@/components/booking-link";
+import { HeroImage } from "@/components/hero-image";
 import type { HeroContent } from "@/lib/service-module";
 
 function BookingButton({ href, label, overlay }: { href: string; label: string; overlay: boolean }) {
@@ -27,18 +28,7 @@ function BookingButton({ href, label, overlay }: { href: string; label: string; 
 export function Hero({ hero }: { hero: HeroContent }) {
   return (
     <section id={hero.anchor || undefined} className="bg-white">
-      {hero.image ? (
-        <div className="relative aspect-[4/5] w-full overflow-hidden bg-white lg:aspect-[16/9]">
-          <Image
-            src={hero.image.src}
-            alt={hero.image.alt}
-            fill
-            preload
-            sizes="100vw"
-            className="object-cover"
-          />
-        </div>
-      ) : null}
+      {hero.image ? <HeroImage image={hero.image} /> : null}
       <div className="px-gutter py-20">
         <div className="mx-auto flex max-w-column flex-col items-center gap-nav text-center">
           <h1 className="text-balance text-ink">{hero.headline}</h1>

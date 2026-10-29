@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
+import { HeroImage } from "@/components/hero-image";
 import { RichText } from "@/components/rich-text";
-import type { ContentHeroContent, ServiceImage, ServiceLink } from "@/lib/service-module";
+import type { ContentHeroContent, ServiceLink } from "@/lib/service-module";
 
 function ContentAnchor({ link }: { link: ServiceLink }) {
   const className = "header-link inline-flex items-center gap-pair text-nav";
@@ -27,28 +27,13 @@ function ContentAnchor({ link }: { link: ServiceLink }) {
   );
 }
 
-function ContentImage({ image }: { image: ServiceImage }) {
-  return (
-    <div className="relative aspect-[4/5] w-full overflow-hidden bg-white lg:aspect-[16/9]">
-      <Image
-        src={image.src}
-        alt={image.alt}
-        fill
-        preload
-        sizes="100vw"
-        className="object-cover"
-      />
-    </div>
-  );
-}
-
 export function ContentHero({ content }: { content: ContentHeroContent }) {
   const hasHeading = content.eyebrow.length > 0 || content.headline.length > 0;
   const hasCopy = content.body.blocks.length > 0 || content.links.length > 0;
 
   return (
     <section id={content.anchor || undefined} className="bg-white">
-      {content.image ? <ContentImage image={content.image} /> : null}
+      {content.image ? <HeroImage image={content.image} /> : null}
       {hasHeading || hasCopy ? (
         <div className="px-gutter py-20">
           <div className="mx-auto grid max-w-column lg:grid-cols-2 lg:gap-x-20">
