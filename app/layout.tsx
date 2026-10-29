@@ -62,7 +62,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <Suspense fallback={null}>
             <SiteHeaderData />
           </Suspense>
-          {children}
+          <div className="min-h-dvh">{children}</div>
           <Suspense fallback={null}>
             <SprechzeitenData />
           </Suspense>
