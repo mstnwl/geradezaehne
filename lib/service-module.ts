@@ -137,6 +137,20 @@ export type CaseStudyContent = {
   photos: CasePhoto[];
 };
 
+export type FaqItem = {
+  question: string;
+  answer: RichTextDoc;
+  anchor: string;
+};
+
+export type FaqContent = {
+  id: string;
+  anchor: string;
+  headline: string;
+  body: string;
+  items: FaqItem[];
+};
+
 export type ContentHeroContent = {
   id: string;
   anchor: string;
@@ -160,7 +174,8 @@ export type HomeBlock =
   | { kind: "booking"; booking: BookingContent }
   | { kind: "team-grid"; teamGrid: TeamGridContent }
   | { kind: "gallery"; gallery: GalleryContent }
-  | { kind: "case-study"; caseStudy: CaseStudyContent };
+  | { kind: "case-study"; caseStudy: CaseStudyContent }
+  | { kind: "faq"; faq: FaqContent };
 
 const fallbackHero: HeroContent = {
   id: "fallback-hero",
@@ -351,7 +366,8 @@ function homeBlocksInBody(content: StoryblokRecord): StoryblokRecord[] {
         record.component !== "booking" &&
         record.component !== "team_grid" &&
         record.component !== "gallery" &&
-        record.component !== "case_study")
+        record.component !== "case_study" &&
+        record.component !== "faq")
     ) {
       return [];
     }
@@ -857,6 +873,45 @@ function mapCasePhoto(value: unknown): CasePhoto | null {
   return { image, caption };
 }
 
+function mapFaqItem(value: unknown): FaqItem | null {
+  const record = asRecord(value);
+
+  if (!record || record.component !== "faq_item") {
+    return null;
+  }
+
+  const question = trimmedField(record.question);
+  const answer = richTextValue(record.answer);
+
+  if (!question && answer.blocks.length === 0) {
+    return null;
+  }
+
+  return {
+    question,
+    answer,
+    anchor: anchorValue(record.anchor),
+  };
+}
+
+function mapFaq(module: StoryblokRecord, index: number): FaqContent {
+  const items = Array.isArray(module.items)
+    ? module.items.flatMap((item) => {
+        const mapped = mapFaqItem(item);
+
+        return mapped ? [mapped] : [];
+      })
+    : [];
+
+  return {
+    id: blockId(module, index, "faq"),
+    anchor: anchorValue(module.anchor),
+    headline: trimmedField(module.headline),
+    body: trimmedField(module.body),
+    items,
+  };
+}
+
 function mapCaseStudy(module: StoryblokRecord, index: number): CaseStudyContent {
   const photos = Array.isArray(module.photos)
     ? module.photos.flatMap((photo) => {
@@ -940,6 +995,8 @@ function toHomeBlocks(records: StoryblokRecord[]): HomeBlock[] {
       blocks.push({ kind: "gallery", gallery: mapGallery(record, index) });
     } else if (record.component === "case_study") {
       blocks.push({ kind: "case-study", caseStudy: mapCaseStudy(record, index) });
+    } else if (record.component === "faq") {
+      blocks.push({ kind: "faq", faq: mapFaq(record, index) });
     }
   });
 
@@ -1005,6 +1062,8 @@ function toStoryBlocks(records: StoryblokRecord[], legacyContentHero = false): H
       blocks.push({ kind: "gallery", gallery: mapGallery(record, index) });
     } else if (record.component === "case_study") {
       blocks.push({ kind: "case-study", caseStudy: mapCaseStudy(record, index) });
+    } else if (record.component === "faq") {
+      blocks.push({ kind: "faq", faq: mapFaq(record, index) });
     }
   });
 

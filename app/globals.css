@@ -240,6 +240,32 @@ body {
   mask-mode: alpha;
 }
 
+.faq-question-caption {
+  color: var(--color-ink);
+  transition:
+    color 150ms ease-out,
+    transform 150ms ease-out;
+}
+
+.faq-question:hover .faq-question-caption,
+.faq-question:focus-visible .faq-question-caption {
+  color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.faq-chevron {
+  display: block;
+  background-color: currentColor;
+  -webkit-mask: url("/media/misc/Icon16_ChevronUp.svg") center / contain no-repeat;
+  mask: url("/media/misc/Icon16_ChevronUp.svg") center / contain no-repeat;
+  -webkit-mask-source-type: alpha;
+  mask-mode: alpha;
+}
+
+.faq-chevron-closed {
+  transform: rotate(180deg);
+}
+
 .hours-line {
   grid-area: 1 / 1;
 }
@@ -270,7 +296,8 @@ body {
   .action-bar,
   .action-link,
   .booking-button,
-  .booking-caption {
+  .booking-caption,
+  .faq-question-caption {
     transition: none;
   }
 
@@ -279,7 +306,9 @@ body {
   .action-link:hover,
   .action-link:focus-visible,
   .booking-button:hover .booking-caption,
-  .booking-button:focus-visible .booking-caption {
+  .booking-button:focus-visible .booking-caption,
+  .faq-question:hover .faq-question-caption,
+  .faq-question:focus-visible .faq-question-caption {
     transform: none;
   }
 

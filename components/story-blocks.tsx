@@ -1,6 +1,7 @@
 import { AgeGroups } from "@/components/age-groups";
 import { Booking } from "@/components/booking";
 import { CaseStudy } from "@/components/case-study";
+import { Faq } from "@/components/faq";
 import { Gallery } from "@/components/gallery";
 import { ContentHero } from "@/components/content-hero";
 import { Hero } from "@/components/hero";
@@ -66,6 +67,10 @@ export function StoryBlocks({ blocks }: { blocks: HomeBlock[] }) {
 
     if (block.kind === "case-study") {
       return <CaseStudy key={block.caseStudy.id} caseStudy={block.caseStudy} />;
+    }
+
+    if (block.kind === "faq") {
+      return <Faq key={block.faq.id} faq={block.faq} />;
     }
 
     return <InfoPanel key={block.info.id} info={block.info} />;
