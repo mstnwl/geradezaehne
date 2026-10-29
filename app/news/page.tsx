@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { PostList, newsListHeading } from "@/components/post-list";
+import { PostList } from "@/components/post-list";
 import { StoryBlocks } from "@/components/story-blocks";
 import { getPublishedPosts } from "@/lib/posts";
 import { getStoryBlocks } from "@/lib/service-module";
@@ -10,7 +10,7 @@ async function NewsBody() {
   return (
     <>
       <StoryBlocks blocks={blocks} />
-      <PostList posts={posts} heading={newsListHeading(blocks)} />
+      <PostList posts={posts} heading="Beiträge" />
     </>
   );
 }

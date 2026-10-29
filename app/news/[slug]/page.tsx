@@ -4,7 +4,8 @@ import { PostDetail } from "@/components/post-detail";
 import { PostList } from "@/components/post-list";
 import { getPost, getRelatedPosts } from "@/lib/posts";
 
-async function PostBody({ slug }: { slug: string }) {
+async function PostBody({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const post = await getPost(slug);
 
   if (!post) {
@@ -21,13 +22,11 @@ async function PostBody({ slug }: { slug: string }) {
   );
 }
 
-export default async function NewsPostPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-
+export default function NewsPostPage({ params }: { params: Promise<{ slug: string }> }) {
   return (
     <main>
       <Suspense fallback={null}>
-        <PostBody slug={slug} />
+        <PostBody params={params} />
       </Suspense>
     </main>
   );

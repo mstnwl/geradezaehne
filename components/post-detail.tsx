@@ -73,38 +73,50 @@ function PostDate({ post }: { post: Post }) {
   );
 }
 
+function PostBackLink() {
+  return (
+    <Link href="/news" className="header-link inline-flex w-fit items-center gap-pair text-nav">
+      <span className="menu-arrow size-icon shrink-0" style={{ transform: "scaleX(-1)" }} aria-hidden="true" />
+      Alle Beiträge
+    </Link>
+  );
+}
+
 export function PostDetail({ post }: { post: Post }) {
   return (
     <Reveal className="bg-white px-gutter py-20">
-      <div className="mx-auto grid max-w-column items-start gap-nav lg:grid-cols-2 lg:gap-x-20">
-        <div className="flex flex-col gap-nav">
-          {post.dateLabel || post.headline ? (
-            <div className="flex flex-col gap-pair">
-              <PostDate post={post} />
-              {post.headline ? <h1 className="text-ink">{post.headline}</h1> : null}
-            </div>
-          ) : null}
+      <div className="mx-auto flex max-w-column flex-col gap-nav">
+        <PostBackLink />
+        <div className="grid items-start gap-nav lg:grid-cols-2 lg:gap-x-20">
+          <div className="flex flex-col gap-nav">
+            {post.dateLabel || post.headline ? (
+              <div className="flex flex-col gap-pair">
+                <PostDate post={post} />
+                {post.headline ? <h1 className="text-ink">{post.headline}</h1> : null}
+              </div>
+            ) : null}
+            {post.image ? (
+              <div className="lg:hidden">
+                <PostPicture image={post.image} />
+              </div>
+            ) : null}
+            {post.body.blocks.length > 0 ? <RichText document={post.body} /> : null}
+            {post.links.length > 0 ? (
+              <ul className="flex flex-col gap-pair">
+                {post.links.map((link, index) => (
+                  <li key={`${link.href}-${index}`}>
+                    <PostAnchor link={link} />
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
           {post.image ? (
-            <div className="lg:hidden">
+            <div className="hidden lg:block">
               <PostPicture image={post.image} />
             </div>
           ) : null}
-          {post.body.blocks.length > 0 ? <RichText document={post.body} /> : null}
-          {post.links.length > 0 ? (
-            <ul className="flex flex-col gap-pair">
-              {post.links.map((link, index) => (
-                <li key={`${link.href}-${index}`}>
-                  <PostAnchor link={link} />
-                </li>
-              ))}
-            </ul>
-          ) : null}
         </div>
-        {post.image ? (
-          <div className="hidden lg:block">
-            <PostPicture image={post.image} />
-          </div>
-        ) : null}
       </div>
     </Reveal>
   );
