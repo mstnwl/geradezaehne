@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
+import { BookingLink } from "@/components/booking-link";
 
 function percent(value: number) {
   return Number(value.toFixed(3));
@@ -19,7 +20,7 @@ function hoursKeyframes(count: number) {
   }`;
 }
 
-export function SubHeader({ lines }: { lines: string[] }) {
+export function SubHeader({ lines, bookingHref }: { lines: string[]; bookingHref: string }) {
   const count = lines.length;
   const cycling = count > 1;
 
@@ -57,8 +58,8 @@ export function SubHeader({ lines }: { lines: string[] }) {
               />
               06131 227266
             </a>
-            <a
-              href="#"
+            <BookingLink
+              href={bookingHref}
               className="action-link flex items-center justify-center gap-pair text-nav whitespace-nowrap"
             >
               <Image
@@ -70,7 +71,7 @@ export function SubHeader({ lines }: { lines: string[] }) {
                 className="size-icon shrink-0"
               />
               Termin buchen
-            </a>
+            </BookingLink>
           </div>
         </div>
       </div>

@@ -1,37 +1,27 @@
 import Image from "next/image";
 import Link from "next/link";
+import { BookingLink } from "@/components/booking-link";
 import { Reveal } from "@/components/reveal";
 import type { SprechzeitenContent } from "@/lib/sprechzeiten";
 
 function BookingButton({ href, label }: { href: string; label: string }) {
-  const className =
-    "booking-button inline-flex h-bar w-fit items-center rounded bg-accent px-gutter text-ink";
-  const content = (
-    <span className="booking-caption inline-flex items-center gap-pair text-nav">
-      <Image
-        src="/Icon24_Calendar.svg"
-        alt=""
-        width={24}
-        height={24}
-        unoptimized
-        className="size-icon shrink-0"
-      />
-      {label}
-    </span>
-  );
-
-  if (/^(https?:|mailto:|tel:|#)/i.test(href)) {
-    return (
-      <a href={href} className={className}>
-        {content}
-      </a>
-    );
-  }
-
   return (
-    <Link href={href} className={className}>
-      {content}
-    </Link>
+    <BookingLink
+      href={href}
+      className="booking-button inline-flex h-bar w-fit items-center rounded bg-accent px-gutter text-ink"
+    >
+      <span className="booking-caption inline-flex items-center gap-pair text-nav">
+        <Image
+          src="/Icon24_Calendar.svg"
+          alt=""
+          width={24}
+          height={24}
+          unoptimized
+          className="size-icon shrink-0"
+        />
+        {label}
+      </span>
+    </BookingLink>
   );
 }
 

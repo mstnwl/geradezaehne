@@ -9,6 +9,7 @@ import { getFooter } from "@/lib/footer";
 import { getMainNavigation } from "@/lib/navigation";
 import { getOpeningHours } from "@/lib/opening-hours";
 import { getSprechzeiten } from "@/lib/sprechzeiten";
+import { getHomeBlocks } from "@/lib/service-module";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -22,16 +23,19 @@ export const metadata: Metadata = {
 };
 
 async function SiteHeaderData() {
-  const [navigation, openingHours] = await Promise.all([
+  const [navigation, openingHours, blocks] = await Promise.all([
     getMainNavigation(),
     getOpeningHours(),
+    getHomeBlocks(),
   ]);
+  const hero = blocks.find((block) => block.kind === "hero");
 
   return (
     <SiteHeader
       desktop={navigation.desktop}
       mobile={navigation.mobile}
       openingHours={openingHours}
+      bookingHref={hero ? hero.hero.buttonHref : "#"}
     />
   );
 }
