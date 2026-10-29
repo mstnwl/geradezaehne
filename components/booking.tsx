@@ -55,6 +55,8 @@ export function Booking({ booking }: { booking: BookingContent }) {
     .split(/\n+/)
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
+  const showBooking = Boolean(booking.bookingLabel && booking.bookingHref);
+  const showPhone = Boolean(booking.phoneLabel && booking.phoneHref);
 
   return (
     <Reveal id={booking.anchor} className="bg-background px-gutter py-20">
@@ -73,14 +75,20 @@ export function Booking({ booking }: { booking: BookingContent }) {
               ))}
             </div>
           ) : null}
-          <div className="flex flex-col items-start gap-nav lg:flex-row lg:items-center lg:gap-gutter">
-            <BookingButton
-              href={booking.bookingHref}
-              label={booking.bookingLabel}
-              overlay={booking.overlay}
-            />
-            <PhoneLink href={booking.phoneHref} label={booking.phoneLabel} />
-          </div>
+          {showBooking || showPhone ? (
+            <div className="flex flex-col items-start gap-nav lg:flex-row lg:items-center lg:gap-gutter">
+              {showBooking ? (
+                <BookingButton
+                  href={booking.bookingHref}
+                  label={booking.bookingLabel}
+                  overlay={booking.overlay}
+                />
+              ) : null}
+              {showPhone ? (
+                <PhoneLink href={booking.phoneHref} label={booking.phoneLabel} />
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </div>
     </Reveal>

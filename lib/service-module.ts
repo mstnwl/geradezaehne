@@ -771,19 +771,20 @@ const fallbackBooking: BookingContent = {
   anchor: "",
   headline: "Individuelle Beratung",
   body: "Wir nehmen uns Zeit für Ihre Fragen und beraten Sie persönlich zur passenden Behandlung.",
-  bookingLabel: "Termin buchen",
-  bookingHref: "/",
+  bookingLabel: "",
+  bookingHref: "",
   overlay: false,
-  phoneLabel: "Jetzt anrufen",
-  phoneHref: "tel:+496131227266",
+  phoneLabel: "",
+  phoneHref: "",
 };
 
-function linkedHref(link: StoryblokLink | null, fallback: string) {
+function optionalHref(link: StoryblokLink | null) {
   const value =
     link?.linktype === "url" ? link.url || link.cached_url || "" : link?.cached_url || link?.url || "";
+  const trimmed = value.trim();
 
-  if (!value.trim()) {
-    return fallback;
+  if (!trimmed || trimmed === "home") {
+    return "";
   }
 
   return resolveHref(link ?? undefined);
@@ -798,11 +799,11 @@ function mapBooking(module: StoryblokRecord, index: number): BookingContent {
     anchor: anchorValue(module.anchor),
     headline: textValue(module.headline, fallbackBooking.headline),
     body: textValue(module.body, fallbackBooking.body),
-    bookingLabel: textValue(module.booking_label, fallbackBooking.bookingLabel),
-    bookingHref: linkedHref(bookingLink, fallbackBooking.bookingHref),
+    bookingLabel: textValue(module.booking_label, ""),
+    bookingHref: optionalHref(bookingLink),
     overlay: module.overlay === true,
-    phoneLabel: textValue(module.phone_label, fallbackBooking.phoneLabel),
-    phoneHref: linkedHref(phoneLink, fallbackBooking.phoneHref),
+    phoneLabel: textValue(module.phone_label, ""),
+    phoneHref: optionalHref(phoneLink),
   };
 }
 
