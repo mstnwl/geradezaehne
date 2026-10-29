@@ -72,7 +72,7 @@ function FaqRow({
         </span>
       </button>
       {open && hasAnswer ? (
-        <div id={panelId} className="pb-nav">
+        <div id={panelId} className="pb-nav pl-menu">
           <RichText document={item.answer} />
         </div>
       ) : null}
