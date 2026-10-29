@@ -99,6 +99,7 @@ h4:not(:first-child) {
 
 html {
   scroll-padding-top: var(--spacing-bar);
+  background-color: var(--color-background);
 }
 
 body {

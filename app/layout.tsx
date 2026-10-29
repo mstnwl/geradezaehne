@@ -50,7 +50,7 @@ async function FooterData() {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="de" className={`${outfit.className} h-full`}>
+    <html lang="de" className={`${outfit.className} h-full bg-background`}>
       <body className="flex min-h-full flex-col bg-background text-ink">
         <Suspense fallback={null}>
           <SiteHeaderData />
