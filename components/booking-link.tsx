@@ -5,7 +5,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useId,
   useState,
   type MouseEvent,
   type ReactNode,
@@ -16,8 +15,6 @@ import Link from "next/link";
 const BookingOverlayContext = createContext<((href: string) => void) | null>(null);
 
 function BookingOverlay({ href, onClose }: { href: string; onClose: () => void }) {
-  const titleId = useId();
-
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -43,15 +40,27 @@ function BookingOverlay({ href, onClose }: { href: string; onClose: () => void }
       <div
         role="dialog"
         aria-modal="true"
-        aria-labelledby={titleId}
+        aria-label="Termin buchen"
         className="flex h-[90vh] w-full max-w-column flex-col bg-white"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="flex h-bar shrink-0 items-center justify-between px-gutter">
-          <p id={titleId} className="text-nav font-medium">
-            Termin buchen
-          </p>
-          <button type="button" className="header-link text-nav" onClick={onClose}>
+        <div className="flex h-bar shrink-0 items-center justify-end px-gutter">
+          <button
+            type="button"
+            className="header-link inline-flex items-center gap-pair text-nav"
+            onClick={onClose}
+          >
+            <span
+              className="size-icon shrink-0"
+              aria-hidden="true"
+              style={{
+                display: "block",
+                backgroundColor: "currentColor",
+                WebkitMask: 'url("/Icon32_BurgerX.svg") center / contain no-repeat',
+                mask: 'url("/Icon32_BurgerX.svg") center / contain no-repeat',
+                maskMode: "alpha",
+              }}
+            />
             Schließen
           </button>
         </div>
