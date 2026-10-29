@@ -37,7 +37,7 @@ function AgeGroupImage({ image }: { image: ServiceImage }) {
       alt={image.alt}
       width={size.width}
       height={size.height}
-      sizes="(min-width: 64rem) 18rem, 80vw"
+      unoptimized
       className={className}
     />
   );
