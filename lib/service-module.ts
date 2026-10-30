@@ -65,6 +65,7 @@ export type HeroContent = {
   buttonHref: string;
   overlay: boolean;
   image: ServiceImage | null;
+  imageMobile: ServiceImage | null;
 };
 
 export type TrustBandContent = {
@@ -110,6 +111,7 @@ export type TeamGridContent = {
 
 export type GalleryImage = {
   image: ServiceImage | null;
+  imageMobile: ServiceImage | null;
   caption: string;
 };
 
@@ -160,6 +162,7 @@ export type ContentHeroContent = {
   eyebrow: string;
   headline: string;
   image: ServiceImage | null;
+  imageMobile: ServiceImage | null;
   body: RichTextDoc;
   links: ServiceLink[];
 };
@@ -189,6 +192,7 @@ const fallbackHero: HeroContent = {
   buttonHref: "#",
   overlay: false,
   image: null,
+  imageMobile: null,
 };
 
 const fallbackTrustBand: TrustBandContent = {
@@ -521,6 +525,7 @@ function mapHero(module: StoryblokRecord, index: number): HeroContent {
     buttonHref: module.button_link ? resolveHref(link ?? undefined) : fallbackHero.buttonHref,
     overlay: module.overlay_link === true,
     image: imageValue(module.image),
+    imageMobile: imageValue(module.image_mobile),
   };
 }
 
@@ -575,6 +580,7 @@ function mapContentHero(module: StoryblokRecord, index: number): ContentHeroCont
     eyebrow: trimmedField(module.eyebrow),
     headline: trimmedField(module.headline),
     image: imageValue(module.image),
+    imageMobile: imageValue(module.image_mobile),
     body: richTextValue(module.body),
     links: contentLinks(module.links),
   };
@@ -596,6 +602,7 @@ function mapLegacyContentHero(module: StoryblokRecord, index: number): ContentHe
     eyebrow: trimmedField(module.eyebrow),
     headline: trimmedField(module.headline),
     image: imageValue(module.image),
+    imageMobile: imageValue(module.image_mobile),
     body: richTextValue(module.text),
     links: serviceLinks(module.links),
   };
@@ -838,12 +845,13 @@ function mapGalleryImage(value: unknown): GalleryImage | null {
 
   const caption = textValue(record.caption, "");
   const image = imageValue(record.image);
+  const imageMobile = imageValue(record.image_mobile);
 
-  if (!caption && !image) {
+  if (!caption && !image && !imageMobile) {
     return null;
   }
 
-  return { image, caption };
+  return { image, imageMobile, caption };
 }
 
 function mapGallery(module: StoryblokRecord, index: number): GalleryContent {

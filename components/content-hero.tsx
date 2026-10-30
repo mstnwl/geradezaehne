@@ -33,8 +33,16 @@ export function ContentHero({ content }: { content: ContentHeroContent }) {
 
   return (
     <section id={content.anchor || undefined} className="bg-white">
-      {content.image ? (
-        <HeroImage image={{ ...content.image, alt: content.image.alt || content.headline }} mobile="natural" />
+      {content.image || content.imageMobile ? (
+        <HeroImage
+          image={content.image ? { ...content.image, alt: content.image.alt || content.headline } : null}
+          imageMobile={
+            content.imageMobile
+              ? { ...content.imageMobile, alt: content.imageMobile.alt || content.headline }
+              : null
+          }
+          mobile="natural"
+        />
       ) : null}
       {hasHeading || hasCopy ? (
         <div className="px-gutter py-20">

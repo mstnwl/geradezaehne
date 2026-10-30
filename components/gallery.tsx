@@ -6,16 +6,30 @@ function GalleryFigure({ item, fallback }: { item: GalleryImage; fallback: strin
   return (
     <li>
       <figure className="flex flex-col gap-pair">
-        {item.image ? (
-          <div className="relative aspect-[16/9] w-full overflow-hidden bg-white">
-            <Image
-              src={item.image.src}
-              alt={item.image.alt || item.caption || fallback}
-              fill
-              unoptimized
-              sizes="(min-width: 64rem) 75rem, 100vw"
-              className="object-cover"
-            />
+        {item.image || item.imageMobile ? (
+          <div
+            className={`relative aspect-[16/9] w-full overflow-hidden bg-white${item.image ? "" : " lg:hidden"}`}
+          >
+            {item.imageMobile ? (
+              <Image
+                src={item.imageMobile.src}
+                alt={item.imageMobile.alt || item.image?.alt || item.caption || fallback}
+                fill
+                unoptimized
+                sizes="100vw"
+                className={item.image ? "object-cover lg:hidden" : "object-cover"}
+              />
+            ) : null}
+            {item.image ? (
+              <Image
+                src={item.image.src}
+                alt={item.image.alt || item.caption || fallback}
+                fill
+                unoptimized
+                sizes="(min-width: 64rem) 75rem, 100vw"
+                className={item.imageMobile ? "hidden object-cover lg:block" : "object-cover"}
+              />
+            ) : null}
           </div>
         ) : null}
         {item.caption ? (

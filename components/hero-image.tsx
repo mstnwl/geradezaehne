@@ -18,12 +18,12 @@ function imageSize(src: string) {
   return { width, height };
 }
 
-export function HeroImage({
+function HeroFrame({
   image,
-  mobile = "cover",
+  mobile,
 }: {
   image: ServiceImage;
-  mobile?: "cover" | "natural";
+  mobile: "cover" | "natural";
 }) {
   const size = imageSize(image.src);
   const portrait = size ? size.height > size.width : false;
@@ -59,5 +59,42 @@ export function HeroImage({
         className="h-auto w-full lg:absolute lg:inset-0 lg:h-full lg:object-cover"
       />
     </div>
+  );
+}
+
+export function HeroImage({
+  image,
+  imageMobile = null,
+  mobile = "cover",
+}: {
+  image: ServiceImage | null;
+  imageMobile?: ServiceImage | null;
+  mobile?: "cover" | "natural";
+}) {
+  if (!image) {
+    if (!imageMobile) {
+      return null;
+    }
+
+    return (
+      <div className="lg:hidden">
+        <HeroFrame image={imageMobile} mobile={mobile} />
+      </div>
+    );
+  }
+
+  if (!imageMobile) {
+    return <HeroFrame image={image} mobile={mobile} />;
+  }
+
+  return (
+    <>
+      <div className="lg:hidden">
+        <HeroFrame image={imageMobile} mobile={mobile} />
+      </div>
+      <div className="hidden lg:block">
+        <HeroFrame image={image} mobile={mobile} />
+      </div>
+    </>
   );
 }
