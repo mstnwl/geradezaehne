@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { PostList } from "@/components/post-list";
+import { SiteEnd } from "@/components/site-end";
 import { StoryBlocks } from "@/components/story-blocks";
 import { getPublishedPosts } from "@/lib/posts";
 import { storyMetadata } from "@/lib/seo";
@@ -16,6 +17,7 @@ async function NewsBody() {
     <>
       <StoryBlocks blocks={blocks} />
       <PostList posts={posts} heading="Beiträge" />
+      <SiteEnd />
     </>
   );
 }

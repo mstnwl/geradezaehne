@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { PostDetail } from "@/components/post-detail";
 import { PostList } from "@/components/post-list";
+import { SiteEnd } from "@/components/site-end";
 import { getPost, getRelatedPosts } from "@/lib/posts";
 import { firstRichText, pageMetadata } from "@/lib/seo";
 
@@ -30,6 +31,7 @@ async function PostBody({ params }: { params: Promise<{ slug: string }> }) {
     <>
       <PostDetail post={post} />
       <PostList posts={related} heading="Neueste Beiträge" />
+      <SiteEnd />
     </>
   );
 }

@@ -2,15 +2,11 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import { BookingOverlayProvider } from "@/components/booking-link";
-import { SiteFooter } from "@/components/footer";
 import { HashScroll } from "@/components/hash-scroll";
 import { SiteHeader } from "@/components/header/site-header";
-import { Sprechzeiten } from "@/components/sprechzeiten";
-import { getFooter } from "@/lib/footer";
 import { getMainNavigation } from "@/lib/navigation";
 import { getOpeningHours } from "@/lib/opening-hours";
 import { siteDescription, siteName, siteOrigin } from "@/lib/seo";
-import { getSprechzeiten } from "@/lib/sprechzeiten";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -51,16 +47,13 @@ async function SiteHeaderData() {
   );
 }
 
-async function SprechzeitenData() {
-  const sprechzeiten = await getSprechzeiten();
-
-  return <Sprechzeiten sprechzeiten={sprechzeiten} />;
-}
-
-async function FooterData() {
-  const footer = await getFooter();
-
-  return <SiteFooter footer={footer} />;
+function HeaderFallback() {
+  return (
+    <div aria-hidden="true">
+      <div className="h-header" />
+      <div className="h-bar" />
+    </div>
+  );
 }
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -68,16 +61,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="de" className={`${outfit.className} h-full bg-white`}>
       <body className="flex min-h-full flex-col bg-white text-ink">
         <BookingOverlayProvider>
-          <Suspense fallback={null}>
+          <Suspense fallback={<HeaderFallback />}>
             <SiteHeaderData />
           </Suspense>
-          <div className="min-h-dvh">{children}</div>
-          <Suspense fallback={null}>
-            <SprechzeitenData />
-          </Suspense>
-          <Suspense fallback={null}>
-            <FooterData />
-          </Suspense>
+          {children}
           <HashScroll />
         </BookingOverlayProvider>
       </body>
