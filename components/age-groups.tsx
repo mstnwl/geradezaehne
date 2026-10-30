@@ -20,21 +20,22 @@ function imageSize(src: string) {
   return { width, height };
 }
 
-function AgeGroupImage({ image }: { image: ServiceImage }) {
+function AgeGroupImage({ image, fallback }: { image: ServiceImage; fallback: string }) {
   const size = imageSize(image.src);
   const className = "h-auto w-4/5";
+  const alt = image.alt || fallback;
 
   if (!size) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={image.src} alt={image.alt} className={className} />
+      <img src={image.src} alt={alt} className={className} />
     );
   }
 
   return (
     <Image
       src={image.src}
-      alt={image.alt}
+      alt={alt}
       width={size.width}
       height={size.height}
       unoptimized
@@ -74,7 +75,7 @@ export function AgeGroups({ ageGroups }: { ageGroups: AgeGroupsContent }) {
         {ageGroups.groups.map((group, index) => (
           <article key={`${group.headline}-${index}`} className="flex flex-col gap-nav">
             <h3 className="text-ink">{group.headline}</h3>
-            {group.image ? <AgeGroupImage image={group.image} /> : null}
+            {group.image ? <AgeGroupImage image={group.image} fallback={group.headline} /> : null}
             <div className="flex flex-col gap-pair">
               {group.paragraphs.map((paragraph) => (
                 <p key={paragraph} className="text-base leading-normal font-normal text-ink lg:text-[18px]">

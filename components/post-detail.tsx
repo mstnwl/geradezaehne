@@ -14,17 +14,18 @@ function imageSize(src: string) {
   return { width: Number(match[1]), height: Number(match[2]) };
 }
 
-function PostPicture({ image }: { image: PostImage }) {
+function PostPicture({ image, fallback }: { image: PostImage; fallback: string }) {
   const size = imageSize(image.src);
+  const alt = image.alt || fallback;
 
   if (!size) {
-    return <img src={image.src} alt={image.alt} className="h-auto w-full" />;
+    return <img src={image.src} alt={alt} className="h-auto w-full" />;
   }
 
   return (
     <Image
       src={image.src}
-      alt={image.alt}
+      alt={alt}
       width={size.width}
       height={size.height}
       unoptimized
@@ -98,7 +99,7 @@ export function PostDetail({ post }: { post: Post }) {
             ) : null}
             {post.image ? (
               <div className="lg:hidden">
-                <PostPicture image={post.image} />
+                <PostPicture image={post.image} fallback={post.headline} />
               </div>
             ) : null}
             {post.body.blocks.length > 0 ? <RichText document={post.body} /> : null}
@@ -114,7 +115,7 @@ export function PostDetail({ post }: { post: Post }) {
           </div>
           {post.image ? (
             <div className="hidden lg:block">
-              <PostPicture image={post.image} />
+              <PostPicture image={post.image} fallback={post.headline} />
             </div>
           ) : null}
         </div>

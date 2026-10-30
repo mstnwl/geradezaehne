@@ -63,12 +63,12 @@ function CaseImage({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-function CaseFigure({ photo }: { photo: CasePhoto }) {
+function CaseFigure({ photo, fallback }: { photo: CasePhoto; fallback: string }) {
   return (
     <li>
       <figure className="flex flex-col gap-pair">
         {photo.image ? (
-          <CaseImage src={photo.image.src} alt={photo.image.alt || photo.caption} />
+          <CaseImage src={photo.image.src} alt={photo.image.alt || photo.caption || fallback} />
         ) : null}
         {photo.caption ? (
           <figcaption className="text-base leading-normal font-normal text-ink">
@@ -125,7 +125,7 @@ export function CaseStudy({ caseStudy }: { caseStudy: CaseStudyContent }) {
         {caseStudy.photos.length > 0 ? (
           <ul className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-x-20">
             {caseStudy.photos.map((photo, index) => (
-              <CaseFigure key={`${photo.caption}-${index}`} photo={photo} />
+              <CaseFigure key={`${photo.caption}-${index}`} photo={photo} fallback={caseStudy.headline} />
             ))}
           </ul>
         ) : null}

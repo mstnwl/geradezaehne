@@ -9,6 +9,7 @@ import { Sprechzeiten } from "@/components/sprechzeiten";
 import { getFooter } from "@/lib/footer";
 import { getMainNavigation } from "@/lib/navigation";
 import { getOpeningHours } from "@/lib/opening-hours";
+import { siteDescription, siteName, siteOrigin } from "@/lib/seo";
 import { getSprechzeiten } from "@/lib/sprechzeiten";
 import "./globals.css";
 
@@ -18,8 +19,16 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Praxis Dr. Hück",
-  description: "Praxis Dr. Hück",
+  metadataBase: new URL(siteOrigin),
+  title: { absolute: siteName },
+  description: siteDescription,
+  openGraph: {
+    siteName,
+    type: "website",
+    locale: "de_DE",
+    title: siteName,
+    description: siteDescription,
+  },
 };
 
 async function SiteHeaderData() {

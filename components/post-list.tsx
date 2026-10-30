@@ -6,7 +6,14 @@ import type { PostSummary } from "@/lib/posts";
 function PostThumb({ post }: { post: PostSummary }) {
   const frame = post.image ? (
     <div className="relative size-40 overflow-hidden bg-background lg:size-72">
-      <Image src={post.image.src} alt="" fill unoptimized sizes="(min-width: 64rem) 18rem, 10rem" className="object-cover" />
+      <Image
+        src={post.image.src}
+        alt={post.image.alt || post.headline}
+        fill
+        unoptimized
+        sizes="(min-width: 64rem) 18rem, 10rem"
+        className="object-cover"
+      />
     </div>
   ) : (
     <div className="size-40 bg-background lg:size-72" aria-hidden="true" />
@@ -41,7 +48,7 @@ export function PostRow({ post }: { post: PostSummary }) {
       <PostThumb post={post} />
       <div className="flex flex-col gap-pair">
         <PostDate post={post} />
-        {post.headline ? <h4 className="text-ink">{post.headline}</h4> : null}
+        {post.headline ? <h3 className="text-ink">{post.headline}</h3> : null}
         <Link href={`/news/${post.slug}`} className="header-link inline-flex w-fit items-center gap-pair text-nav">
           <span className="menu-arrow size-icon shrink-0" aria-hidden="true" />
           Lesen

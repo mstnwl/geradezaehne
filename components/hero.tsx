@@ -28,7 +28,7 @@ function BookingButton({ href, label, overlay }: { href: string; label: string; 
 export function Hero({ hero }: { hero: HeroContent }) {
   return (
     <section id={hero.anchor || undefined} className="bg-white">
-      {hero.image ? <HeroImage image={hero.image} /> : null}
+      {hero.image ? <HeroImage image={{ ...hero.image, alt: hero.image.alt || hero.headline }} /> : null}
       <div className="px-gutter py-20">
         <div className="mx-auto flex max-w-column flex-col items-center gap-nav text-center">
           <h1 className="text-balance text-ink">{hero.headline}</h1>

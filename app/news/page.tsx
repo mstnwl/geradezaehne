@@ -2,7 +2,12 @@ import { Suspense } from "react";
 import { PostList } from "@/components/post-list";
 import { StoryBlocks } from "@/components/story-blocks";
 import { getPublishedPosts } from "@/lib/posts";
+import { storyMetadata } from "@/lib/seo";
 import { getStoryBlocks } from "@/lib/service-module";
+
+export function generateMetadata() {
+  return storyMetadata("News", "/news", "news");
+}
 
 async function NewsBody() {
   const [blocks, posts] = await Promise.all([getStoryBlocks("news"), getPublishedPosts()]);

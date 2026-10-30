@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Reveal } from "@/components/reveal";
 import type { GalleryContent, GalleryImage } from "@/lib/service-module";
 
-function GalleryFigure({ item }: { item: GalleryImage }) {
+function GalleryFigure({ item, fallback }: { item: GalleryImage; fallback: string }) {
   return (
     <li>
       <figure className="flex flex-col gap-pair">
@@ -10,7 +10,7 @@ function GalleryFigure({ item }: { item: GalleryImage }) {
           <div className="relative aspect-[16/9] w-full overflow-hidden bg-white">
             <Image
               src={item.image.src}
-              alt={item.image.alt || item.caption}
+              alt={item.image.alt || item.caption || fallback}
               fill
               unoptimized
               sizes="(min-width: 64rem) 75rem, 100vw"
@@ -61,7 +61,7 @@ export function Gallery({ gallery }: { gallery: GalleryContent }) {
         {gallery.images.length > 0 ? (
           <ul className="flex flex-col gap-12">
             {gallery.images.map((item, index) => (
-              <GalleryFigure key={`${item.caption}-${index}`} item={item} />
+              <GalleryFigure key={`${item.caption}-${index}`} item={item} fallback={gallery.headline} />
             ))}
           </ul>
         ) : null}

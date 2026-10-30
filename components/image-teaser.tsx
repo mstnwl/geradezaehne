@@ -33,7 +33,7 @@ export function ImageTeaser({ teaser }: { teaser: ImageTeaserContent }) {
       {teaser.image ? (
         <Image
           src={teaser.image.src}
-          alt={teaser.image.alt}
+          alt={teaser.image.alt || teaser.headline}
           fill
           unoptimized
           sizes="100vw"

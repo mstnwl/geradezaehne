@@ -61,7 +61,7 @@ export function Sprechzeiten({ sprechzeiten }: { sprechzeiten: SprechzeitenConte
           <div className="relative aspect-[7/5] w-full overflow-hidden bg-white lg:col-start-1 lg:row-span-4 lg:row-start-1">
             <Image
               src={sprechzeiten.image.src}
-              alt={sprechzeiten.image.alt}
+              alt={sprechzeiten.image.alt || sprechzeiten.headline}
               fill
               unoptimized
               sizes="(min-width: 64rem) 35rem, 100vw"

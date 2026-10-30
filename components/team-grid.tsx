@@ -2,14 +2,14 @@ import Image from "next/image";
 import { Reveal } from "@/components/reveal";
 import type { TeamGridContent, TeamMember } from "@/lib/service-module";
 
-function Member({ member }: { member: TeamMember }) {
+function Member({ member, fallback }: { member: TeamMember; fallback: string }) {
   return (
     <li className="flex flex-col gap-nav">
       {member.image ? (
         <div className="relative aspect-[4/5] w-full overflow-hidden bg-white">
           <Image
             src={member.image.src}
-            alt={member.image.alt || member.name}
+            alt={member.image.alt || member.name || fallback}
             fill
             unoptimized
             sizes="(min-width: 64rem) 22rem, 45vw"
@@ -35,7 +35,7 @@ export function TeamGrid({ teamGrid }: { teamGrid: TeamGridContent }) {
         {teamGrid.members.length > 0 ? (
           <ul className="grid grid-cols-2 gap-12 lg:grid-cols-3 lg:gap-x-20">
             {teamGrid.members.map((member, index) => (
-              <Member key={`${member.name}-${index}`} member={member} />
+              <Member key={`${member.name}-${index}`} member={member} fallback={teamGrid.headline} />
             ))}
           </ul>
         ) : null}
