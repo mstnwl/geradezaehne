@@ -33,6 +33,7 @@ export function StoryBlocks({ blocks }: { blocks: HomeBlock[] }) {
           key={block.contentService.id}
           service={block.contentService}
           imageAlign="start"
+          naturalDesktop
         />
       );
     }

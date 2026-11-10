@@ -4,6 +4,23 @@ import { Reveal } from "@/components/reveal";
 import { RichText } from "@/components/rich-text";
 import type { ServiceImage, ServiceLink, ServiceModuleContent } from "@/lib/service-module";
 
+function imageSize(src: string) {
+  const match = src.match(/\/(\d+)x(\d+)\//);
+
+  if (!match) {
+    return null;
+  }
+
+  const width = Number(match[1]);
+  const height = Number(match[2]);
+
+  if (!width || !height) {
+    return null;
+  }
+
+  return { width, height };
+}
+
 function ServiceFrame({
   image,
   portrait,
@@ -24,6 +41,34 @@ function ServiceFrame({
         unoptimized
         sizes="(min-width: 64rem) 35rem, 100vw"
         className="object-cover"
+      />
+    </div>
+  );
+}
+
+function NaturalServiceFrame({ image, fallback }: { image: ServiceImage; fallback: string }) {
+  const size = imageSize(image.src);
+  const alt = image.alt || fallback;
+
+  if (!size) {
+    return (
+      <div className="w-full bg-white">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={image.src} alt={alt} className="block h-auto w-full" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full bg-white">
+      <Image
+        src={image.src}
+        alt={alt}
+        width={size.width}
+        height={size.height}
+        unoptimized
+        sizes="(min-width: 64rem) 35rem, 100vw"
+        className="block h-auto w-full"
       />
     </div>
   );
@@ -96,9 +141,11 @@ function ServiceCopy({
 export function ServiceModule({
   service,
   imageAlign = "center",
+  naturalDesktop = false,
 }: {
   service: ServiceModuleContent;
   imageAlign?: "center" | "start";
+  naturalDesktop?: boolean;
 }) {
   if (!service.image) {
     return (
@@ -120,7 +167,11 @@ export function ServiceModule({
         }`}
       >
         <div className="hidden lg:block">
-          <ServiceFrame image={service.image} portrait={service.portrait} fallback={service.headline} />
+          {naturalDesktop ? (
+            <NaturalServiceFrame image={service.image} fallback={service.headline} />
+          ) : (
+            <ServiceFrame image={service.image} portrait={service.portrait} fallback={service.headline} />
+          )}
         </div>
         <div className="contents lg:flex lg:flex-col lg:gap-nav">
           <ServiceCopy service={service} showMobileImage />
