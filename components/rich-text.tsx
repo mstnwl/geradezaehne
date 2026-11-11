@@ -57,8 +57,41 @@ function Inlines({ content }: { content: RichInline[] }) {
   );
 }
 
+function imageSize(src: string) {
+  const match = src.match(/\/(\d+)x(\d+)\//);
+
+  if (!match) {
+    return null;
+  }
+
+  const width = Number(match[1]);
+  const height = Number(match[2]);
+
+  if (!width || !height) {
+    return null;
+  }
+
+  return { width, height };
+}
+
 function Blocks({ blocks }: { blocks: RichBlock[] }) {
   return blocks.map((block, index) => {
+    if (block.type === "image") {
+      const size = imageSize(block.src);
+
+      return (
+        <figure key={index} className="text-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={block.src}
+            alt={block.alt}
+            {...(size ? { width: size.width, height: size.height } : {})}
+            className="inline-block h-auto max-w-[80%]"
+          />
+        </figure>
+      );
+    }
+
     if (block.type === "heading") {
       const Tag = `h${block.level}` as "h1" | "h2" | "h3" | "h4";
       const className = "text-ink";
