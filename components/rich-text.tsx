@@ -80,13 +80,13 @@ function Blocks({ blocks }: { blocks: RichBlock[] }) {
       const size = imageSize(block.src);
 
       return (
-        <figure key={index} className="text-center">
+        <figure key={index} className="mt-6 mb-8">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={block.src}
             alt={block.alt}
             {...(size ? { width: size.width, height: size.height } : {})}
-            className="inline-block h-auto max-w-[80%]"
+            className="block h-auto max-w-[60%]"
           />
         </figure>
       );
