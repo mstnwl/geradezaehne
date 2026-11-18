@@ -8,6 +8,7 @@ function FooterAnchor({ link }: { link: FooterLink }) {
     <BookingLink
       href={link.href}
       overlay={link.overlay === true}
+      newTab={link.newTab === true}
       className="header-link inline-flex w-fit items-center gap-pair text-nav"
     >
       <span className="menu-arrow size-icon shrink-0" aria-hidden="true" />

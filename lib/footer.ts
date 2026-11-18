@@ -2,6 +2,7 @@ export type FooterLink = {
   label: string;
   href: string;
   overlay?: boolean;
+  newTab?: boolean;
 };
 
 export type FooterGroup = {
@@ -19,6 +20,49 @@ export type FooterContent = {
   email: string;
   groups: FooterGroup[];
 };
+
+const instagramHref = "https://www.instagram.com/gerade.zaehne.mainz/";
+
+const instagramLink: FooterLink = {
+  label: "Instagram",
+  href: instagramHref,
+  newTab: true,
+};
+
+function isInstagram(link: FooterLink) {
+  return link.label === "Instagram" || link.href === instagramHref;
+}
+
+function ensureInstagram(groups: FooterGroup[]): FooterGroup[] {
+  const present = groups.some((group) => group.links.some(isInstagram));
+
+  if (present) {
+    return groups.map((group) => ({
+      ...group,
+      links: group.links.map((link) => (isInstagram(link) ? { ...link, newTab: true } : link)),
+    }));
+  }
+
+  let inserted = false;
+
+  return groups.map((group) => {
+    if (inserted) {
+      return group;
+    }
+
+    const index = group.links.findIndex((link) => link.label === "Kontakt");
+
+    if (index === -1) {
+      return group;
+    }
+
+    inserted = true;
+    const links = group.links.slice();
+    links.splice(index + 1, 0, instagramLink);
+
+    return { ...group, links };
+  });
+}
 
 const fallbackGroups: FooterGroup[] = [
   {
@@ -42,6 +86,7 @@ const fallbackGroups: FooterGroup[] = [
       { label: "Praxis", href: "/" },
       { label: "Jobs", href: "/" },
       { label: "Kontakt", href: "/" },
+      instagramLink,
     ],
   },
   {
@@ -68,6 +113,7 @@ type StoryblokLink = {
   linktype?: string;
   url?: string;
   cached_url?: string;
+  target?: string;
 };
 
 type StoryblokRecord = Record<string, unknown>;
@@ -140,8 +186,18 @@ function mapLinks(value: unknown): FooterLink[] {
     }
 
     const link = asRecord(record.link) as StoryblokLink | null;
+    const href = resolveHref(link ?? undefined);
+    const newTab =
+      link?.target === "_blank" || (/^https?:/i.test(href) && record.overlay !== true);
 
-    return [{ label, href: resolveHref(link ?? undefined), overlay: record.overlay === true }];
+    return [
+      {
+        label,
+        href,
+        overlay: record.overlay === true,
+        ...(newTab ? { newTab: true } : {}),
+      },
+    ];
   });
 }
 
@@ -179,7 +235,7 @@ function mapFooter(content: StoryblokRecord): FooterContent {
     phone: textValue(content.phone, fallbackFooter.phone),
     fax: textValue(content.fax, fallbackFooter.fax),
     email: textValue(content.email, fallbackFooter.email),
-    groups: groups.length > 0 ? groups : fallbackFooter.groups,
+    groups: ensureInstagram(groups.length > 0 ? groups : fallbackFooter.groups),
   };
 }
 

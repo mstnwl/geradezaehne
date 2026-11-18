@@ -91,6 +91,7 @@ export function BookingOverlayProvider({ children }: { children: ReactNode }) {
 export function BookingLink({
   href,
   overlay = false,
+  newTab = false,
   className,
   children,
   onClick,
@@ -98,6 +99,7 @@ export function BookingLink({
 }: {
   href: string;
   overlay?: boolean;
+  newTab?: boolean;
   className: string;
   children: ReactNode;
   onClick?: () => void;
@@ -109,7 +111,14 @@ export function BookingLink({
   if (!overlay) {
     if (/^(https?:|mailto:|tel:|#)/i.test(href)) {
       return (
-        <a href={href} className={className} aria-current={ariaCurrent} onClick={onClick}>
+        <a
+          href={href}
+          className={className}
+          aria-current={ariaCurrent}
+          onClick={onClick}
+          target={newTab ? "_blank" : undefined}
+          rel={newTab ? "noopener noreferrer" : undefined}
+        >
           {children}
         </a>
       );
