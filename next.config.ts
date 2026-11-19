@@ -16,7 +16,7 @@ const cutoverRedirects: ReadonlyArray<{
   { source: "/news/tag/Öffnungszeiten", destination: "/news" },
   { source: "/news/tag/Dr.+Michael+Hück", destination: "/news" },
   { source: "/news/tag/Dr.+Günter+Hück", destination: "/news" },
-  { source: "/news/2026/10/9/schne-herbstferien", destination: "/news/schoene-herbstferien" },
+  { source: "/news/2026/10/9/schne-herbstferien", destination: "/news" },
   { source: "/news/2026/6/25/herzlichen-glckwunsch-kiana", destination: "/news/kiana-freisprechung" },
   { source: "/news/2024/11/20/if-its-not-clean-its-not-cleen", destination: "/news/cleen-zahngel" },
   { source: "/news/2024/12/18/graphy-aligner", destination: "/news/graphy-aligner" },
