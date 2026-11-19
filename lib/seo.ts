@@ -4,7 +4,7 @@ import type { HomeBlock, ServiceModuleContent } from "@/lib/service-module";
 import { getHomeBlocks, getStoryBlocks } from "@/lib/service-module";
 
 export const siteName = "Praxis Dr. Hück";
-export const siteOrigin = "https://geradezaehne.vercel.app";
+export const siteOrigin = "https://www.gerade-zaehne.com";
 export const siteDescription = "Praxis Dr. Hück, Fachzahnärzte für Kieferorthopädie.";
 
 export const sitePaths = [
