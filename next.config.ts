@@ -60,13 +60,57 @@ const cutoverRedirects: ReadonlyArray<{
   { source: "/news/2016/8/16/sprechzeiten-1", destination: "/news/sprechzeiten" },
 ];
 
+// Former practice domains that now resolve to this deployment. `has.value`
+// is a full-string regular expression; Next lowercases the host and strips
+// any port before matching. These run before the Squarespace path redirects
+// so the requested path is preserved. Next passes the query string through.
+const canonicalOrigin = "https://www.gerade-zaehne.com";
+
+const legacyHostRedirects = (
+  ["kieferorthopaeden-mainz.de", "www.kieferorthopaeden-mainz.de"] as const
+).flatMap((host) => {
+  const has = [{ type: "host" as const, value: host.replace(/\./g, "\\.") }];
+  return [
+    {
+      source: "/",
+      has,
+      destination: `${canonicalOrigin}/`,
+      statusCode: 308 as const,
+    },
+    {
+      source: "/:path+/",
+      has,
+      destination: `${canonicalOrigin}/:path+/`,
+      statusCode: 308 as const,
+    },
+    {
+      source: "/:path*",
+      has,
+      destination: `${canonicalOrigin}/:path*`,
+      statusCode: 308 as const,
+    },
+  ];
+});
+
 const nextConfig: NextConfig = {
+  // Next inserts its trailing-slash redirect ahead of redirects(). Skip that
+  // so the host rules above can send `/path/` to the same path, then restore
+  // the same 308 for every other host.
+  skipTrailingSlashRedirect: true,
   async redirects() {
-    return cutoverRedirects.map((redirect) => ({
-      source: encodeURI(redirect.source).replace(/[()+?*{}:]/g, (char) => `\\${char}`),
-      destination: redirect.destination,
-      statusCode: 301,
-    }));
+    return [
+      ...legacyHostRedirects,
+      {
+        source: "/:path+/",
+        destination: "/:path+",
+        statusCode: 308 as const,
+      },
+      ...cutoverRedirects.map((redirect) => ({
+        source: encodeURI(redirect.source).replace(/[()+?*{}:]/g, (char) => `\\${char}`),
+        destination: redirect.destination,
+        statusCode: 301,
+      })),
+    ];
   },
   images: {
     remotePatterns: [
