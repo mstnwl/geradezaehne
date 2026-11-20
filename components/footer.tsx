@@ -68,11 +68,9 @@ export function SiteFooter({ footer }: { footer: FooterContent }) {
                 </li>
               ))}
             </ul>
+            {group.title.trim().toLowerCase() === "rechtliches" ? <CookieSettingsButton /> : null}
           </div>
         ))}
-        <div className="lg:col-span-4 lg:row-start-3">
-          <CookieSettingsButton />
-        </div>
       </div>
     </Reveal>
   );

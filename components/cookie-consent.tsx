@@ -32,7 +32,7 @@ import { ClickIdPassthrough } from "@/components/click-id-passthrough";
 const CookieConsentContext = createContext<(() => void) | null>(null);
 
 const choiceButtonClass =
-  "inline-flex h-bar w-full items-center justify-center rounded border border-ink bg-white px-gutter text-center text-nav whitespace-nowrap text-ink hover:bg-background";
+  "inline-flex h-11 w-full items-center justify-center rounded border border-ink bg-white px-3 text-center text-[0.8125rem] leading-none font-medium whitespace-nowrap text-ink hover:bg-background";
 
 function CategoryControl({
   title,
@@ -50,13 +50,13 @@ function CategoryControl({
   const labelId = useId();
 
   return (
-    <div className="flex items-start justify-between gap-gutter border-t border-beige py-nav first:border-t-0 first:pt-0">
+    <div className="flex items-start justify-between gap-3 border-t border-beige py-2 first:border-t-0 first:pt-0">
       <div className="min-w-0">
-        <p id={labelId} className="text-nav">
+        <p id={labelId} className="text-[0.8125rem] leading-snug font-medium">
           {title}
         </p>
-        <p className="mt-pair text-base leading-normal font-normal">{description}</p>
-        {locked ? <p className="mt-pair text-base leading-normal font-normal">Immer aktiv</p> : null}
+        <p className="mt-0.5 text-[0.8125rem] leading-snug font-normal">{description}</p>
+        {locked ? <p className="mt-0.5 text-[0.8125rem] leading-snug font-normal">Immer aktiv</p> : null}
       </div>
       <button
         type="button"
@@ -148,24 +148,25 @@ function CookieBanner({
         aria-modal="false"
         aria-labelledby="cookie-banner-title"
         tabIndex={-1}
-        className="max-h-[100dvh] overflow-y-auto border-t-4 border-accent bg-white text-ink"
+        style={{ outline: "none" }}
+        className="max-h-[100dvh] overflow-y-auto bg-white text-ink"
       >
-        <div className="mx-auto flex w-full max-w-column flex-col px-gutter pt-gutter">
-          <div className="flex flex-col gap-pair">
-            <p id="cookie-banner-title" className="text-[1.375rem] leading-[1.2] font-medium">
+        <div className="mx-auto flex w-full max-w-column flex-col px-gutter pt-3">
+          <div className="flex flex-col gap-1">
+            <p id="cookie-banner-title" className="text-base leading-snug font-medium">
               {settings ? "Cookie- und Datenschutz-Einstellungen" : "Cookie-Zustimmung"}
             </p>
             {settings ? (
               <>
-                <p className="max-w-3xl text-base leading-normal font-medium lg:text-[18px]">
+                <p className="max-w-3xl text-[0.8125rem] leading-snug font-medium">
                   Sie haben die Kontrolle über Ihre Daten
                 </p>
-                <p className="max-w-3xl text-base leading-normal font-normal lg:text-[18px]">
+                <p className="max-w-3xl text-[0.8125rem] leading-snug font-normal">
                   Erfahren Sie mehr über die von uns verwendeten Cookies und wählen Sie aus, welche Sie zulassen möchten.
                 </p>
               </>
             ) : (
-              <p className="max-w-3xl text-base leading-normal font-normal lg:text-[18px]">
+              <p className="max-w-3xl text-[0.8125rem] leading-snug font-normal">
                 Wir verwenden Cookies und weitere Technologien, um Ihr Erlebnis auf dieser Website zu gestalten und,
                 wenn Sie zustimmen, Besuche aus Werbung zuzuordnen. Optionale Cookies setzen wir nur mit Ihrer
                 Zustimmung. Mehr Informationen finden Sie in unserer{" "}
@@ -177,7 +178,7 @@ function CookieBanner({
             )}
           </div>
           {settings ? (
-            <div className="mt-nav bg-background px-gutter py-nav">
+            <div className="mt-3 bg-background px-3 py-2">
               <CategoryControl
                 title="Technisch notwendige Cookies"
                 description="Diese Cookies sind erforderlich, damit die Website ordnungsgemäß funktioniert, zum Beispiel um Ihre Cookie-Auswahl zu speichern."
@@ -198,7 +199,7 @@ function CookieBanner({
               />
             </div>
           ) : null}
-          <div className="sticky bottom-0 -mx-gutter flex flex-col items-start gap-nav bg-white px-gutter pt-nav pb-gutter">
+          <div className="sticky bottom-0 -mx-gutter flex flex-col items-start gap-2 bg-white px-gutter pt-3 pb-3">
             <div
               className={`grid w-full max-w-3xl grid-cols-1 gap-pair ${settings ? "sm:grid-cols-3" : "sm:max-w-xl sm:grid-cols-2"}`}
             >
@@ -216,16 +217,16 @@ function CookieBanner({
             </div>
             <div className="flex flex-wrap items-center gap-gutter">
               {settings ? (
-                <button type="button" className="header-link text-nav" onClick={onBack}>
+                <button type="button" className="header-link text-[0.8125rem] leading-snug" onClick={onBack}>
                   Zurück
                 </button>
               ) : (
-                <button type="button" className="header-link text-nav" onClick={onOpenSettings}>
+                <button type="button" className="header-link text-[0.8125rem] leading-snug" onClick={onOpenSettings}>
                   Einstellungen
                 </button>
               )}
               {stored ? (
-                <button type="button" className="header-link text-nav" onClick={onClose}>
+                <button type="button" className="header-link text-[0.8125rem] leading-snug" onClick={onClose}>
                   Schließen
                 </button>
               ) : null}
