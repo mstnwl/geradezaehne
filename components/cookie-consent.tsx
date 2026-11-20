@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Suspense,
   createContext,
   useCallback,
   useContext,
@@ -292,7 +293,9 @@ export function CookieConsentProvider({ children }: { children: ReactNode }) {
   return (
     <CookieConsentContext.Provider value={openSettings}>
       {children}
-      <ClickIdPassthrough />
+      <Suspense fallback={null}>
+        <ClickIdPassthrough />
+      </Suspense>
       {open ? (
         <CookieBanner
           stored={stored}
