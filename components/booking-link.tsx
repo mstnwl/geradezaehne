@@ -5,17 +5,25 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
   type MouseEvent,
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
+import { pushBookingOpen } from "@/lib/consent";
 
 const BookingOverlayContext = createContext<((href: string) => void) | null>(null);
 
 function BookingOverlay({ href, onClose }: { href: string; onClose: () => void }) {
+  const [started, setStarted] = useState(false);
+  const continued = useRef(false);
+  const continueRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
+    continueRef.current?.focus();
+
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         onClose();
@@ -32,6 +40,15 @@ function BookingOverlay({ href, onClose }: { href: string; onClose: () => void }
     };
   }, [onClose]);
 
+  const continueBooking = () => {
+    if (continued.current) {
+      return;
+    }
+    continued.current = true;
+    setStarted(true);
+    pushBookingOpen();
+  };
+
   return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-gutter"
@@ -41,6 +58,7 @@ function BookingOverlay({ href, onClose }: { href: string; onClose: () => void }
         role="dialog"
         aria-modal="true"
         aria-label="Termin buchen"
+        aria-describedby={started ? undefined : "booking-provider-note"}
         className="flex h-[90vh] w-full max-w-column flex-col bg-white"
         onClick={(event) => event.stopPropagation()}
       >
@@ -64,7 +82,29 @@ function BookingOverlay({ href, onClose }: { href: string; onClose: () => void }
             Schließen
           </button>
         </div>
-        <iframe src={href} title="Termin buchen" className="min-h-0 w-full flex-1" />
+        {started ? null : (
+          <div className="flex flex-1 flex-col items-start justify-center gap-nav px-gutter">
+            <p className="text-[1.375rem] leading-[1.2] font-medium text-ink">Termin buchen</p>
+            <p id="booking-provider-note" className="max-w-xl text-base leading-normal font-normal text-ink">
+              Die Terminbuchung wird von eTermio bereitgestellt.
+            </p>
+            <button
+              ref={continueRef}
+              type="button"
+              className="booking-button inline-flex h-bar items-center rounded bg-accent px-gutter text-nav text-ink"
+              onClick={continueBooking}
+            >
+              Fortfahren
+            </button>
+          </div>
+        )}
+        {/* Leave src unset until Fortfahren. src="" would load this page into the frame. */}
+        <iframe
+          title="Termin buchen"
+          aria-hidden={started ? undefined : true}
+          className={started ? "min-h-0 w-full flex-1" : "hidden"}
+          src={started ? href : undefined}
+        />
       </div>
     </div>,
     document.body,
@@ -142,7 +182,13 @@ export function BookingLink({
 
   return (
     <>
-      <a href={href} className={className} aria-current={ariaCurrent} onClick={show}>
+      <a
+        href={href}
+        data-booking-overlay=""
+        className={className}
+        aria-current={ariaCurrent}
+        onClick={show}
+      >
         {children}
       </a>
       {!openOverlay && open ? <BookingOverlay href={href} onClose={() => setOpen(false)} /> : null}

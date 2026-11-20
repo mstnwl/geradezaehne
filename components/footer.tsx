@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { BookingLink } from "@/components/booking-link";
+import { CookieSettingsButton } from "@/components/cookie-consent";
 import { Reveal } from "@/components/reveal";
 import type { FooterContent, FooterLink } from "@/lib/footer";
 
@@ -69,6 +70,9 @@ export function SiteFooter({ footer }: { footer: FooterContent }) {
             </ul>
           </div>
         ))}
+        <div className="lg:col-span-4 lg:row-start-3">
+          <CookieSettingsButton />
+        </div>
       </div>
     </Reveal>
   );
