@@ -152,35 +152,46 @@ function CookieBanner({
         <div className="mx-auto flex w-full max-w-column flex-col px-gutter pt-gutter">
           <div className="flex flex-col gap-pair">
             <p id="cookie-banner-title" className="text-[1.375rem] leading-[1.2] font-medium">
-              Cookies
+              {settings ? "Cookie- und Datenschutz-Einstellungen" : "Cookie-Zustimmung"}
             </p>
-            <p className="max-w-3xl text-base leading-normal font-normal lg:text-[18px]">
-              Notwendige Cookies speichern Ihre Auswahl und sind für den Betrieb der Website nötig.
-              Statistik und Marketing setzen wir nur ein, wenn Sie einwilligen. Beides ist zunächst
-              aus. Mehr dazu in der{" "}
-              <Link href="/datenschutz" className="header-link underline underline-offset-4">
-                Datenschutzerklärung
-              </Link>
-              .
-            </p>
+            {settings ? (
+              <>
+                <p className="max-w-3xl text-base leading-normal font-medium lg:text-[18px]">
+                  Sie haben die Kontrolle über Ihre Daten
+                </p>
+                <p className="max-w-3xl text-base leading-normal font-normal lg:text-[18px]">
+                  Erfahren Sie mehr über die von uns verwendeten Cookies und wählen Sie aus, welche Sie zulassen möchten.
+                </p>
+              </>
+            ) : (
+              <p className="max-w-3xl text-base leading-normal font-normal lg:text-[18px]">
+                Wir verwenden Cookies und weitere Technologien, um Ihr Erlebnis auf dieser Website zu gestalten und,
+                wenn Sie zustimmen, Besuche aus Werbung zuzuordnen. Optionale Cookies setzen wir nur mit Ihrer
+                Zustimmung. Mehr Informationen finden Sie in unserer{" "}
+                <Link href="/datenschutz" className="header-link underline underline-offset-4">
+                  Datenschutzerklärung
+                </Link>
+                .
+              </p>
+            )}
           </div>
           {settings ? (
             <div className="mt-nav bg-background px-gutter py-nav">
               <CategoryControl
-                title="Notwendig"
-                description="Speichert Ihre Entscheidung in einem Cookie auf diesem Gerät und sichert den Betrieb der Website."
+                title="Technisch notwendige Cookies"
+                description="Diese Cookies sind erforderlich, damit die Website ordnungsgemäß funktioniert, zum Beispiel um Ihre Cookie-Auswahl zu speichern."
                 checked
                 locked
               />
               <CategoryControl
-                title="Statistik"
-                description="Heute ist kein Statistik-Werkzeug geladen. Eine spätere Reichweitenmessung läuft nur, wenn diese Kategorie an ist."
+                title="Analysen"
+                description="Diese Cookies helfen uns zu verstehen, wie die Website genutzt wird. Derzeit ist kein Analyse-Tool aktiv. Ein späteres Tool läuft nur mit Ihrer Zustimmung."
                 checked={statistics}
                 onChange={onStatistics}
               />
               <CategoryControl
                 title="Marketing"
-                description="Lädt Google Tag Manager (GTM-5LR4972), Google Ads (AW-1028513074) und den Conversion Linker. Dabei können Werbe-Cookies gesetzt und Daten an Google gesendet werden."
+                description="Diese Cookies ordnen Besuche aus Werbung zu. Dazu gehören Google Tag Manager und Google Ads. Sie werden nur gesetzt, wenn Sie Marketing erlauben."
                 checked={marketing}
                 onChange={onMarketing}
               />
@@ -198,7 +209,7 @@ function CookieBanner({
               </button>
               {settings ? (
                 <button type="button" className={choiceButtonClass} onClick={onSave}>
-                  Auswahl speichern
+                  Meine Auswahl speichern
                 </button>
               ) : null}
             </div>
